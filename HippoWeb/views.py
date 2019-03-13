@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.contrib import auth
 from HippoWeb.forms import *
 
 # Create your views here.
@@ -13,4 +14,11 @@ def login(req):
         if login_form.is_valid():
             username = req.POST.get('username', '')
             password = req.POST.get('password', '')
-        return render(req, 'index.html', {'username': username, 'password': password})
+            user = auth.authenticate(username=username, password=password)
+            if user is not None and user.is_active:
+                auth.login(req, user)
+                return render(req, 'index.html', {'username': username, 'password': password})
+            else:
+                return render(req, 'index.html', {'username': username, 'password': password, 'is_wrong': True})
+        else:
+            return render(req, 'login.html', {'login_form': login_form})
