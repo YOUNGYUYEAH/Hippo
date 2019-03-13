@@ -1,0 +1,21 @@
+{% load staticfiles %}
+<html lang="en">
+    {% include 'header.html' %}
+    <link href="{% static "css/login.css" %}" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="{% static "js/login.js" %}"></script>
+    <title>Hippo运维平台-登录页</title>
+</html>
+</head>
+    <body>
+        <div class="login-bg">
+            <div class="login-form">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ login_form.as_p }}
+                    <input class="btn btn-default" type="submit" value="Sign In" id="login_form">
+                    <input class="btn btn-default" type="submit" value="Login In" id="Sign_form">
+                </form>
+            </div>
+        </div>
+    </body>
+</html>

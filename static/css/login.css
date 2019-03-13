@@ -1,0 +1,29 @@
+body {
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+
+.login-bg {
+    background: url("../images/login-1.jpg") no-repeat;
+    background-size: 100% 100%;
+    height: 100%;
+    width: 100%;
+    background-attachment: fixed;
+}
+.login-form {
+    list-style: none;
+    border: 0;
+    width: 300px;
+    height: 300px;
+    background-color: #323232;
+    background: rgba(255, 255, 255, 0);
+    margin: auto;
+    position: absolute;
+    top: 20px;
+    left: -5px;
+    bottom: 20px;
+    right: 20px;
+    border-radius: 10px;
+}
+
