@@ -3,6 +3,7 @@
     {% include 'header.html' %}
     <link href="{% static "css/login.css" %}" rel="stylesheet" type="text/css" />
     <script type="text/javascript" src="{% static "js/login.js" %}"></script>
+    <script type="text/javascript" src="{% static "js/jsencrypt.min.js" %}"></script>
     <title>Hippo运维平台-登录页</title>
 </html>
 </head>
@@ -10,10 +11,11 @@
         <div class="login-bg">
             <div class="login-form">
                 <form method="post" enctype="multipart/form-data">
+                    <input type="hidden" value="{{ pubkey_e }}" name="pubkeye" id="pubkeye"/>
+                    <input type="hidden" value="{{ pubkey_n }}" name="pubkeyn" id="pubkeyn"/>
                     {% csrf_token %}
                     {{ login_form.as_p }}
-                    <input class="btn btn-default" type="submit" value="Sign In" id="login_form">
-                    <input class="btn btn-default" type="submit" value="Login In" id="Sign_form">
+                    <input class="btn btn-default" type="submit" value="Sign In" id="login_form" onclick="dologin()"/>
                 </form>
             </div>
         </div>
