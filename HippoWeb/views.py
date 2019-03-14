@@ -22,3 +22,4 @@ def login(req):
                 return render(req, 'index.html', {'username': username, 'password': password, 'is_wrong': True})
         else:
             return render(req, 'login.html', {'login_form': login_form})
+
