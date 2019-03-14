@@ -8,23 +8,32 @@ def login(req):
     """
     登录验证页
     """
-    (pub_key, priv_key) = rsa.newkeys(512)
-    pubkey_e = hex(pub_key.e)
-    pubkey_n = hex(pub_key.n)
+    login_form = LoginForm()
     if req.method == 'GET':
-        login_form = LoginForm()
-        return render(req, 'login.html', {'login_form': login_form, 'pubkey_e': pubkey_e, 'pubkey_n': pubkey_n})
+        return render(req, 'login.html', {'login_form': login_form})
     elif req.method == 'POST':
         username = req.POST.get('username', None)
         password = req.POST.get('password', None)
-        return render(req, 'index.html', {'username': username, 'password': password})
+        user = auth.authenticate(username=username, password=password)
+        if user is not None and user.is_active:
+            req.session['IS_LGOIN'] = True
+            response = redirect('/index/')
+            response.set_cookie('username', username)
+            auth.login(req, user)
+            return response
+        else:
+            return render(req, '50x.html')
+    else:
+        return render(req, '404.html')
 
 
 def index(req):
     """
     主页,判断用户是否已经登录,若未登录则跳转login页
     """
-    if req.method == 'POST':
-        return render(req, 'index.html')
+    login_user = req.COOKIES.get('username')
+    print(login_user)
+    if login_user:
+        return render(req, 'index.html', {'login_user': login_user})
     else:
         return HttpResponseRedirect('/login/')

@@ -11,11 +11,9 @@
         <div class="login-bg">
             <div class="login-form">
                 <form method="post" enctype="multipart/form-data">
-                    <input type="hidden" value="{{ pubkey_e }}" name="pubkeye" id="pubkeye"/>
-                    <input type="hidden" value="{{ pubkey_n }}" name="pubkeyn" id="pubkeyn"/>
                     {% csrf_token %}
                     {{ login_form.as_p }}
-                    <input class="btn btn-default" type="submit" value="Sign In" id="login_form" onclick="dologin()"/>
+                    <input class="btn btn-default" type="submit" value="Sign In" id="login_form"/>
                 </form>
             </div>
         </div>
