@@ -2,8 +2,8 @@
 <html lang="en">
     {% include 'header.html' %}
     <link href="{% static "css/login.css" %}" rel="stylesheet" type="text/css" />
-    <script type="text/javascript" src="{% static "js/login.js" %}"></script>
     <script type="text/javascript" src="{% static "js/jsencrypt.min.js" %}"></script>
+    <script type="text/javascript" src="{% static "js/rsa.js" %}"></script>
     <title>Hippo运维平台-登录页</title>
 </html>
 </head>
@@ -13,9 +13,24 @@
                 <form method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                     {{ login_form.as_p }}
-                    <input class="btn btn-default" type="submit" value="Sign In" id="login_form"/>
+                    <input class="btn btn-default" type="button" value="Sign In" id="login_form" onclick="dologin()"/>
+                    <input type="hidden" id="pub_e" value={{ pub_e }} name="pub_e" />
+                    <input type="hidden" id="pub_n" value={{ pub_n }} name="pub_n" />
                 </form>
             </div>
         </div>
     </body>
+    <script type="text/javascript">
+        function dologin(){
+            var username = $("#username").val();
+            var password = $("#password").val();
+            $.ajax({
+                url: '/login/',
+                type: 'POST',
+                data: {'username': username, 'password': password},
+                dataType: 'JSON',
+                async: false
+            });
+        }
+    </script>
 </html>
