@@ -2,15 +2,16 @@
 <html lang="en">
     {% include 'header.html' %}
     <link href="{% static "css/login.css" %}" rel="stylesheet" type="text/css" />
-    <script type="text/javascript" src="{% static "js/jsencrypt.min.js" %}"></script>
-    <script type="text/javascript" src="{% static "js/rsa.js" %}"></script>
+    <script type="text/javascript" src="{% static "js/rsa/RSA.js" %}"></script>
+    <script type="text/javascript" src="{% static "js/rsa/Barrett.js" %}"></script>
+    <script type="text/javascript" src="{% static "js/rsa/BigInt.js" %}"></script>
     <title>Hippo运维平台-登录页</title>
 </html>
 </head>
     <body>
         <div class="login-bg">
             <div class="login-form">
-                <form method="post" enctype="multipart/form-data">
+                <form enctype="multipart/form-data">
                     {% csrf_token %}
                     {{ login_form.as_p }}
                     <input class="btn btn-default" type="button" value="Sign In" id="login_form" onclick="dologin()"/>
@@ -22,14 +23,23 @@
     </body>
     <script type="text/javascript">
         function dologin(){
-            var username = $("#username").val();
-            var password = $("#password").val();
+            // http://www.ohdave.com/rsa/  加密所需js文件网址
+            var username = $('#username').val();
+            var pub_e = $('#pub_e').val();
+            var pub_n = $('#pub_n').val();
+            setMaxDigits(129);  // "n的位数"
+            var key = new RSAKeyPair(pub_e,"",pub_n);
+            var en_password = encryptedString(key, $('#password').val());
             $.ajax({
-                url: '/login/',
-                type: 'POST',
-                data: {'username': username, 'password': password},
-                dataType: 'JSON',
-                async: false
+                url: '{% url '/login/i' %}',
+                type: 'post',
+                data: {'username': username, 'password': $('#password').val(), 'en_password': en_password},
+                dataType: 'json',
+                async: false, //同步操作
+                success: function(data) {
+                    if (data["data"] = "ok")
+                        window.location.reload();
+                },
             });
         }
     </script>

@@ -25,7 +25,7 @@ SECRET_KEY = 'ighh9dvuerplm)h7-@a%q(m*f@5%x)bsew1arrs4igjydhuc1b'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '192.168.20.228']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '192.168.20.228', '192.168.10.10']
 
 
 # Application definition
@@ -77,7 +77,8 @@ DATABASES = {
         'NAME': 'Hippo',
         'USER': 'root',
         'PASSWORD': '531144968',
-        'HOST': '192.168.80.100',
+        # 'HOST': '192.168.80.100',
+        'HOST': '127.0.0.1',
         'PORT': 3306
     }
 }
