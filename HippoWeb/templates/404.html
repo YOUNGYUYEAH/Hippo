@@ -1,1 +1,11 @@
-<p>404</p>
+{% load staticfiles %}
+<html>
+    {% include 'header.html' %}
+    <title>Hippo运维平台-404</title>
+<body>
+    <div align="center">
+        <img src="{% static "images/404.jpg" %}" />
+        <p>404</p>
+    </div>
+</body>
+</html>

@@ -1,46 +1,44 @@
 {% load staticfiles %}
-<html lang="en">
-    {% include 'header.html' %}
-    <link href="{% static "css/login.css" %}" rel="stylesheet" type="text/css" />
-    <script type="text/javascript" src="{% static "js/rsa/RSA.js" %}"></script>
-    <script type="text/javascript" src="{% static "js/rsa/Barrett.js" %}"></script>
-    <script type="text/javascript" src="{% static "js/rsa/BigInt.js" %}"></script>
-    <title>Hippo运维平台-登录页</title>
-</html>
-</head>
-    <body>
-        <div class="login-bg">
-            <div class="login-form">
-                <form enctype="multipart/form-data">
-                    {% csrf_token %}
-                    {{ login_form.as_p }}
-                    <input class="btn btn-default" type="button" value="Sign In" id="login_form" onclick="dologin()"/>
-                    <input type="hidden" id="pub_e" value={{ pub_e }} name="pub_e" />
-                    <input type="hidden" id="pub_n" value={{ pub_n }} name="pub_n" />
-                </form>
-            </div>
+<html>
+{% include 'header.html' %}
+<link href="{% static "css/login.css" %}" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="{% static "js/rsa/RSA.js" %}"></script>
+<script type="text/javascript" src="{% static "js/rsa/Barrett.js" %}"></script>
+<script type="text/javascript" src="{% static "js/rsa/BigInt.js" %}"></script>
+<title>Hippo运维平台-登录页</title>
+<body>
+    <div class="login-bg">
+        <div class="login-form">
+            <form enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ login_form.as_p }}
+                <input class="btn btn-default" type="button" value="Sign In" id="login_form" onclick="dologin()"/>
+                <input type="hidden" id="pub_e" value={{ pub_e }} name="pub_e" />
+                <input type="hidden" id="pub_n" value={{ pub_n }} name="pub_n" />
+            </form>
         </div>
-    </body>
-    <script type="text/javascript">
-        function dologin(){
-            // http://www.ohdave.com/rsa/  加密所需js文件网址
-            var username = $('#username').val();
-            var pub_e = $('#pub_e').val();
-            var pub_n = $('#pub_n').val();
-            setMaxDigits(129);  // "n的位数"
-            var key = new RSAKeyPair(pub_e,"",pub_n);
-            var en_password = encryptedString(key, $('#password').val());
-            $.ajax({
-                url: '{% url '/login/i' %}',
-                type: 'post',
-                data: {'username': username, 'password': $('#password').val(), 'en_password': en_password},
-                dataType: 'json',
-                async: false, //同步操作
-                success: function(data) {
-                    if (data["data"] = "ok")
-                        window.location.reload();
-                },
-            });
-        }
-    </script>
+    </div>
+</body>
+<script type="text/javascript">
+    function dologin(){
+        // http://www.ohdave.com/rsa/  加密所需js文件网址
+        var username = $('#username').val();
+        var pub_e = $('#pub_e').val();
+        var pub_n = $('#pub_n').val();
+        setMaxDigits(129);  // "n的位数"
+        var key = new RSAKeyPair(pub_e,"",pub_n);
+        var en_password = encryptedString(key, $('#password').val());
+        $.ajax({
+            url: '{% url '/login/i' %}',
+            type: 'post',
+            data: {'username': username, 'password': $('#password').val(), 'en_password': en_password},
+            dataType: 'json',
+            async: false, //同步操作
+            success: function(data) {
+                if (data["data"] = "ok")
+                    window.location.reload();
+            },
+        });
+    }
+</script>
 </html>

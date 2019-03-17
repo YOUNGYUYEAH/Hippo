@@ -7,6 +7,20 @@ import rsa
 import json
 
 
+def page_not_found(request):
+    from django.shortcuts import render_to_response
+    response = render_to_response('404.html')
+    response.status_code = 404
+    return response
+
+
+def page_error(request):
+    from django.shortcuts import render_to_response
+    response = render_to_response('50x.html')
+    response.status_code = 500
+    return response
+
+
 def rsa_encrypt(req):
     """使用RSA生成公钥私钥,并拆分存放private key"""
     (public, private) = rsa.newkeys(512)
