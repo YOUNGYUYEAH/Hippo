@@ -1,11 +1,11 @@
 {% load staticfiles %}
 <html>
 {% include 'header.html' %}
-<link href="{% static "css/login.css" %}" rel="stylesheet" type="text/css" />
-<script type="text/javascript" src="{% static "js/rsa/RSA.js" %}"></script>
-<script type="text/javascript" src="{% static "js/rsa/Barrett.js" %}"></script>
-<script type="text/javascript" src="{% static "js/rsa/BigInt.js" %}"></script>
-<title>Hippo运维平台-登录页</title>
+<link href="{% static 'css/login.css' %}" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="{% static 'js/rsa/RSA.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/rsa/Barrett.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/rsa/BigInt.js' %}"></script>
+<title> Hippo OPS Platform - Login </title>
 <body>
     <div class="login-bg">
         <div class="login-form">
@@ -35,7 +35,7 @@
             dataType: 'json',
             async: false, //同步操作
             success: function(data) {
-                if (data["data"] = "ok")
+                if (data['data'] = "ok")
                     window.location.reload();
             },
         });

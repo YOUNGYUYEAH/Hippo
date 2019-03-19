@@ -1,0 +1,11 @@
+.topbar {
+    border: 0;
+    border-radius: 0;
+    background-color: rgba(18, 52, 86, 1) ;
+}
+.topbar a.navbar-brand, .topbar ul.navbar-nav > li > a {
+    color: #428bca;
+}
+.topbar a:hover.navbar-brand, .topbar ul.navbar-nav > li > a:hover {
+    color: #fffccf;
+}
