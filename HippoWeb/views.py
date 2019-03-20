@@ -55,12 +55,11 @@ def login(req):
     login_user = req.COOKIES.get('username')
     if login_user:
         return redirect('/index/')
-    else:
-        pubkey = rsa_encrypt(req)
-        pub_e = pubkey['pub_e']
-        pub_n = pubkey['pub_n']
-        login_form = LoginForm()
-        return render(req, 'login.html', {'login_form': login_form, 'pub_e': pub_e, 'pub_n': pub_n})
+    pubkey = rsa_encrypt(req)
+    pub_e = pubkey['pub_e']
+    pub_n = pubkey['pub_n']
+    login_form = LoginForm()
+    return render(req, 'login.html', {'login_form': login_form, 'pub_e': pub_e, 'pub_n': pub_n})
 
 
 def checklogin(req):
@@ -83,7 +82,9 @@ def checklogin(req):
                     response.set_cookie('username', user)
                     return response
                 else:
-                    return redirect('/login/')
+                    response = HttpResponse(json.dumps({'data': "error"}))
+                    return response
+                # 添加账号密码判断反馈回前端
 
 
 def logout(req):
