@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="RemoteMappingsManager">
+    <list>
+      <list>
+        <remote-mappings server-id="python@ssh://root@192.168.80.100:22/usr/local/python-3.6.4/bin/python3">
+          <settings>
+            <list>
+              <mapping local-root="$PROJECT_DIR$/HippoTools" remote-root="/data/HippoAgent" />
+            </list>
+          </settings>
+        </remote-mappings>
+      </list>
+    </list>
+  </component>
+</project>
