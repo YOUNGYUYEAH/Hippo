@@ -89,7 +89,7 @@ def netinfo():
     return _netinfo
 
 
-def createjson():
+def info_json():
     import json
     server_info = dict()
     server_info["SYSTEM"] = systeminfo()
@@ -101,4 +101,4 @@ def createjson():
 
 
 if __name__ == '__main__':
-    createjson()
+    info_json()
