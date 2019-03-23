@@ -101,4 +101,4 @@ def createjson():
 
 
 if __name__ == '__main__':
-    print(createjson())
+    createjson()
