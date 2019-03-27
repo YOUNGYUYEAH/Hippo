@@ -6,8 +6,8 @@ import datetime
 
 def fun_timer():
     """定时器执行监控"""
-    print(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
-    hippoagent.info_json()
+    # print(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+    hippoagent.influxdb()
     global timer
     timer = threading.Timer(t, fun_timer)
     timer.start()

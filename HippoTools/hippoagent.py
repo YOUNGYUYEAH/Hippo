@@ -35,7 +35,7 @@ def cpuinfo():
     return _cpuinfo
 
 
-def meminfo(unit="mb"):
+def meminfo(unit="mb"):                                               #后期设置为setting
     _meminfo = dict()
     _meminfo['total'] = psutil.virtual_memory().total
     _meminfo['available'] = psutil.virtual_memory().available
@@ -89,16 +89,21 @@ def netinfo():
     return _netinfo
 
 
-def info_json():
-    import json
-    server_info = dict()
-    server_info["SYSTEM"] = systeminfo()
-    server_info["CPU"] = cpuinfo()
-    server_info["MEM"] = meminfo()
-    server_info["DISK"] = diskinfo()
-    server_info["NET"] = netinfo()
-    return json.dumps(server_info)
+def influxdb():
+    from influxdb import InfluxDBClient
+    client = InfluxDBClient(host='192.168.80.100', port=8086, username='influxdb',
+                            password='531144968', database='Hippoagent')       # 后期变更为setting
+    influx_data = [{'measurement': 'serverinfo',
+                   'fields': {
+                       "system": str(systeminfo()),
+                       "cpu": str(cpuinfo()),
+                       "memory": str(meminfo()),
+                       "disk": str(diskinfo()),
+                       "network": str(netinfo())
+                   }}]
+    client.write_points(influx_data)
+    client.close()
 
 
-if __name__ == '__main__':
-    info_json()
+# if __name__ == '__main__':
+#     influxdb()
