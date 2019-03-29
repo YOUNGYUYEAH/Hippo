@@ -1,29 +1,32 @@
 # -*- encoding:utf-8 -*-
 import psutil
+# 校验数值正常项目会添加 #check
 
 
 def systeminfo():
+    """系统内核和版本,主机名,架构"""
     import platform
     _systeminfo = dict()
-    _systeminfo['platform'] = platform.platform()
-    _systeminfo['type'] = platform.system()
-    if platform.system() == "Linux":
+    _systeminfo['platform'] = platform.platform()           # check
+    _systeminfo['type'] = platform.system()                 # check
+    _systeminfo['hostname'] = platform.node()               # check
+    _systeminfo['kernel'] = platform.release()              # check
+    _systeminfo['arch'] = platform.processor()              # check
+    return _systeminfo
+
+
+def cpuinfo():
+    import platform
+    _cpuinfo = dict()
+    if platform.system() == "Linux":                        # check
         with open("/proc/loadavg", "r") as f:
             _v = f.read().split()
             load = dict()
             load["1min"] = _v[0]
             load["5min"] = _v[1]
             load["15min"] = _v[2]
-        _systeminfo['loadavg'] = load
-    _systeminfo['hostname'] = platform.node()
-    _systeminfo['kernel'] = platform.release()
-    _systeminfo['arch'] = platform.processor()
-    return _systeminfo
-
-
-def cpuinfo():
-    _cpuinfo = dict()
-    _cpuinfo['count'] = psutil.cpu_count()                # 逻辑核数
+        _cpuinfo['loadavg'] = load
+    _cpuinfo['count'] = psutil.cpu_count()
     _cpuinfo['user'] = psutil.cpu_times().user
     _cpuinfo['nice'] = psutil.cpu_times().nice
     _cpuinfo['system'] = psutil.cpu_times().system
@@ -32,10 +35,15 @@ def cpuinfo():
     _cpuinfo['irq'] = psutil.cpu_times().irq
     _cpuinfo['softirq'] = psutil.cpu_times().softirq
     _cpuinfo['steal'] = psutil.cpu_times().steal
+    _cpu_times_total = 0
+    for c in range(len(psutil.cpu_times())):
+        _cpu_times_total += psutil.cpu_times()[c]
+    _cpuinfo['total'] = _cpu_times_total
     return _cpuinfo
 
 
-def meminfo(unit="mb"):                                               #后期设置为setting
+def meminfo(unit="mb"):                                   # 后期设置为setting
+    """机器内存,用量统计,可以设置MB或GB单位"""
     _meminfo = dict()
     _meminfo['total'] = psutil.virtual_memory().total
     _meminfo['available'] = psutil.virtual_memory().available
@@ -43,21 +51,22 @@ def meminfo(unit="mb"):                                               #后期设
     _meminfo['free'] = psutil.virtual_memory().free
     _meminfo['active'] = psutil.virtual_memory().active
     _meminfo['inactive'] = psutil.virtual_memory().inactive
-    _meminfo['huffers'] = psutil.virtual_memory().buffers
+    _meminfo['buffers'] = psutil.virtual_memory().buffers
     _meminfo['cached'] = psutil.virtual_memory().cached
     _meminfo['shared'] = psutil.virtual_memory().shared
     _meminfo['slab'] = psutil.virtual_memory().slab
     if unit in ["mb", "Mb", "MB", "M"]:
         for k, v in enumerate(_meminfo):
-            _meminfo[v] = round(int(_meminfo[v])/1024/1024, 1)
+            _meminfo[v] = round(int(_meminfo[v])/1024/1024, 2)
         return _meminfo
     elif unit in ["gb", "Gb", "GB", "G"]:
         for k, v in enumerate(_meminfo):
-            _meminfo[v] = round(int(_meminfo[v])/1024/1024/1024, 1)
+            _meminfo[v] = round(int(_meminfo[v])/1024/1024/1024, 2)
         return _meminfo
 
 
 def diskinfo():
+    """获取磁盘总量用量和空闲及其百分比,动态"""
     _diskinfo = dict()
     allpart = psutil.disk_partitions()
     for _part in allpart:
@@ -89,11 +98,23 @@ def netinfo():
     return _netinfo
 
 
+def minitor_json():
+    import json
+    _minitor_json = dict()
+    _minitor_json["system"] = systeminfo()
+    _minitor_json["cpu"] = cpuinfo()
+    _minitor_json["memory"] = cpuinfo()
+    _minitor_json["disk"] = cpuinfo()
+    _minitor_json["network"] = cpuinfo()
+    return json.dumps(_minitor_json)
+
+
 def influxdb():
     from influxdb import InfluxDBClient
     client = InfluxDBClient(host='192.168.80.100', port=8086, username='influxdb',
                             password='531144968', database='Hippoagent')       # 后期变更为setting
     influx_data = [{'measurement': 'serverinfo',
+                    'tags': {"ip": "192.168.80.100"},
                    'fields': {
                        "system": str(systeminfo()),
                        "cpu": str(cpuinfo()),
@@ -105,5 +126,7 @@ def influxdb():
     client.close()
 
 
-# if __name__ == '__main__':
-#     influxdb()
+if __name__ == '__main__':
+    print(cpuinfo())
+    # print(diskinfo())
+    # print(netinfo())

@@ -5,7 +5,7 @@
       <paths name="HippoAgent">
         <serverdata>
           <mappings>
-            <mapping deploy="/data/HippoAgent" local="$PROJECT_DIR$/HippoTools" web="/" />
+            <mapping deploy="/data/HippoAgent" local="$PROJECT_DIR$/HippoAgent" web="/" />
           </mappings>
         </serverdata>
       </paths>
