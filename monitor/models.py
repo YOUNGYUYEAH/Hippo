@@ -11,3 +11,7 @@ class info(models.Model):
     arch = models.CharField(max_length=30, verbose_name="架构")
     create_time = models.DateField(auto_now_add=True, verbose_name="创建时间")
     status = models.BooleanField(default=True, verbose_name="机器状态")
+
+
+class cpu(models.Model):
+    ip = models.CharField(max_length=20, verbose_name="主机名")
