@@ -3,3 +3,4 @@ from monitor import models
 
 
 admin.register(models.info)
+admin.register(models.cpu)

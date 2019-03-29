@@ -15,3 +15,15 @@ class info(models.Model):
 
 class cpu(models.Model):
     ip = models.CharField(max_length=20, verbose_name="主机名")
+    loadavg = models.CharField(max_length=500, verbose_name="负载")
+    count = models.CharField(max_length=4, verbose_name="cpu核数")
+    user = models.FloatField(verbose_name="用户态时间")
+    system = models.FloatField(verbose_name="系统态时间")
+    nice = models.FloatField(verbose_name="")
+    idle = models.FloatField(verbose_name="")
+    iowait = models.FloatField(verbose_name="")
+    irq = models.FloatField(verbose_name="")
+    softirq = models.FloatField(verbose_name="")
+    steal = models.FloatField(verbose_name="")
+    checktime = models.DateTimeField(auto_now_add=True)
+
