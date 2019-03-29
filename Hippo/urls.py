@@ -7,5 +7,6 @@ admin.autodiscover()
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^', include('HippoWeb.urls')),
+    url(r'^monitor/', include('monitor.urls')),
     url(r'^static/(?P<path>.*)/$', serve, {'document_root': settings.STATIC_ROOT})
 ]

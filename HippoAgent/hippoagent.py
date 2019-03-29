@@ -1,24 +1,38 @@
 # -*- encoding:utf-8 -*-
 import psutil
-# 校验数值正常项目会添加 #check
 
 
 def systeminfo():
-    """系统内核和版本,主机名,架构"""
+    """
+    系统内核和版本,主机名,架构
+    """
+    import socket
     import platform
+    try:
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.connect(('192.168.20.228', 8000))
+        ip = s.getsockname()[0]
+        s.close()
+    except Exception as e:
+        print(e)
     _systeminfo = dict()
-    _systeminfo['platform'] = platform.platform()           # check
-    _systeminfo['type'] = platform.system()                 # check
-    _systeminfo['hostname'] = platform.node()               # check
-    _systeminfo['kernel'] = platform.release()              # check
-    _systeminfo['arch'] = platform.processor()              # check
+    _systeminfo['platform'] = platform.platform()
+    _systeminfo['ip'] = ip
+    _systeminfo['type'] = platform.system()
+    _systeminfo['hostname'] = platform.node()
+    _systeminfo['kernel'] = platform.release()
+    _systeminfo['arch'] = platform.processor()
     return _systeminfo
 
 
 def cpuinfo():
+    """
+    CPU和负载信息采集
+    cpu时间都是累积值,需要于下一次采集进行运算
+    """
     import platform
     _cpuinfo = dict()
-    if platform.system() == "Linux":                        # check
+    if platform.system() == "Linux":
         with open("/proc/loadavg", "r") as f:
             _v = f.read().split()
             load = dict()
@@ -42,8 +56,10 @@ def cpuinfo():
     return _cpuinfo
 
 
-def meminfo(unit="mb"):                                   # 后期设置为setting
-    """机器内存,用量统计,可以设置MB或GB单位"""
+def meminfo():
+    """
+    机器内存,用量统计
+    """
     _meminfo = dict()
     _meminfo['total'] = psutil.virtual_memory().total
     _meminfo['available'] = psutil.virtual_memory().available
@@ -55,33 +71,31 @@ def meminfo(unit="mb"):                                   # 后期设置为setti
     _meminfo['cached'] = psutil.virtual_memory().cached
     _meminfo['shared'] = psutil.virtual_memory().shared
     _meminfo['slab'] = psutil.virtual_memory().slab
-    if unit in ["mb", "Mb", "MB", "M"]:
-        for k, v in enumerate(_meminfo):
-            _meminfo[v] = round(int(_meminfo[v])/1024/1024, 2)
-        return _meminfo
-    elif unit in ["gb", "Gb", "GB", "G"]:
-        for k, v in enumerate(_meminfo):
-            _meminfo[v] = round(int(_meminfo[v])/1024/1024/1024, 2)
-        return _meminfo
+    return _meminfo
 
 
 def diskinfo():
-    """获取磁盘总量用量和空闲及其百分比,动态"""
+    """
+    获取磁盘总量用量和空闲及其百分比,动态感知分区
+    """
     _diskinfo = dict()
     allpart = psutil.disk_partitions()
     for _part in allpart:
         _diskusage = dict()
         mountpoint = _part[1]
         usage = psutil.disk_usage(mountpoint)
-        _diskusage["total"] = round(usage[0]/1024/1024/1024, 1)
-        _diskusage["used"] = round(usage[1]/1024/1024/1024, 1)
-        _diskusage["free"] = round(usage[2]/1024/1024/1024, 1)
+        _diskusage["total"] = usage[0]
+        _diskusage["used"] = usage[1]
+        _diskusage["free"] = usage[2]
         _diskusage["percent"] = usage[3]
         _diskinfo[mountpoint] = _diskusage
     return _diskinfo
 
 
 def netinfo():
+    """
+    获取网卡总量用量和流量情况,需要于下次采集进行运算
+    """
     _netinfo = dict()
     _addr = psutil.net_if_addrs()
     _stat = psutil.net_if_stats()
@@ -98,35 +112,49 @@ def netinfo():
     return _netinfo
 
 
-def minitor_json():
+def monitorjson():
     import json
-    _minitor_json = dict()
-    _minitor_json["system"] = systeminfo()
-    _minitor_json["cpu"] = cpuinfo()
-    _minitor_json["memory"] = cpuinfo()
-    _minitor_json["disk"] = cpuinfo()
-    _minitor_json["network"] = cpuinfo()
-    return json.dumps(_minitor_json)
+    _monitorjson = dict()
+    _monitorjson["system"] = systeminfo()
+    _monitorjson["cpu"] = cpuinfo()
+    _monitorjson["memory"] = meminfo()
+    _monitorjson["disk"] = diskinfo()
+    _monitorjson["network"] = netinfo()
+    return json.dumps(_monitorjson)
 
 
-def influxdb():
-    from influxdb import InfluxDBClient
-    client = InfluxDBClient(host='192.168.80.100', port=8086, username='influxdb',
-                            password='531144968', database='Hippoagent')       # 后期变更为setting
-    influx_data = [{'measurement': 'serverinfo',
-                    'tags': {"ip": "192.168.80.100"},
-                   'fields': {
-                       "system": str(systeminfo()),
-                       "cpu": str(cpuinfo()),
-                       "memory": str(meminfo()),
-                       "disk": str(diskinfo()),
-                       "network": str(netinfo())
-                   }}]
-    client.write_points(influx_data)
-    client.close()
+def sendjson():
+    """
+    数据传递方式一: JSON串用POST传递到接口
+    """
+    import requests
+    domain = "192.168.20.228:8000"
+    uri = "/monitor/i"
+    url = "http://" + domain + uri
+    requests.post(url=url, data=monitorjson())
+
+
+# def influxdb():
+#     """
+#     数据传递方式二: 可以选择是否直接从agent点入influxdb时序数据库
+#     """
+#     from influxdb import InfluxDBClient
+#     client = InfluxDBClient(host='192.168.80.100', port=8086, username='influxdb',
+#                             password='XXXXXXX', database='Hippoagent')       # 后期变更为setting
+#     influx_data = [{'measurement': 'serverinfo',
+#                     'tags': {"ip": "192.168.80.100"},
+#                    'fields': {
+#                        "system": str(systeminfo()),
+#                        "cpu": str(cpuinfo()),
+#                        "memory": str(meminfo()),
+#                        "disk": str(diskinfo()),
+#                        "network": str(netinfo())
+#                    }}]
+#     client.write_points(influx_data)
+#     client.close()
 
 
 if __name__ == '__main__':
-    print(cpuinfo())
-    # print(diskinfo())
-    # print(netinfo())
+    print(monitorjson())
+    #sendjson()
+

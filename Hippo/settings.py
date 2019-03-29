@@ -15,7 +15,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'HippoWeb'
+    'HippoWeb',
+    'monitor'
 ]
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 
