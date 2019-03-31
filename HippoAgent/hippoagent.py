@@ -10,7 +10,7 @@ def systeminfo():
     import platform
     try:
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        s.connect(('192.168.20.228', 8000))
+        s.connect(('192.168.20.228', 8000))                  # 从settings里提取Hippo server位置
         ip = s.getsockname()[0]
         s.close()
     except Exception as e:
@@ -79,16 +79,19 @@ def diskinfo():
     获取磁盘总量用量和空闲及其百分比,动态感知分区
     """
     _diskinfo = dict()
+    _diskallusage = dict()
+    _diskio =dict()
     allpart = psutil.disk_partitions()
     for _part in allpart:
-        _diskusage = dict()
+        _partusage = dict()
         mountpoint = _part[1]
         usage = psutil.disk_usage(mountpoint)
-        _diskusage["total"] = usage[0]
-        _diskusage["used"] = usage[1]
-        _diskusage["free"] = usage[2]
-        _diskusage["percent"] = usage[3]
-        _diskinfo[mountpoint] = _diskusage
+        _partusage["total"] = usage[0]
+        _partusage["used"] = usage[1]
+        _partusage["free"] = usage[2]
+        _partusage["percent"] = usage[3]
+        _diskallusage[mountpoint] = _partusage
+    _diskinfo["usage"] = _diskallusage
     return _diskinfo
 
 
@@ -128,7 +131,7 @@ def sendjson():
     数据传递方式一: JSON串用POST传递到接口
     """
     import requests
-    domain = "192.168.20.228:8000"
+    domain = "192.168.20.228:8000"                     # 从settings提取Hippo server位置
     uri = "/monitor/i"
     url = "http://" + domain + uri
     requests.post(url=url, data=monitorjson())
@@ -153,8 +156,14 @@ def sendjson():
 #     client.write_points(influx_data)
 #     client.close()
 
+def io():
+    a = psutil.disk_io_counters()
+    b = psutil.disk_partitions()
+    print(a)
+    print(b)
+
 
 if __name__ == '__main__':
-    print(monitorjson())
-    #sendjson()
+    # print(monitorjson())
+    io()
 

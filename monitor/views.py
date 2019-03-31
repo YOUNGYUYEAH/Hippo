@@ -1,12 +1,16 @@
 # -*- encoding:utf-8 -*-
 import json
 from monitor import models
-from save_info import Saveinfo
+from monitor import save_info
 from django.shortcuts import HttpResponse
 
 
 
 def minitorjson(req):
+    """
+    接收agent数据的接口,仅接收方法为POST的请求,
+    将数据判断后入库
+    """
     if req.method == 'GET':
         return HttpResponse("API error(405).")
     elif req.method == 'POST':
@@ -15,8 +19,9 @@ def minitorjson(req):
                 monitorjson = json.loads(req.body, encoding='utf-8')
                 monitorjson_system = monitorjson["system"]
                 if models.info.objects.filter(ip=monitorjson_system["ip"]):
-                    s = save_monitorinfo.Saveinfo(monitorjson)
-                    s.save_cpu()
+                    # 需要判断新的数据是否跟源数据不同,若不同需要更新
+                    s = save_info.Saveinfo(monitorjson)
+                    s.save_all()
                     response = HttpResponse()
                     response.status_code = 200
                     return response
@@ -29,8 +34,8 @@ def minitorjson(req):
                         kernel=monitorjson_system["kernel"],
                         arch=monitorjson_system["arch"],
                     )
-                    s = save_monitorinfo.Saveinfo(monitorjson)
-                    s.save_cpu()
+                    s = save_info.Saveinfo(monitorjson)
+                    s.save_all()
                     response = HttpResponse()
                     response.status_code = 200
                     return response
