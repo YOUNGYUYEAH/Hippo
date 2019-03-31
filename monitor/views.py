@@ -2,6 +2,7 @@
 import json
 from monitor import models
 from django.shortcuts import HttpResponse
+from monitor.save_monitorinfo import Saveinfo
 
 
 def minitorjson(req):
@@ -13,6 +14,7 @@ def minitorjson(req):
                 monitorjson = json.loads(req.body, encoding='utf-8')
                 monitorjson_system = monitorjson["system"]
                 if models.info.objects.filter(ip=monitorjson_system["ip"]):
+                    Saveinfo(monitorjson)
                     response = HttpResponse()
                     response.status_code = 200
                     return response
@@ -25,6 +27,7 @@ def minitorjson(req):
                         kernel=monitorjson_system["kernel"],
                         arch=monitorjson_system["arch"],
                     )
+                    Saveinfo(monitorjson)
                     response = HttpResponse()
                     response.status_code = 200
                     return response

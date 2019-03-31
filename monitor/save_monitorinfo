@@ -1,0 +1,13 @@
+# -*- encoding:utf-8 -*-
+
+
+class Saveinfo(object):
+    def __init__(self, monitorjson):
+        self.system = monitorjson["system"]
+        self.cpu = monitorjson["cpu"]
+        self.memory = monitorjson["memory"]
+        self.disk = monitorjson["disk"]
+        self.network = monitorjson["network"]
+
+    def savejson(self):
+        pass
