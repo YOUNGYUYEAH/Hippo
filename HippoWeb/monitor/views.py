@@ -1,7 +1,7 @@
 # -*- encoding:utf-8 -*-
 import json
-from monitor import models
-from monitor import save_info
+from HippoWeb.monitor import models
+from HippoWeb.monitor import save_info
 from django.shortcuts import HttpResponse
 
 
