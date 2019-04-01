@@ -13,6 +13,6 @@ def fun_timer():
 
 
 if __name__ == '__main__':
-    t = 5                                    # 后期变更为settings
+    t = 20                                    # 后期变更为settings
     timer = threading.Timer(1, fun_timer)
     timer.start()
