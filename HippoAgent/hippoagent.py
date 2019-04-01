@@ -156,14 +156,7 @@ def sendjson():
 #     client.write_points(influx_data)
 #     client.close()
 
-def io():
-    a = psutil.disk_io_counters()
-    b = psutil.disk_partitions()
-    print(a)
-    print(b)
-
 
 if __name__ == '__main__':
-    # print(monitorjson())
-    io()
+    print(monitorjson())
 
