@@ -1,5 +1,5 @@
 # -*- encoding:utf-8 -*-
-from monitor import models
+from HippoWeb.monitor import models
 from time import time, localtime, strftime
 
 
