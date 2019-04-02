@@ -56,7 +56,9 @@ class Saveinfo(object):
 
     def save_network(self):
         models.network.object.create(
-            ip=self.system['ip']
+            ip=self.system['ip'],
+            network=self.network,
+            checktime=self.checktime
         )
 
     def save_all(self):

@@ -141,6 +141,11 @@ def netinfo():
     return _netinfo
 
 
+def tcpinfo():
+    """检查TCP连接状态"""
+    pass
+
+
 def monitorjson():
     import json
     _monitorjson = dict()
@@ -154,7 +159,7 @@ def monitorjson():
 
 def sendjson():
     """
-    数据传递方式一: JSON串用POST传递到接口
+    数据传递方式: JSON串用POST传递到接口
     """
     import requests
     try:
@@ -164,26 +169,6 @@ def sendjson():
         requests.post(url=url, data=monitorjson())
     except Exception as e:
         print(e)
-
-
-# def influxdb():
-#     """
-#     数据传递方式二: 可以选择是否直接从agent点入influxdb时序数据库
-#     """
-#     from influxdb import InfluxDBClient
-#     client = InfluxDBClient(host='192.168.80.100', port=8086, username='influxdb',
-#                             password='XXXXXXX', database='Hippoagent')       # 后期变更为setting
-#     influx_data = [{'measurement': 'serverinfo',
-#                     'tags': {"ip": "192.168.80.100"},
-#                    'fields': {
-#                        "system": str(systeminfo()),
-#                        "cpu": str(cpuinfo()),
-#                        "memory": str(meminfo()),
-#                        "disk": str(diskinfo()),
-#                        "network": str(netinfo())
-#                    }}]
-#     client.write_points(influx_data)
-#     client.close()
 
 
 if __name__ == '__main__':
