@@ -62,6 +62,6 @@ class disk(models.Model):
     注意usage为mysql内建关键字,而且根目录也需要加""
     """
     ip = models.CharField(max_length=20, verbose_name="主机ip")
-    usage = models.TextField(verbose_name="磁盘用量JSON串")
+    diskusage = models.TextField(verbose_name="磁盘用量JSON串")
     iousage = models.TextField(verbose_name="磁盘IO用量JSON串")
     checktime = models.DateTimeField(null=True)
