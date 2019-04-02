@@ -78,18 +78,44 @@ def diskinfo():
     """
     获取磁盘总量用量和空闲及其百分比,动态感知分区
     """
+    import subprocess
+    import re
     _diskinfo = dict()
     _diskallusage = dict()
-    _diskio =dict()
+    _diskiousage = dict()
+    device_regex = re.compile(r'sd[a-z]|vd[a-z]')
     allpart = psutil.disk_partitions()
+    iopart = psutil.disk_io_counters(perdisk=True, nowrap=True)
+    for _io in iopart:
+        _iousage = dict()
+        device = _io
+        if re.match(device_regex, _io):
+            _iousage["read_count"] = iopart[device][0]
+            _iousage["write_count"] = iopart[device][1]
+            _iousage["read_bytes"] = iopart[device][2]
+            _iousage["write_bytes"] = iopart[device][3]
+            _iousage["read_time"] = iopart[device][4]
+            _iousage["write_time"] = iopart[device][5]
+            _iousage["read_merged_count"] = iopart[device][6]
+            _iousage["write_merged_count"] = iopart[device][7]
+            _iousage["busy_time"] = iopart[device][8]
+        if _iousage:
+            _diskiousage[device] = _iousage
+    _diskinfo["io"] = _diskiousage
     for _part in allpart:
         _partusage = dict()
         mountpoint = _part[1]
+        inode_shell = "df -i |grep -w %s | awk '{print $(NF-1)}'" % (mountpoint,)
+        subshell = subprocess.Popen([inode_shell], shell=True, stdout=subprocess.PIPE)
+        inode_usage = subshell.stdout.readline()
+        inode_usage = inode_usage.decode("utf-8").split("\n")[0]
         usage = psutil.disk_usage(mountpoint)
         _partusage["total"] = usage[0]
         _partusage["used"] = usage[1]
         _partusage["free"] = usage[2]
         _partusage["percent"] = usage[3]
+        if inode_usage:
+            _partusage["inode"] = inode_usage
         _diskallusage[mountpoint] = _partusage
     _diskinfo["usage"] = _diskallusage
     return _diskinfo
@@ -159,4 +185,5 @@ def sendjson():
 
 if __name__ == '__main__':
     print(monitorjson())
+    # diskinfo()
 

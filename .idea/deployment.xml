@@ -6,7 +6,6 @@
         <serverdata>
           <mappings>
             <mapping deploy="/data/HippoAgent" local="$PROJECT_DIR$/HippoAgent" web="/" />
-            <mapping local="" />
           </mappings>
         </serverdata>
       </paths>

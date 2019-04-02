@@ -1,6 +1,7 @@
 # -*- encoding:utf-8 -*-
 from HippoWeb.monitor import models
 from time import time, localtime, strftime
+import json
 
 
 class Saveinfo(object):
@@ -30,31 +31,28 @@ class Saveinfo(object):
         )
 
     def save_memory(self):
-       models.memory.objects.create(
-           ip=self.system["ip"],
-           total=int(self.memory["total"]),
-           available=int(self.memory["available"]),
-           used=int(self.memory["used"]),
-           free=int(self.memory["free"]),
-           active=int(self.memory["active"]),
-           inactive=int(self.memory["inactive"]),
-           buffers=int(self.memory["buffers"]),
-           cached=int(self.memory["cached"]),
-           shared=int(self.memory["shared"]),
-           slab=int(self.memory["slab"]),
-           checktime=self.checktime
-       )
+        models.memory.objects.create(
+            ip=self.system["ip"],
+            total=int(self.memory["total"]),
+            available=int(self.memory["available"]),
+            used=int(self.memory["used"]),
+            free=int(self.memory["free"]),
+            active=int(self.memory["active"]),
+            inactive=int(self.memory["inactive"]),
+            buffers=int(self.memory["buffers"]),
+            cached=int(self.memory["cached"]),
+            shared=int(self.memory["shared"]),
+            slab=int(self.memory["slab"]),
+            checktime=self.checktime
+        )
 
     def save_disk(self):
-        print(self.disk)
-        try:
-            models.disk.objects.create(
-                ip=self.system["ip"],
-                usage=self.disk["disk"],
-                checktime=self.checktime
-            )
-        except Exception as e:
-            print(e)
+        models.disk.objects.create(
+            ip=self.system["ip"],
+            usage=json.dumps(self.disk["usage"]),
+            iousage=json.dumps(self.disk["io"]),
+            checktime=self.checktime
+        )
 
     def save_all(self):
         self.save_cpu()

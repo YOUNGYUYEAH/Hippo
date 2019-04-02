@@ -47,6 +47,20 @@ class memory(models.Model):
     checktime = models.DateTimeField(null=True)
 
 class disk(models.Model):
+    """
+    建表语句
+    CREATE TABLE `monitor_disk` (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `ip` varchar(20) NOT NULL,
+    `usage` json DEFAULT NULL,
+    `iousage` json DEFAULT NULL,
+    `checktime` datetime(6) DEFAULT NULL,
+    PRIMARY KEY (`id`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8
+
+    SELECT `ip`,`usage`->'$."/".free' FROM Hippo.monitor_disk limit 1;
+    注意usage为mysql内建关键字,而且根目录也需要加""
+    """
     ip = models.CharField(max_length=20, verbose_name="主机ip")
     usage = models.TextField(verbose_name="磁盘用量JSON串")
     iousage = models.TextField(verbose_name="磁盘IO用量JSON串")
