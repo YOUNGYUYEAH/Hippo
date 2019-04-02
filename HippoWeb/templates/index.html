@@ -1,11 +1,11 @@
 {% load staticfiles %}
 <html>
-{% include 'header.html' %}
+{% include "header.html" %}
 <link href="{% static 'css/index.css' %}" rel="stylesheet" type="text/css" />
 <title> Hippo OPS Platform </title>
 <body>
-    {% include 'topbar.html' %}
-    {% include 'leftmenu.html' %}
+    {% include "topbar.html" %}
+    {% include "leftmenu.html" %}
     <div class="rightweb">
         <p>{{ login_user }}</p>
     </div>

@@ -31,8 +31,8 @@ def rsa_encrypt(req):
     private_key['p'] = private.p
     private_key['q'] = private.q
     req.session['privkey'] = private_key          # session存放在 django_session表内
-    pub_e = hex(public.e).split("0x")[1]          # hex转化为16进制数再截去0x头部
-    pub_n = hex(public.n).split("0x")[1]
+    pub_e = hex(public.e).split('0x')[1]          # hex转化为16进制数再截去0x头部
+    pub_n = hex(public.n).split('0x')[1]
     # print(pub_e)
     # print(pub_n)
     pubkey = {'pub_e': pub_e, 'pub_n': pub_n}
