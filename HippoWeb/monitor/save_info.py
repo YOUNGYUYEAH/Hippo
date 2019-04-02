@@ -49,7 +49,7 @@ class Saveinfo(object):
     def save_disk(self):
         models.disk.objects.create(
             ip=self.system["ip"],
-            usage=json.dumps(self.disk["usage"]),
+            diskusage=json.dumps(self.disk["usage"]),
             iousage=json.dumps(self.disk["io"]),
             checktime=self.checktime
         )
