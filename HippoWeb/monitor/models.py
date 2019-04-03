@@ -65,3 +65,8 @@ class disk(models.Model):
     diskusage = models.TextField(verbose_name="磁盘用量JSON串")
     iousage = models.TextField(verbose_name="磁盘IO用量JSON串")
     checktime = models.DateTimeField(null=True)
+
+class network(models.Model):
+    ip = models.CharField(max_length=20, verbose_name="主机ip")
+    network = models.TextField(verbose_name="网卡情况JSON串")
+    checktime = models.DateTimeField(null=True)

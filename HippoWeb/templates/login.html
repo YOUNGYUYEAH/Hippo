@@ -1,6 +1,6 @@
 {% load staticfiles %}
 <html>
-{% include 'header.html' %}
+{% include "header.html" %}
 <link href="{% static 'css/login.css' %}" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="{% static 'js/rsa/RSA.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/rsa/Barrett.js' %}"></script>
@@ -29,7 +29,7 @@
         var key = new RSAKeyPair(pub_e,"",pub_n);
         var en_password = encryptedString(key, $('#password').val());
         $.ajax({
-            url: '{% url '/login/i' %}',
+            url: "{% url '/login/i' %}",
             type: 'post',
             data: {'username': username, 'password': $('#password').val(), 'en_password': en_password},
             dataType: 'json',

@@ -17,8 +17,8 @@ def minitorjson(req):
         if req.body:
             try:
                 monitorjson = json.loads(req.body, encoding='utf-8')
-                monitorjson_system = monitorjson["system"]
-                if models.info.objects.filter(ip=monitorjson_system["ip"]):
+                monitorjson_system = monitorjson['system']
+                if models.info.objects.filter(ip=monitorjson_system['ip']):
                     # 需要判断新的数据是否跟源数据不同,若不同需要更新
                     s = save_info.Saveinfo(monitorjson)
                     s.save_all()
@@ -27,12 +27,12 @@ def minitorjson(req):
                     return response
                 else:
                     models.info.objects.create(
-                        host=monitorjson_system["hostname"],
-                        ip=monitorjson_system["ip"],
-                        platform=monitorjson_system["platform"],
-                        type=monitorjson_system["type"],
-                        kernel=monitorjson_system["kernel"],
-                        arch=monitorjson_system["arch"],
+                        host=monitorjson_system['hostname'],
+                        ip=monitorjson_system['ip'],
+                        platform=monitorjson_system['platform'],
+                        type=monitorjson_system['type'],
+                        kernel=monitorjson_system['kernel'],
+                        arch=monitorjson_system['arch'],
                     )
                     s = save_info.Saveinfo(monitorjson)
                     s.save_all()
@@ -40,6 +40,6 @@ def minitorjson(req):
                     response.status_code = 200
                     return response
             except Exception as e:
-                return HttpResponse("Bad Requests.", {"error": e})
+                return HttpResponse("Bad Requests.", {'error': e})
         else:
             return HttpResponse("Empty Requests.")
