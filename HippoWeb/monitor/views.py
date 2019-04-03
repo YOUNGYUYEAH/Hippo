@@ -48,14 +48,13 @@ def showinfo(req):
     #if req.method == 'GET':
     #    _i = monitorjson_orm.Loadinfo()
     if req.method == 'GET':
+        # 获取前端传回的target_ip,若没有传回则默认读取全部,而且分页展示
         try:
-            # target_ip = "192.168.80.100"
             _i = monitorjson_orm.Loadinfo()
             json_list = []
             for index in range(len(_i.load_info())):
                 monitorjson = json.dumps(_i.load_info()[index])
                 json_list.append(monitorjson)
-            # monitorjson = json.dumps(_i.load_info()[0])
             web_type = 'monitor'
             return render(req, 'index.html', {'web_type': web_type, 'msg': json_list})
         except Exception as e:
