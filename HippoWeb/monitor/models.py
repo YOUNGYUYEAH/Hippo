@@ -67,6 +67,8 @@ class disk(models.Model):
     checktime = models.DateTimeField(null=True)
 
 class network(models.Model):
+    """network使用JSON类型"""
     ip = models.CharField(max_length=20, verbose_name="主机ip")
     network = models.TextField(verbose_name="网卡情况JSON串")
     checktime = models.DateTimeField(null=True)
+

@@ -1,7 +1,7 @@
 # -*- encoding:utf-8 -*-
 import json
 from HippoWeb.monitor import models
-from HippoWeb.monitor import save_info
+from HippoWeb.monitor import monitorjson_orm
 from django.shortcuts import HttpResponse
 
 
@@ -20,7 +20,7 @@ def minitorjson(req):
                 monitorjson_system = monitorjson['system']
                 if models.info.objects.filter(ip=monitorjson_system['ip']):
                     # 需要判断新的数据是否跟源数据不同,若不同需要更新
-                    s = save_info.Saveinfo(monitorjson)
+                    s = monitorjson_orm.Saveinfo(monitorjson)
                     s.save_all()
                     response = HttpResponse()
                     response.status_code = 200
@@ -34,7 +34,7 @@ def minitorjson(req):
                         kernel=monitorjson_system['kernel'],
                         arch=monitorjson_system['arch'],
                     )
-                    s = save_info.Saveinfo(monitorjson)
+                    s = monitorjson_orm.Saveinfo(monitorjson)
                     s.save_all()
                     response = HttpResponse()
                     response.status_code = 200

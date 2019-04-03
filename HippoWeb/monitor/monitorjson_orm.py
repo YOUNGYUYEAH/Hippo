@@ -55,9 +55,9 @@ class Saveinfo(object):
         )
 
     def save_network(self):
-        models.network.object.create(
+        models.network.objects.create(
             ip=self.system['ip'],
-            network=self.network,
+            network=json.dumps(self.network),
             checktime=self.checktime
         )
 
@@ -66,3 +66,8 @@ class Saveinfo(object):
         self.save_memory()
         self.save_disk()
         self.save_network()
+
+
+class Loadinfo(object):
+    def __init__(self):
+        pass
