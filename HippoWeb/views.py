@@ -104,6 +104,7 @@ def index(req):
     """主页,判断用户是否已经登录,若未登录则跳转login页"""
     login_user = req.COOKIES.get('username')
     if login_user:
-        return render(req, 'index.html', {'login_user': login_user})
+        web_type = None
+        return render(req, 'index.html', {'web_type': web_type, 'login_user': login_user})
     else:
         return redirect('/login/')

@@ -2,8 +2,7 @@
 import json
 from HippoWeb.monitor import models
 from HippoWeb.monitor import monitorjson_orm
-from django.shortcuts import HttpResponse
-
+from django.shortcuts import HttpResponse, render
 
 
 def minitorjson(req):
@@ -43,3 +42,21 @@ def minitorjson(req):
                 return HttpResponse("Bad Requests.", {'error': e})
         else:
             return HttpResponse("Empty Requests.")
+
+
+def showinfo(req):
+    #if req.method == 'GET':
+    #    _i = monitorjson_orm.Loadinfo()
+    if req.method == 'GET':
+        try:
+            # target_ip = "192.168.80.100"
+            _i = monitorjson_orm.Loadinfo()
+            json_list = []
+            for index in range(len(_i.load_info())):
+                monitorjson = json.dumps(_i.load_info()[index])
+                json_list.append(monitorjson)
+            # monitorjson = json.dumps(_i.load_info()[0])
+            web_type = 'monitor'
+            return render(req, 'index.html', {'web_type': web_type, 'msg': json_list})
+        except Exception as e:
+            print(e)

@@ -8,6 +8,11 @@
     {% include "leftmenu.html" %}
     <div class="rightweb">
         <p>{{ login_user }}</p>
+        {% if web_type == "monitor" %}
+            {% for i in msg %}
+                <p>{{ i }}</p>
+            {% endfor %}
+        {% endif %}
     </div>
 </body>
 </html>

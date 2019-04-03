@@ -69,5 +69,26 @@ class Saveinfo(object):
 
 
 class Loadinfo(object):
-    def __init__(self):
-        pass
+    """根据提交回来的ip进行数据库查询"""
+    def __init__(self, ip=None, timerange=None, item=None):
+        self.ip = ip
+        self.timerange = timerange
+        self.options = item
+        self.count = models.info.objects.all().count()
+
+    def load_info(self):
+        """ORM提取回来的时间格式非正常显示,需要进一步处理"""
+        if self.ip is not None:
+            _load_info_result = models.info.objects.filter(ip=self.ip).\
+                extra(select={'ctime': "DATE_FORMAT(create_time,'%%Y-%%m-%%d')",
+                              'utime': "DATE_FORMAT(update_time,'%%Y-%%m-%%d')"}).\
+                values('host', 'ip', 'platform', 'type', 'kernel', 'arch', 'ctime', 'utime', 'status', 'remark')
+            return _load_info_result
+        elif self.ip is None:
+            _load_info_result = models.info.objects.all().\
+                extra(select={'ctime': "DATE_FORMAT(create_time,'%%Y-%%m-%%d')",
+                              'utime': "DATE_FORMAT(update_time,'%%Y-%%m-%%d')"}). \
+                values('host', 'ip', 'platform', 'type', 'kernel', 'arch', 'ctime', 'utime', 'status', 'remark')
+            return _load_info_result
+
+
