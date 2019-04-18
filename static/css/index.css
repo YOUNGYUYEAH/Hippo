@@ -1,42 +1,20 @@
-.topbar {
-    border: 1px #4e4e4e  outset;
-    border-radius: 0;
-    background: #222123;
+#top-moudle {
     margin-bottom: 0;
 }
-.topbar a.navbar-brand, .topbar ul.navbar-nav > li > a {
-    color: #e1e1e1;
-}
-.topbar a:hover.navbar-brand, .topbar ul.navbar-nav > li > a:hover {
-    color: #fffccf;
-}
-.leftmenu {
-    border: 1px #4e4e4e outset;
-    position: fixed;
+#main-moudle {
+    padding: 0;
     margin: 0;
-    width: 11%;
     height: 100%;
+    background-color: #333333;
+}
+#leftmenu-moudle {
     padding: 0;
-    text-indent: 10px;
-    background-color: #222123;
-}
-.leftmenu a {
-    color: #e1e1e1;
-}
-.leftmenu ul.nav li a:hover {
-    background-color: #e1e1e1;
-    color: #222123;
-}
-.leftmenu ul.nav li a:focus {
-    color: #222123;
-}
-.rightweb {
-    position: fixed;
-    left: 11%;
-    width: 89%;
-    height: 95%;
-    overflow-y:scroll;
-    border: 0;
     margin: 0;
-    padding: 0;
+    background-color: #222222;
+    position: fixed;
+}
+#leftmenu-moudle-list {
+    text-indent: 8%;
+}
+#rightweb-moudle {
 }

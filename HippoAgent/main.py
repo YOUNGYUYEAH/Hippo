@@ -6,7 +6,10 @@ import hippoagent
 def fun_timer():
     """定时器执行监控"""
     # print(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
-    hippoagent.sendjson()
+    try:
+        hippoagent.sendjson()
+    except Exception as e:
+        print(e)
     global timer
     timer = threading.Timer(t, fun_timer)
     timer.start()

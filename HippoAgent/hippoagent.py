@@ -162,16 +162,12 @@ def sendjson():
     数据传递方式: JSON串用POST传递到接口
     """
     import requests
-    try:
-        domain = '192.168.20.228:8000'                   # 从settings提取Hippo server位置
-        uri = '/monitor/i'
-        url = 'http://' + domain + uri
-        requests.post(url=url, data=monitorjson())
-    except Exception as e:
-        print(e)
+    domain = '192.168.20.228:8000'                   # 从settings提取Hippo server位置
+    uri = '/monitor/i'
+    url = 'http://' + domain + uri
+    requests.post(url=url, data=monitorjson())
 
 
 if __name__ == '__main__':
     print(monitorjson())
-    # diskinfo()
 

@@ -44,18 +44,22 @@ def minitorjson(req):
             return HttpResponse("Empty Requests.")
 
 
-def showinfo(req):
-    #if req.method == 'GET':
+def monitor_alerm(req):
+    pass
+
+
+def monitor_info(req):
+    # if req.method == 'GET':
     #    _i = monitorjson_orm.Loadinfo()
     if req.method == 'GET':
-        # 获取前端传回的target_ip,若没有传回则默认读取全部,而且分页展示
+        # 获取前端传回的target_ip,若没有传回则默认读取全部,但分页展示
         try:
             _i = monitorjson_orm.Loadinfo()
             json_list = []
             for index in range(len(_i.load_info())):
                 monitorjson = json.dumps(_i.load_info()[index])
                 json_list.append(monitorjson)
-            web_type = 'monitor'
+            web_type = 'monitor_info'
             return render(req, 'index.html', {'web_type': web_type, 'msg': json_list})
         except Exception as e:
             print(e)

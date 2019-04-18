@@ -3,5 +3,6 @@ from HippoWeb.monitor import views
 
 urlpatterns = [
     url(r'i$', views.minitorjson, name='/monitor/i'),
-    url(r'showinfo$', views.showinfo, name='/monitor/showinfo')
+    url(r'alerm', views.monitor_alerm, name='/monitor/alerm'),
+    url(r'info$', views.monitor_info, name='/monitor/info')
 ]
