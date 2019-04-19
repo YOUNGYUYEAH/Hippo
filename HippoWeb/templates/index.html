@@ -1,20 +1,30 @@
 {% load staticfiles %}
 <html>
 {% include "header.html" %}
-<link href="{% static 'css/index.css' %}" rel="stylesheet" type="text/css" />
-    <title> Hippo OPS Platform </title>
+<link href="{% static 'css/index.css' %}" rel="stylesheet" type="text/css"/>
+<title> Hippo OPS Platform </title>
 <body>
-    <div id="container-moudle" class="container-fluid">
-        <div id="top-moudle" class="navbar navbar-header navbar-inverse navbar-static-top col-lg-12 col-md-12 col-sm-12 col-ms-12">
-            <a class="navbar-brand" href="/index/"> Hippo OPS Platform </a>
-            <img id="logo" src="{% static 'images/hippo-logo.png' %}" width="50px" height="50px">
-        </div><!-- End top-moudle -->
+    <div id="wrapper" class="container-fluid">
         <div class="row">
-            <div class="container-fluid col-lg-1">
-                <p>1234123</p>
+            <div id="top-moudle" class="container-fluid">
+                <div class="row">
+                    <div id="top-moudle-logo" class="">
+                        <li><a href="/index/">Hippo OPS Platform</a></li>
+                    </div>
+                    <div id="top-moudle-list" class="">
+                        <p>顶部导航栏菜单</p>
+                    </div>
+                </div>
             </div>
-            <div class="container-fluid col-lg-11">
-                <p>23512341235</p>
+            <div id="main-module" class="container-fluid">
+                <div class="row">
+                    <div id="main-moudle-leftmenu" class="">
+                        <p>页面高度100%,宽度占15%的左侧边栏菜单</p>
+                    </div>
+                    <div id="main-moudle-rightweb" class="">
+                        <p>占据剩下空间</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
