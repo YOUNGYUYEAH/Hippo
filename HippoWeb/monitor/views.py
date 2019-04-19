@@ -1,11 +1,11 @@
 # -*- encoding:utf-8 -*-
 import json
 from HippoWeb.monitor import models
-from HippoWeb.monitor import monitorjson_orm
+from HippoWeb.monitor import orm
 from django.shortcuts import HttpResponse, render
 
 
-def minitorjson(req):
+def collect(req):
     """
     接收agent数据的接口,仅接收方法为POST的请求,
     将数据判断后入库
@@ -19,7 +19,7 @@ def minitorjson(req):
                 monitorjson_system = monitorjson['system']
                 if models.info.objects.filter(ip=monitorjson_system['ip']):
                     # 需要判断新的数据是否跟源数据不同,若不同需要更新
-                    s = monitorjson_orm.Saveinfo(monitorjson)
+                    s = orm.Saveinfo(monitorjson)
                     s.save_all()
                     response = HttpResponse()
                     response.status_code = 200
@@ -33,7 +33,7 @@ def minitorjson(req):
                         kernel=monitorjson_system['kernel'],
                         arch=monitorjson_system['arch'],
                     )
-                    s = monitorjson_orm.Saveinfo(monitorjson)
+                    s = orm.Saveinfo(monitorjson)
                     s.save_all()
                     response = HttpResponse()
                     response.status_code = 200
@@ -54,7 +54,7 @@ def monitor_info(req):
     if req.method == 'GET':
         # 获取前端传回的target_ip,若没有传回则默认读取全部,但分页展示
         try:
-            _i = monitorjson_orm.Loadinfo()
+            _i = orm.Loadinfo()
             json_list = []
             for index in range(len(_i.load_info())):
                 monitorjson = json.dumps(_i.load_info()[index])
