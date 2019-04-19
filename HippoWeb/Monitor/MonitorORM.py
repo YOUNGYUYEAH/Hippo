@@ -1,5 +1,5 @@
 # -*- encoding:utf-8 -*-
-from HippoWeb.monitor import models
+from HippoWeb.Monitor import models
 from time import time, localtime, strftime
 import json
 
@@ -15,7 +15,7 @@ class Saveinfo(object):
         self.checktime = strftime('%Y-%m-%d %H:%M:%S', localtime(time()))
 
     def save_cpu(self):
-        models.cpu.objects.create(
+        models.Cpu.objects.create(
             ip=self.system['ip'],
             loadavg=self.cpu['loadavg'],
             user=self.cpu['user'],
@@ -31,7 +31,7 @@ class Saveinfo(object):
         )
 
     def save_memory(self):
-        models.memory.objects.create(
+        models.Memory.objects.create(
             ip=self.system['ip'],
             total=int(self.memory['total']),
             available=int(self.memory['available']),
@@ -47,7 +47,7 @@ class Saveinfo(object):
         )
 
     def save_disk(self):
-        models.disk.objects.create(
+        models.Disk.objects.create(
             ip=self.system["ip"],
             diskusage=json.dumps(self.disk["usage"]),
             iousage=json.dumps(self.disk["io"]),
@@ -55,7 +55,7 @@ class Saveinfo(object):
         )
 
     def save_network(self):
-        models.network.objects.create(
+        models.Network.objects.create(
             ip=self.system['ip'],
             network=json.dumps(self.network),
             checktime=self.checktime
@@ -74,18 +74,18 @@ class Loadinfo(object):
         self.ip = ip
         self.timerange = timerange
         self.options = item
-        self.count = models.info.objects.all().count()
+        self.count = models.Info.objects.all().count()
 
     def load_info(self):
         """ORM提取回来的时间格式非正常显示,需要进一步处理"""
         if self.ip is not None:
-            _load_info_result = models.info.objects.filter(ip=self.ip).\
+            _load_info_result = models.Info.objects.filter(ip=self.ip).\
                 extra(select={'ctime': "DATE_FORMAT(create_time,'%%Y-%%m-%%d')",
                               'utime': "DATE_FORMAT(update_time,'%%Y-%%m-%%d')"}).\
                 values('host', 'ip', 'platform', 'type', 'kernel', 'arch', 'ctime', 'utime', 'status', 'remark')
             return _load_info_result
         elif self.ip is None:
-            _load_info_result = models.info.objects.all().\
+            _load_info_result = models.Info.objects.all().\
                 extra(select={'ctime': "DATE_FORMAT(create_time,'%%Y-%%m-%%d')",
                               'utime': "DATE_FORMAT(update_time,'%%Y-%%m-%%d')"}). \
                 values('host', 'ip', 'platform', 'type', 'kernel', 'arch', 'ctime', 'utime', 'status', 'remark')

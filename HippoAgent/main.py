@@ -1,6 +1,7 @@
 # -*- encoding:utf-8 -*-
 import threading
 import hippoagent
+import config
 
 
 def fun_timer():
@@ -16,6 +17,6 @@ def fun_timer():
 
 
 if __name__ == '__main__':
-    t = 20                                    # 后期变更为settings
+    t = int(config.Period)
     timer = threading.Timer(1, fun_timer)
     timer.start()

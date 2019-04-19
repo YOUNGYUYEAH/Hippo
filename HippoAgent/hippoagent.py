@@ -1,5 +1,6 @@
 # -*- encoding:utf-8 -*-
 import psutil
+import config
 
 
 def systeminfo():
@@ -10,14 +11,14 @@ def systeminfo():
     import platform
     try:
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        s.connect(('192.168.20.228', 8000))                  # 从settings里提取Hippo server位置
-        ip = s.getsockname()[0]
+        s.connect((config.ServerHost, int(config.ServerPost)))                  # 从settings里提取Hippo server位置
+        owner_ip = s.getsockname()[0]
         s.close()
     except Exception as e:
         print(e)
     _systeminfo = dict()
     _systeminfo['platform'] = platform.platform()
-    _systeminfo['ip'] = ip
+    _systeminfo['ip'] = owner_ip
     _systeminfo['type'] = platform.system()
     _systeminfo['hostname'] = platform.node()
     _systeminfo['kernel'] = platform.release()
@@ -162,9 +163,9 @@ def sendjson():
     数据传递方式: JSON串用POST传递到接口
     """
     import requests
-    domain = '192.168.20.228:8000'                   # 从settings提取Hippo server位置
+    domain = config.ServerHost+":"+config.ServerPost
     uri = '/monitor/i'
-    url = 'http://' + domain + uri
+    url = 'http://' + str(domain) + uri
     requests.post(url=url, data=monitorjson())
 
 

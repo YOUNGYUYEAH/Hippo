@@ -17,7 +17,7 @@ def collect(req):
             try:
                 monitorjson = json.loads(req.body, encoding='utf-8')
                 monitorjson_system = monitorjson['system']
-                if models.info.objects.filter(ip=monitorjson_system['ip']):
+                if models.Info.objects.filter(ip=monitorjson_system['ip']):
                     # 需要判断新的数据是否跟源数据不同,若不同需要更新
                     s = MonitorORM.Saveinfo(monitorjson)
                     s.save_all()
@@ -25,10 +25,10 @@ def collect(req):
                     response.status_code = 200
                     return response
                 else:
-                    models.info.objects.create(
+                    models.Info.objects.create(
                         host=monitorjson_system['hostname'],
                         ip=monitorjson_system['ip'],
-                        platfMonitorORM=monitorjson_system['platfMonitorORM'],
+                        platform=monitorjson_system['platform'],
                         type=monitorjson_system['type'],
                         kernel=monitorjson_system['kernel'],
                         arch=monitorjson_system['arch'],
