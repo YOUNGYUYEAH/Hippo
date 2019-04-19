@@ -158,7 +158,7 @@ def monitorjson():
     return json.dumps(_monitorjson)
 
 
-def sendjson():
+def pusher():
     """
     数据传递方式: JSON串用POST传递到接口
     """
