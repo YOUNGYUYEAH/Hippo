@@ -1,5 +1,5 @@
 from django.contrib import admin
-from HippoWeb.monitor import models
+from HippoWeb.Monitor import models
 
 admin.register(models.info)
 admin.register(models.cpu)

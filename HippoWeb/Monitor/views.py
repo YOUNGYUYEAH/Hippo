@@ -1,7 +1,7 @@
 # -*- encoding:utf-8 -*-
 import json
-from HippoWeb.monitor import models
-from HippoWeb.monitor import orm
+from HippoWeb.Monitor import models
+from HippoWeb.Monitor import MonitorORM
 from django.shortcuts import HttpResponse, render
 
 
@@ -19,7 +19,7 @@ def collect(req):
                 monitorjson_system = monitorjson['system']
                 if models.info.objects.filter(ip=monitorjson_system['ip']):
                     # 需要判断新的数据是否跟源数据不同,若不同需要更新
-                    s = orm.Saveinfo(monitorjson)
+                    s = MonitorORM.Saveinfo(monitorjson)
                     s.save_all()
                     response = HttpResponse()
                     response.status_code = 200
@@ -28,12 +28,12 @@ def collect(req):
                     models.info.objects.create(
                         host=monitorjson_system['hostname'],
                         ip=monitorjson_system['ip'],
-                        platform=monitorjson_system['platform'],
+                        platfMonitorORM=monitorjson_system['platfMonitorORM'],
                         type=monitorjson_system['type'],
                         kernel=monitorjson_system['kernel'],
                         arch=monitorjson_system['arch'],
                     )
-                    s = orm.Saveinfo(monitorjson)
+                    s = MonitorORM.Saveinfo(monitorjson)
                     s.save_all()
                     response = HttpResponse()
                     response.status_code = 200
@@ -50,11 +50,11 @@ def monitor_alerm(req):
 
 def monitor_info(req):
     # if req.method == 'GET':
-    #    _i = monitorjson_orm.Loadinfo()
+    #    _i = monitorjson_MonitorORM.Loadinfo()
     if req.method == 'GET':
         # 获取前端传回的target_ip,若没有传回则默认读取全部,但分页展示
         try:
-            _i = orm.Loadinfo()
+            _i = MonitorORM.Loadinfo()
             json_list = []
             for index in range(len(_i.load_info())):
                 monitorjson = json.dumps(_i.load_info()[index])

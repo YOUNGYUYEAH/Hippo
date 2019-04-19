@@ -1,5 +1,5 @@
 from django.conf.urls import url
-from HippoWeb.monitor import views
+from HippoWeb.Monitor import views
 
 urlpatterns = [
     url(r'i$', views.collect, name='/monitor/i'),
