@@ -1,32 +1,129 @@
 {% load staticfiles %}
-<html>
-{% include "header.html" %}
-<link href="{% static 'css/index.css' %}" rel="stylesheet" type="text/css"/>
-<title> Hippo OPS Platform </title>
-<body>
-    <div id="wrapper" class="container-fluid">
-        <div class="row">
-            <div id="top-moudle" class="container-fluid">
-                <div class="row">
-                    <div id="top-moudle-logo" class="">
-                        <li><a href="/index/">Hippo OPS Platform</a></li>
-                    </div>
-                    <div id="top-moudle-list" class="">
-                        <p>顶部导航栏菜单</p>
-                    </div>
-                </div>
-            </div>
-            <div id="main-module" class="container-fluid">
-                <div class="row">
-                    <div id="main-moudle-leftmenu" class="">
-                        <p>页面高度100%,宽度占15%的左侧边栏菜单</p>
-                    </div>
-                    <div id="main-moudle-rightweb" class="">
-                        <p>占据剩下空间</p>
-                    </div>
-                </div>
-            </div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <link href="{% static "vendor/bootstrap-4.1.3/css/bootstrap.min.css" %}" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="{% static "css/index.css" %}" rel="stylesheet" type="text/css">
+    <title> Hippo OPS Platform </title>
+</head>
+
+<body class="fixed-nav sticky-footer" id="page-top">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
+        <a class="navbar-brand" href="#"> Hippo OPS Platform </a>
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="true">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse show" id="navbarResponsive">
+            <ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
+                <li class="nav-item" data-toggle="tooltip" data-placement="right" title data-original-title="Dashboard">
+                    <a class="nav-link" href="{% url "/index/" %}">
+                        <i class="fa fa-fw fa-tachometer"></i>
+                        <span class="nav-link-text">Dashbord</span>
+                    </a>
+                </li>
+                <li class="nav-item" data-toggle="tooltip" data-placement="right" title data-original-title="Monitor">
+                    <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#MonitorcollapsePages" data-parent="#exampleAccordion" aria-expanded="true" >
+                        <i class="fa fa-fw fa-area-chart" href="/Monitor"></i>
+                        <span class="nav-link-text"> Monitor System</span>
+                    </a>
+                    <ul class="sidenav-second-level collapse" id="MonitorcollapsePages">
+                        <li>
+                            <a class="nav-link" href="/Monitor/list">
+                                <i class="fa fa-fw fa-list"></i>
+                                <span class="nav-link-text">Server List</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="nav-link" href="/Monitor/addserver">
+                                <i class="fa fa-fw fa-gear"></i>
+                                <span class="nav-link-text">Add Server</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item" data-toggle="tooltip" data-placement="right" title data-original-title="Log">
+                    <a class="nav-link" href="/Log">
+                        <i class="fa fa-fw fa-file-text-o"></i>
+                        <span class="nav-link-text">Log System</span>
+                    </a>
+                </li>
+                <li class="nav-item" data-toggle="tooltip" data-placement="right" title data-original-title="Deploy">
+                    <a class="nav-link" href="/Deploy">
+                        <i class="fa fa-fw fa-th-list"></i>
+                        <span class="nav-link-text">Deploy System</span>
+                    </a>
+                </li>
+                <li class="nav-item" data-toggle="tooltip" data-placement="right" title data-original-title="terminal">
+                    <a class="nav-link" href="/Terminal">
+                        <i class="fa fa-fw fa-terminal"></i>
+                        <span class="nav-link-text">Terminal</span>
+                    </a>
+                </li>
+            </ul>
+            <ul class="navbar-nav sidenav-toggler">
+                <li class="nav-item">
+                    <a class="nav-link text-center" id="sidenavToggler">
+                        <i class="fa fa-fw fa-angle-left"></i>
+                    </a>
+                </li>
+            </ul>
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <form class="form-inline my-2 my-lg-0 mr-lg-2">
+                        <div class="input-group">
+                            <input class="form-control" type="text" placeholder="Search for..">
+                            <span class="input-group-btn">
+                                <button class="btn btn-primary" type="button">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </span>
+                        </div>
+                    </form>
+                </li>
+            </ul>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle mr-lg-2" id="messagesDropdown" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-fw fa-envelope"></i>
+                        <span class="d-lg-none">
+                            Messages
+                            <span class="badge badge-pill badge-primary">6 New</span>
+                        </span>
+                        <span class="indicator text-primary d-none d-lg-block">
+                            <i class="fa fa-fw fa-circle"></i>
+                        </span>
+                    </a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle mr-lg-2" id="alertsDropdown" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-fw fa-bell"></i>
+                        <span class="d-lg-none">
+                            Alerts
+                            <span class="badge badge-pill badge-warning">12 New</span>
+                        </span>
+                        <span class="indicator text-warning d-none d-lg-block">
+                            <i class="fa fa-fw fa-circle"></i>
+                        </span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link mr-lg-2" id="options" href="#" data-toggle="modal">
+                        <i class="fa fa-fw fa-wrench"></i>
+                        Options
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link mr-lg-2" id="logout" href="{% url "/logout/" %}">
+                        <i class="fa fa-fw fa-sign-out"></i>
+                        Logout
+                    </a>
+                </li>
+            </ul>
         </div>
-    </div>
+    </nav>
+    <script src="{% static "vendor/jquery-3.3.1/jquery.js" %}"></script>
+    <script src="{% static "vendor/bootstrap-4.1.3/js/bootstrap.bundle.min.js" %}"></script>
+    <script src="{% static "js/index.js" %}"></script>
 </body>
-</html>
