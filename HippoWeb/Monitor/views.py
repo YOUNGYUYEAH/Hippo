@@ -5,6 +5,11 @@ from HippoWeb.Monitor import MonitorORM
 from django.shortcuts import HttpResponse, render
 
 
+def monitor_index(req):
+    if req.method == 'GET':
+        return render(req, 'monitor.html')
+
+
 def collect(req):
     """
     接收agent数据的接口,仅接收方法为POST的请求,

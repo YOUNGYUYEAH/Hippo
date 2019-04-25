@@ -26,12 +26,12 @@
                 </li>
                 <li class="nav-item" data-toggle="tooltip" data-placement="right" title data-original-title="Monitor">
                     <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#MonitorcollapsePages" data-parent="#exampleAccordion" aria-expanded="false" >
-                        <i class="fa fa-fw fa-area-chart" href="/Monitor"></i>
+                        <i class="fa fa-fw fa-area-chart"></i>
                         <span class="nav-link-text"> Monitor System</span>
                     </a>
                     <ul class="sidenav-second-level collapse" id="MonitorcollapsePages">
                         <li>
-                            <a class="nav-link" href="/Monitor/list">
+                            <a class="nav-link" href="javascript:load_main();">
                                 <i class="fa fa-fw fa-list"></i>
                                 <span class="nav-link-text">Server List</span>
                             </a>
@@ -132,7 +132,8 @@
     </nav>
     <div class="content-wrapper">
         <div class="container-fluid">
-            
+            <div id="mainWeb">
+            </div>
         </div>
     </div>
     <!-- 页脚 -->
@@ -150,5 +151,10 @@
     <script src="{% static "vendor/jquery-3.3.1/jquery.js" %}"></script>
     <script src="{% static "vendor/bootstrap-4.1.3/js/bootstrap.bundle.min.js" %}"></script>
     <script src="{% static "js/index.js" %}"></script>
+    <script>
+        function load_main() {
+            document.getElementById("mainWeb").innerHTML='<object type="text/html" data="{% url "/monitor/" %}" width="100%"></object>';
+        }
+    </script>
     <!-- 用于将左侧边栏收进去,但是影响小页面下的按钮列表缺少文字的问题 -->
 </body>
