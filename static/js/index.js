@@ -42,4 +42,7 @@
     }, 1000, 'easeInOutExpo');
     event.preventDefault();
   });
+  $(document).ready(function() {
+      $('#dataTable').DataTable();
+  });
 })(jQuery); // End of use strict
