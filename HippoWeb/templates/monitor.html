@@ -1,12 +1,28 @@
-<p>1234</p>
-<p>1234</p>
-<p>1234</p>
-<p>1234</p>
-<p>1234</p>
-<p>1234</p>
-<p>1234</p>
-<p>1234</p>
-<p>1234</p>
-<p>1234</p>
-<p>1234</p>
-<p>1234</p>
+{% extends "module/table.html" %}
+
+{% block table_name %}
+    ServerHost List
+{% endblock %}
+
+{% block table_info_head %}
+    <tr role="row">
+        {% for index in list_indexs %}
+        <th class="sorting_desc" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" aria-label="" style="" aria-sort="descending">
+            <i>{{ index }}</i>
+        </th>
+        {% endfor %}
+    </tr>
+{% endblock %}
+
+{% block table_info_body %}
+    {% for i in list_datas %}
+    <tr role="row" class="odd">
+        <td>{{ i.Name }}</td>
+        <td>{{ i.IP }}</td>
+        <td>{{ i.Type }}</td>
+    </tr>
+    {% endfor %}
+{% endblock %}
+
+{% block table_bottom %}
+{% endblock %}

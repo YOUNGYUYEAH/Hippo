@@ -7,7 +7,24 @@ from django.shortcuts import HttpResponse, render
 
 def monitor_index(req):
     if req.method == 'GET':
-        return render(req, 'monitor.html')
+        list_indexs = ["HostIP", "HostName", "HostType"]
+        list_datas = [{"IP": "123", "Name": "123", "Type": "123"},
+                       {"IP": "234", "Name": "234", "Type": "234"},
+                       {"IP": "345", "Name": "345", "Type": "345"},
+                      {"IP": "345", "Name": "345", "Type": "345"},
+                      {"IP": "345", "Name": "345", "Type": "345"},
+                      {"IP": "345", "Name": "345", "Type": "345"},
+                      {"IP": "345", "Name": "345", "Type": "345"},
+                      {"IP": "345", "Name": "345", "Type": "345"},
+                      {"IP": "345", "Name": "345", "Type": "345"},
+                      {"IP": "345", "Name": "345", "Type": "345"},
+                      {"IP": "456", "Name": "456", "Type": "456"}
+                       ]
+        indexs_sum = 11
+        return render(req, 'monitor.html', {'list_indexs': list_indexs,
+                                            'list_datas': list_datas,
+                                            'indexs_sum': indexs_sum}
+                      )
 
 
 def collect(req):
