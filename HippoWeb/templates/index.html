@@ -181,15 +181,15 @@
     <script src="{% static "vendor/datatables/dataTables.bootstrap4.js" %}"></script>
     <script src="{% static "js/index.js" %}"></script>
     <script>
-        $(document).ready(function(){
-            $("#serverlist").click(function(){
-                $("#mainWeb").load("{% url "/monitor/serverlist" %}",function(){
-                    $("#dataTable").DataTable()});
-            });
-            $("#monitordata").click(function(){
-                $("#mainWeb").load("{% url "/monitor/monitordata" %}")
-            });
+        $("#serverlist").click(function(){
+            $("#mainWeb").load("{% url "/monitor/serverlist" %}",function(){
+                $("#dataTable").DataTable()});
+        });
+        $("#monitordata").click(function(){
+            $("#mainWeb").load("{% url "/monitor/monitordata" %}")
         });
     </script>
     <!-- 用于将左侧边栏收进去,但是影响小页面下的按钮列表缺少文字的问题 -->
 </body>
+
+</html>
