@@ -4,8 +4,8 @@
 <head>
     <meta charset="utf-8">
     <link href="{% static "vendor/bootstrap-4.1.3/css/bootstrap.min.css" %}" rel="stylesheet" type="text/css">
-    <link href="{% static "vendor/datatables/dataTables.bootstrap4.css" %}" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="{% static "vendor/datatables/dataTables.bootstrap4.css" %}" rel="stylesheet" type="text/css">
     <link href="{% static "css/index.css" %}" rel="stylesheet" type="text/css">
     <title> Hippo OPS Platform </title>
 </head>
@@ -13,7 +13,10 @@
 <body class="fixed-nav sticky-footer" id="page-top">
     <!-- 导航栏/侧边栏 -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
-        <a class="navbar-brand" href="#"> Hippo OPS Platform </a>
+        <a class="navbar-brand" href="#">
+            <span><img src="{% static "images/hippo-logo.png" %}" width="40px" height="40px"></span>
+            Hippo OPS Platform
+        </a>
         <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -28,13 +31,19 @@
                 <li class="nav-item" data-toggle="tooltip" data-placement="right" title data-original-title="Monitor">
                     <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#MonitorcollapsePages" data-parent="#exampleAccordion" aria-expanded="false" >
                         <i class="fa fa-fw fa-area-chart"></i>
-                        <span class="nav-link-text"> Monitor System</span>
+                        <span class="nav-link-text">Server Monitor</span>
                     </a>
                     <ul class="sidenav-second-level collapse" id="MonitorcollapsePages">
                         <li>
-                            <a class="nav-link" id="monitorlist">
+                            <a class="nav-link" id="serverlist">
                                 <i class="fa fa-fw fa-list"></i>
                                 <span class="nav-link-text">Server List</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="nav-link" id="monitordata">
+                                <i class="fa fa-fw fa-linode"></i>
+                                <span class="nav-link-text">Monitor Data</span>
                             </a>
                         </li>
                         <li>
@@ -51,22 +60,28 @@
                         </li>
                     </ul>
                 </li>
-                <li class="nav-item" data-toggle="tooltip" data-placement="right" title data-original-title="Log">
-                    <a class="nav-link" href="/Log">
-                        <i class="fa fa-fw fa-file-text-o"></i>
-                        <span class="nav-link-text">Log System</span>
+                <li class="nav-item" data-toggle="tooltip" data-placement="right" title data-original-title="Performance">
+                    <a class="nav-link" href="/Performance">
+                        <i class="fa fa-fw fa-lightbulb-o"></i>
+                        <span class="nav-link-text">Service Performance</span>
                     </a>
                 </li>
                 <li class="nav-item" data-toggle="tooltip" data-placement="right" title data-original-title="Config">
                     <a class="nav-link" href="/Config">
-                        <i class="fa fa-fw fa-pencil-square-o"></i>
-                        <span class="nav-link-text">Config System</span>
+                        <i class="fa fa-fw fa-cogs"></i>
+                        <span class="nav-link-text">Configuration Center</span>
                     </a>
                 </li>
                 <li class="nav-item" data-toggle="tooltip" data-placement="right" title data-original-title="Deploy">
                     <a class="nav-link" href="/Deploy">
-                        <i class="fa fa-fw fa-th-list"></i>
-                        <span class="nav-link-text">Deploy System</span>
+                        <i class="fa fa-fw fa-tasks"></i>
+                        <span class="nav-link-text">Deployment System</span>
+                    </a>
+                </li>
+                <li class="nav-item" data-toggle="tooltip" data-placement="right" title data-original-title="Log">
+                    <a class="nav-link" href="/Log">
+                        <i class="fa fa-fw fa-file-text-o"></i>
+                        <span class="nav-link-text">Logging System</span>
                     </a>
                 </li>
                 <li class="nav-item" data-toggle="tooltip" data-placement="right" title data-original-title="terminal">
@@ -139,7 +154,8 @@
     </nav>
     <div class="content-wrapper">
         <div class="container-fluid">
-            <div id="mainWeb"></div>
+            <div id="mainWeb">
+            </div>
         </div>
     </div>
     <!-- 页脚 -->
@@ -148,6 +164,11 @@
             <div class="text-center">
                 <small>Copyright © Your Website 2019</small>
                 <small>- Author - YOUNGYUYEAH</small>
+                <span class="align-right">
+                    <a class="mr-3 d-inline-block" href="https://github.com/YOUNGYUYEAH/Hippo" target="_blank">
+                        <i class="fa fa-fw fa-thumbs-up">Like</i>
+                    </a>
+                </span>
             </div>
         </div>
     </footer>
@@ -161,8 +182,12 @@
     <script src="{% static "js/index.js" %}"></script>
     <script>
         $(document).ready(function(){
-            $("#monitorlist").click(function(){
-                $("#mainWeb").load("{% url "/monitor/" %}");
+            $("#serverlist").click(function(){
+                $("#mainWeb").load("{% url "/monitor/serverlist" %}",function(){
+                    $("#dataTable").DataTable()});
+            });
+            $("#monitordata").click(function(){
+                $("#mainWeb").load("{% url "/monitor/monitordata" %}")
             });
         });
     </script>

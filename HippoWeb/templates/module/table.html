@@ -1,4 +1,4 @@
-<div class="card">
+<div class="card mb-3">
     <div class="card-header">
         <i class="fa fa-table"></i>
             {% block table_name %}
@@ -7,56 +7,17 @@
     </div>
     <div class="card-body">
         <div class="table-responsive">
-            <div class="dataTables_wrapper container-fluid dt-bootstrap4">
-                <div class="row">
-                {% block table_rowselect %}
-                    <div class="col-sm-12 col-md-6">
-                        <div class="dataTables_length" id="dataTable_length">
-                            <label>
-                                Show
-                                <select name="dataTable_length" aria-controls="dataTable" class="form-control form-control-sm">
-                                    <option value="10">10</option>
-                                    <option value="25">25</option>
-                                    <option value="50">50</option>
-                                    <option value="10">100</option>
-                                </select>
-                                Rows
-                            </label>
-                        </div>
-                    </div>
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                {% block table_data_head %}
                 {% endblock %}
-                {% block table_search %}
-                    <div class="col-sm-12 col-md-6">
-                        <div class="dataTables_filter" id="dataTable_filter">
-                            <label>
-                                Search:
-                                <input type="search" class="form-control form-control-sm" placeholder="" aria-controls="dataTable">
-                            </label>
-                        </div>
-                    </div>
+                {% block table_data_body %}
                 {% endblock %}
-                </div>
-                <div class="row">
-                {% block table_body %}
-                    <div class="col-sm-12">
-                        <table class="table table-bordered dataTable" width="100%" cellspacing="0" role="grid" aria-describedby="dataTable_info" id="dataTable">
-                            <thead>
-                                {% block table_info_head %}
-                                {% endblock %}
-                            </thead>
-                            <tbody>
-                                {% block table_info_body %}
-                                {% endblock %}
-                            </tbody>
-                        </table>
-                    </div>
-                {% endblock %}
-                </div>
-                <div class="row">
-                {% block table_bottom %}
-                {% endblock %}
-                </div>
-            </div>
+            </table>
         </div>
+    </div>
+    <div class="card-footer small text-muted">
+        {% block table_footer %}
+        {% endblock %}
+    </div>
     </div>
 </div>

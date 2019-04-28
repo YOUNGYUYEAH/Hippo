@@ -4,7 +4,7 @@ from time import time, localtime, strftime
 import json
 
 
-class Saveinfo(object):
+class SaveData(object):
     """将Hippoagent传回来的monitorjson存入自定义的models表"""
     def __init__(self, monitorjson):
         self.system = monitorjson['system']
@@ -68,7 +68,7 @@ class Saveinfo(object):
         self.save_network()
 
 
-class Loadinfo(object):
+class LoadData(object):
     """根据提交回来的ip进行数据库查询"""
     def __init__(self, ip=None, timerange=None, item=None):
         self.ip = ip
