@@ -1,3 +1,5 @@
+# -*- encoding:utf-8 -*-
+
 # 是否启用HippoAgent
 Switch = "On"
 
