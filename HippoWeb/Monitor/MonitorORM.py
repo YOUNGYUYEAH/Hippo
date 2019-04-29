@@ -1,7 +1,7 @@
 # -*- encoding:utf-8 -*-
 from django.db import connection
-from HippoWeb.Monitor import models
 from time import time, localtime, strftime
+from HippoWeb.Monitor import models
 import json
 
 
@@ -13,6 +13,7 @@ class SaveData(object):
         self.memory = monitorjson['memory']
         self.disk = monitorjson['disk']
         self.network = monitorjson['network']
+        self.option = monitorjson['period']
         self.checktime = strftime('%Y-%m-%d %H:%M:%S', localtime(time()))
 
     def save_cpu(self):
@@ -100,20 +101,46 @@ class LoadData(object):
         """读取CPU信息需做差值处理和百分比计算"""
         pass
 
+    def load_disk(self):
+        """读取磁盘信息,磁盘信息需要进行JSON串处理"""
+        try:
+            cursor = connection.cursor()
+            if self.ip is None:
+                _querysql = """SELECT `ip`,`diskusage`,`iousage`,DATE_FORMAT(`checktime`,'%Y-%m-%d %H:%m:%S') 
+                FROM monitor_disk WHERE `checktime` IN (SELECT Max(`checktime`) FROM monitor_disk GROUP BY `ip)`);"""
+                cursor.execute(_querysql)
+                _load_disk_result = cursor.fetchall()
+                return _load_disk_result
+            else:
+                _querysql = """SELECT `ip`,`diskusage`,`iousage`,DATE_FORMAT(Max(`checktime`),'%%Y-%%m-%%d %%H:%%m:%%S') 
+                FROM monitor_disk WHERE `ip` = '%s';""" % self.ip
+                cursor.execute(_querysql)
+                _load_disk_result = cursor.fetchall()
+                return _load_disk_result
+        except Exception as e:
+            print(e)
+        finally:
+            cursor.close()
+
+    def load_disk_range(self):
+        """读取时间范围内的磁盘信息"""
+        pass
+
     def load_memory(self):
         """读取内存信息需进行单位换算,使用原生SQL,注意由于%和%%使用的不同"""
         try:
             cursor = connection.cursor()
             if self.ip is None:
                 _querysql = """SELECT `ip`,`total`,`available`,`used`,`free`,`active`,`inactive`,`buffers`,`cached`,
-`shared`,`slab`,DATE_FORMAT(`checktime`, '%Y-%m-%d %H:%m:%S') FROM monitor_memory WHERE `checktime` in 
-(SELECT Max(`checktime`) FROM monitor_memory GROUP BY `ip`) ;"""
+                `shared`,`slab`,DATE_FORMAT(`checktime`,'%Y-%m-%d %H:%m:%S') FROM monitor_memory WHERE `checktime` 
+                IN (SELECT Max(`checktime`) FROM monitor_memory GROUP BY `ip`) ;"""
                 cursor.execute(_querysql)
                 _load_memory_result = cursor.fetchall()
                 return _load_memory_result
             else:
                 _querysql = """SELECT `ip`,`total`,`available`,`used`,`free`,`active`,`inactive`,`buffers`,`cached`,
-`shared`,`slab`,DATE_FORMAT(Max(`checktime`),'%%Y-%%m-%%d %%H:%%m:%%S') FROM monitor_memory WHERE `ip` = '%s';""" % self.ip
+                `shared`,`slab`,DATE_FORMAT(Max(`checktime`),'%%Y-%%m-%%d %%H:%%m:%%S') FROM monitor_memory WHERE 
+                `ip` = '%s';""" % self.ip
                 cursor.execute(_querysql)
                 _load_memory_result = cursor.fetchall()
                 return _load_memory_result
@@ -121,4 +148,8 @@ class LoadData(object):
             print(e)
         finally:
             cursor.close()
+
+    def load_memory_range(self):
+        """读取时间范围内的内存信息"""
+        pass
 
