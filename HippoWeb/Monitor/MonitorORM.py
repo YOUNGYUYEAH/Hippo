@@ -1,4 +1,5 @@
 # -*- encoding:utf-8 -*-
+from django.db import connection
 from HippoWeb.Monitor import models
 from time import time, localtime, strftime
 import json
@@ -91,4 +92,26 @@ class LoadData(object):
                 values('host', 'ip', 'platform', 'type', 'kernel', 'arch', 'ctime', 'utime', 'status', 'remark')
             return _load_info_result
 
+    def update_info(self):
+        """用于更新server基础信息"""
+        pass
 
+    def load_cpu(self, checktime, timeoption):
+        """读取CPU信息需做差值处理和百分比计算"""
+        pass
+
+    def load_memory(self):
+        """读取内存信息需进行单位换算"""
+        cursor = connection.cursor()
+        if self.ip is None:
+            cursor.execute("""SELECT `ip`,`total`,`available`,`used`,`free`,`active`,`inactive`,`buffers`,`cached`,
+            `shared`,`slab`,DATE_FORMAT(Max(`checktime`),'%Y-%m-%d %H:%m:%S') FROM monitor_memory group by `ip`; """)
+            _load_memory_result = cursor.fetchall()
+            return _load_memory_result
+        else:
+            _querysql = """SELECT `ip`,`total`,`available`,`used`,`free`,`active`,
+`inactive`,`buffers`,`cached`,`shared`,`slab`,DATE_FORMAT(`checktime`,'%%Y-%%m-%%d %%H:%%m:%%S') 
+FROM monitor_memory WHERE `ip` = '%%s;';""" % self.ip
+            cursor.execute(_querysql)
+            _load_memory_result = cursor.fetchall()
+            return _load_memory_result

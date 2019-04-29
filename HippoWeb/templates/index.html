@@ -48,7 +48,7 @@
                         </li>
                         <li>
                             <a class="nav-link" href="/Monitor/addserver">
-                                <i class="fa fa-fw fa-gear"></i>
+                                <i class="fa fa-fw fa-plus-circle"></i>
                                 <span class="nav-link-text">Add Server</span>
                             </a>
                         </li>
@@ -186,7 +186,9 @@
                 $("#dataTable").DataTable()});
         });
         $("#monitordata").click(function(){
-            $("#mainWeb").load("{% url "/monitor/monitordata" %}")
+            $("#mainWeb").load("{% url "/monitor/monitordata" %}",function(){
+                jQuery.getScript("{% static "js/monitordata.js" %}");
+            });
         });
     </script>
     <!-- 用于将左侧边栏收进去,但是影响小页面下的按钮列表缺少文字的问题 -->
