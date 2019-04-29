@@ -11,7 +11,7 @@ def systeminfo():
     import platform
     try:
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        s.connect((config.ServerHost, int(config.ServerPost)))                  # 从settings里提取Hippo server位置
+        s.connect((config.ServerHost, int(config.ServerPost)))
         owner_ip = s.getsockname()[0]
         s.close()
     except Exception as e:

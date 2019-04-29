@@ -93,11 +93,7 @@ class LoadData(object):
                 values('host', 'ip', 'platform', 'type', 'kernel', 'arch', 'ctime', 'utime', 'status', 'remark')
             return _load_info_result
 
-    def update_info(self):
-        """用于更新server基础信息"""
-        pass
-
-    def load_cpu(self, checktime, timeoption):
+    def load_cpu(self):
         """读取CPU信息需做差值处理和百分比计算"""
         pass
 
