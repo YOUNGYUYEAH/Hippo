@@ -1,5 +1,5 @@
 from django.apps import AppConfig
 
 
-class HippowebConfig(AppConfig):
+class HippoWebConfig(AppConfig):
     name = 'HippoWeb'

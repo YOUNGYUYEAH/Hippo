@@ -1,5 +1,5 @@
 from django.apps import AppConfig
 
 
-class HippomonitorserverConfig(AppConfig):
+class MonitorConfig(AppConfig):
     name = 'HippoWeb.Monitor'
