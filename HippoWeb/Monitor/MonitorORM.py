@@ -113,7 +113,7 @@ class LoadData(object):
                 return _load_memory_result
             else:
                 _querysql = """SELECT `ip`,`total`,`available`,`used`,`free`,`active`,`inactive`,`buffers`,`cached`,
-`shared`,`slab`,DATE_FORMAT(`checktime`,'%%Y-%%m-%%d %%H:%%m:%%S') FROM monitor_memory WHERE `ip` = '%s';""" % self.ip
+`shared`,`slab`,DATE_FORMAT(Max(`checktime`),'%%Y-%%m-%%d %%H:%%m:%%S') FROM monitor_memory WHERE `ip` = '%s';""" % self.ip
                 cursor.execute(_querysql)
                 _load_memory_result = cursor.fetchall()
                 return _load_memory_result

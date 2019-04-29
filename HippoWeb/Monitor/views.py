@@ -60,7 +60,7 @@ def monitordata(req):
     if req.method == 'GET':
         # 根据前端传递的参,调取不同的方法,然后将数据范围给前端页面
         try:
-            s = MonitorORM.LoadData()
+            s = MonitorORM.LoadData(ip="192.168.80.100")
             memorydata = s.load_memory()
             print(memorydata)
             return render(req, 'monitor/monitordata.html')
