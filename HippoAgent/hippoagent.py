@@ -155,6 +155,7 @@ def monitorjson():
     _monitorjson['memory'] = meminfo()
     _monitorjson['disk'] = diskinfo()
     _monitorjson['network'] = netinfo()
+    _monitorjson['option'] = config.Period
     return json.dumps(_monitorjson)
 
 
