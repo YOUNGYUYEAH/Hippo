@@ -63,7 +63,8 @@ def monitordata(req):
         try:
             s = MonitorORM.LoadData(ip="192.168.80.100")
             memorydata = s.load_memory()
-            print(memorydata)
+            diskdata = s.load_disk()
+            print(diskdata)
             return render(req, 'monitor/monitordata.html')
         except Exception as e:
             print(e)
