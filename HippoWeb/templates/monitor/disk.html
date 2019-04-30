@@ -1,0 +1,12 @@
+<table>
+{% if diskdata %}
+    {% for data in diskdata %}
+        <tr>
+            <td>{{ data.0 | safe }}</td>
+            <td>{{ data.1 | safe }}</td>
+            <td>{{ data.2 | safe }}</td>
+            <td>{{ data.3 | safe }}</td>
+        </tr>
+    {% endfor %}
+{% endif %}
+</table>

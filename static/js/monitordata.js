@@ -1,3 +1,12 @@
+$("#monitordata_cpu").click(function(){
+    $("#monitorSubweb").load("/monitor/cpu");
+});
 $("#monitordata_disk").click(function(){
-   alert("OK");
+    $("#monitorSubweb").load("/monitor/disk");
+});
+$("#monitordata_memory").click(function(){
+    $("#monitorSubweb").load("/monitor/memory");
+});
+$("#monitordata_network").click(function(){
+    $("#monitorSubweb").load("/monitor/network");
 });

@@ -54,17 +54,42 @@ def serverlist(req):
     return render(req, 'monitor/serverlist.html', {'data': serverinfo})
 
 
+def monitor_cpu(req):
+    s = MonitorORM.LoadData()
+    cpudata = s.load_cpu()
+    return render(req, 'monitor/cpu.html', {'data': cpudata})
+
+
+def monitor_disk(req):
+    s = MonitorORM.LoadData()
+    diskdata = s.load_disk()
+    for i in diskdata:
+        print(i[0])
+    return render(req, 'monitor/disk.html', {'diskdata': diskdata})
+
+
+def monitor_memory(req):
+    s = MonitorORM.LoadData()
+    memorydata = s.load_memory()
+    return render(req, 'monitor/memory.html', {'data': memorydata})
+
+
+def monitor_network(req):
+    s = MonitorORM.LoadData()
+    networkdata = s.load_network()
+    return render(req, 'monitor/network.html', {'data': networkdata})
+
+
 def monitordata(req):
     """
-    根据选择返回监控数据
+    根据选择返回监控数据,HostMode
     """
     if req.method == 'GET':
         # 根据前端传递的参,调取不同的方法,然后将数据范围给前端页面
         try:
-            s = MonitorORM.LoadData(ip="192.168.80.100")
+            s = MonitorORM.LoadData()
             memorydata = s.load_memory()
             diskdata = s.load_disk()
-            print(diskdata)
             return render(req, 'monitor/monitordata.html')
         except Exception as e:
             print(e)

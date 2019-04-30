@@ -102,13 +102,13 @@ class LoadData(object):
         try:
             cursor = connection.cursor()
             if self.ip is None:
-                _querysql = """SELECT `ip`,`diskusage`,`iousage`,DATE_FORMAT(`checktime`,'%Y-%m-%d %H:%m:%S') 
-                FROM monitor_disk WHERE `checktime` IN (SELECT Max(`checktime`) FROM monitor_disk GROUP BY `ip)`);"""
+                _querysql = """SELECT `ip`,`diskusage`,`iousage`,DATE_FORMAT(`checktime`,'%Y-%m-%d %H:%i:%S') 
+                FROM monitor_disk WHERE `checktime` IN (SELECT Max(`checktime`) FROM monitor_disk GROUP BY `ip`);"""
                 cursor.execute(_querysql)
                 _load_disk_result = cursor.fetchall()
                 return _load_disk_result
             else:
-                _querysql = """SELECT `ip`,`diskusage`,`iousage`,DATE_FORMAT(Max(`checktime`),'%%Y-%%m-%%d %%H:%%m:%%S') 
+                _querysql = """SELECT `ip`,`diskusage`,`iousage`,DATE_FORMAT(Max(`checktime`),'%%Y-%%m-%%d %%H:%%i:%%S') 
                 FROM monitor_disk WHERE `ip` = '%s';""" % self.ip
                 cursor.execute(_querysql)
                 _load_disk_result = cursor.fetchall()
@@ -128,14 +128,14 @@ class LoadData(object):
             cursor = connection.cursor()
             if self.ip is None:
                 _querysql = """SELECT `ip`,`total`,`available`,`used`,`free`,`active`,`inactive`,`buffers`,`cached`,
-                `shared`,`slab`,DATE_FORMAT(`checktime`,'%Y-%m-%d %H:%m:%S') FROM monitor_memory WHERE `checktime` 
-                IN (SELECT Max(`checktime`) FROM monitor_memory GROUP BY `ip`) ;"""
+                `shared`,`slab`,DATE_FORMAT(`checktime`,'%Y-%m-%d %H:%i:%S') FROM monitor_memory WHERE `checktime` 
+                IN (SELECT Max(`checktime`) FROM monitor_memory GROUP BY `ip`);"""
                 cursor.execute(_querysql)
                 _load_memory_result = cursor.fetchall()
                 return _load_memory_result
             else:
                 _querysql = """SELECT `ip`,`total`,`available`,`used`,`free`,`active`,`inactive`,`buffers`,`cached`,
-                `shared`,`slab`,DATE_FORMAT(Max(`checktime`),'%%Y-%%m-%%d %%H:%%m:%%S') FROM monitor_memory WHERE 
+                `shared`,`slab`,DATE_FORMAT(Max(`checktime`),'%%Y-%%m-%%d %%H:%%i:%%S') FROM monitor_memory WHERE 
                 `ip` = '%s';""" % self.ip
                 cursor.execute(_querysql)
                 _load_memory_result = cursor.fetchall()
@@ -149,3 +149,5 @@ class LoadData(object):
         """读取时间范围内的内存信息"""
         pass
 
+    def load_network(self):
+        pass
