@@ -1,8 +1,12 @@
-<div class="card mb-3">
-    <div class="card-header">
-        <i class="fa fa-table"></i>
+<div class="card mb-8">
+    <div class="card-header navbar">
+        <div>
+            <i class="fa fa-table"></i>
             {% block table_name %}
                 Table Example
+            {% endblock %}
+        </div>
+            {% block table_option %}
             {% endblock %}
     </div>
     <div class="card-body">
@@ -18,6 +22,5 @@
     <div class="card-footer small text-muted">
         {% block table_footer %}
         {% endblock %}
-    </div>
     </div>
 </div>

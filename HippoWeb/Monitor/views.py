@@ -67,9 +67,21 @@ def monitor_disk(req):
 
 
 def monitor_memory(req):
+    unit = "GB"
+    memorydata = []
     s = MonitorORM.LoadData()
-    memorydata = s.load_memory()
-    return render(req, 'monitor/memory.html', {'data': memorydata})
+    _data = s.load_memory()
+    for ip in _data:
+        _ipdata = []
+        for value in ip:
+            if isinstance(value, int):
+                if unit == "MB":
+                    value = round(value/1024/1024, 2)
+                elif unit == "GB":
+                    value = round(value/1024/1024/1024,2)
+            _ipdata.append(value)
+        memorydata.append(_ipdata)
+    return render(req, 'monitor/memory.html', {'data': memorydata, 'unit': unit})
 
 
 def monitor_network(req):
@@ -86,8 +98,6 @@ def monitordata(req):
         # 根据前端传递的参,调取不同的方法,然后将数据范围给前端页面
         try:
             s = MonitorORM.LoadData()
-            memorydata = s.load_memory()
-            diskdata = s.load_disk()
             return render(req, 'monitor/monitordata.html')
         except Exception as e:
             print(e)

@@ -5,7 +5,9 @@ $("#monitordata_disk").click(function(){
     $("#monitorSubweb").load("/monitor/disk");
 });
 $("#monitordata_memory").click(function(){
-    $("#monitorSubweb").load("/monitor/memory");
+    $("#monitorSubweb").load("/monitor/memory",function(){
+        $("#dataTable").DataTable();
+    });
 });
 $("#monitordata_network").click(function(){
     $("#monitorSubweb").load("/monitor/network");

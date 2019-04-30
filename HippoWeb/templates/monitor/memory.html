@@ -1,5 +1,58 @@
-{% if data %}
-    {% for m in data %}
-        <p>{{ m }}</p>
-    {% endfor %}
-{% endif %}
+{% extends "module/table.html" %}
+
+{% block table_name %}
+    Memory Data
+{% endblock %}
+
+{% block table_option %}
+    <div>
+        <select class="form-control form-control-sm" id="memoryunit">
+            {% if unit == "MB" %}
+                <option value="MB">MB</option>
+                <option value="GB">GB</option>
+            {% else %}
+                <option value="GB">GB</option>
+                <option value="MB">MB</option>
+            {% endif %}
+        </select>
+    </div>
+{% endblock %}
+
+{% block table_data_head %}
+    <thead>
+        <tr>
+            <td>IP</td>
+            <td>Total</td>
+            <td>Available</td>
+            <td>Used</td>
+            <td>Free</td>
+            <td>Active</td>
+            <td>Inactive</td>
+            <td>Buffers</td>
+            <td>Cached</td>
+            <td>Shared</td>
+            <td>Slab</td>
+            <td>Checktime</td>
+        </tr>
+    </thead>
+{% endblock %}
+
+{% block table_data_body %}
+    {% if data %}
+        <tbody>
+        {% for d in data %}
+            <tr>
+                {% for i in range(0,12) %}
+                    {% if i==0 or i==11 %}
+                        <td>{{ d[i] }}</td>
+                    {% elif d[i] == 0 %}
+                        <td>0</td>
+                    {% else %}
+                        <td>{{ d[i] }}{{ unit }}</td>
+                    {% endif %}
+                {% endfor %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    {% endif %}
+{% endblock %}
