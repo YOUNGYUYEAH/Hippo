@@ -1,14 +1,13 @@
-{% load staticfiles %}
 <html>
-<link href="{% static "vendor/bootstrap-4.1.3/css/bootstrap.min.css" %}" rel="stylesheet" type="text/css">
-<link href="{% static "css/login.css" %}" rel="stylesheet" type="text/css" />
+<link href="{{ static('vendor/bootstrap-4.1.3/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css">
+<link href="{{ static('css/login.css') }}" rel="stylesheet" type="text/css" />
 <title> Hippo OPS Platform - Login </title>
 <body>
     <div class="login-bg">
         <div class="login-form">
             <form enctype="multipart/form-data">
-                {% csrf_token %}
-                {{ login_form.as_p }}
+                {{ csrf_input }}
+                {{ login_form.as_p() }}
                 <input class="btn btn-default" type="button" value="Sign In" id="login_form" onclick="dologin()"/>
                 <input type="hidden" id="pub_e" value={{ pub_e }} name="pub_e" />
                 <input type="hidden" id="pub_n" value={{ pub_n }} name="pub_n" />
@@ -16,10 +15,10 @@
         </div>
     </div>
 </body>
-<script type="text/javascript" src="{% static 'vendor/rsa/RSA.js' %}"></script>
-<script type="text/javascript" src="{% static 'vendor/rsa/Barrett.js' %}"></script>
-<script type="text/javascript" src="{% static 'vendor/rsa/BigInt.js' %}"></script>
-<script src="{% static "vendor/jquery-3.3.1/jquery.js" %}"></script>
+<script type="text/javascript" src="{{ static('vendor/rsa/RSA.js') }}"></script>
+<script type="text/javascript" src="{{ static('vendor/rsa/Barrett.js') }}"></script>
+<script type="text/javascript" src="{{ static('vendor/rsa/BigInt.js') }}"></script>
+<script src="{{ static('vendor/jquery-3.3.1/jquery.js') }}"></script>
 <script type="text/javascript">
     function dologin(){
         // http://www.ohdave.com/rsa/  加密所需js文件网址
@@ -30,7 +29,7 @@
         var key = new RSAKeyPair(pub_e,"",pub_n);
         var en_password = encryptedString(key, $('#password').val());
         $.ajax({
-            url: "{% url '/login/i' %}",
+            url: "{{ url('/login/i') }}",
             type: 'post',
             data: {'username': username, 'password': $('#password').val(), 'en_password': en_password},
             dataType: 'json',

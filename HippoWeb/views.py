@@ -101,9 +101,12 @@ def logout(req):
 
 @login_required
 def index(req):
-    """主页,判断用户是否已经登录,若未登录则跳转login页"""
-    login_user = req.COOKIES.get('username')
-    if login_user:
-        return render(req, 'index.html', {'login_user': login_user})
-    else:
-        return redirect('/login/')
+    try:
+        """主页,判断用户是否已经登录,若未登录则跳转login页"""
+        login_user = req.COOKIES.get('username')
+        if login_user:
+            return render(req, 'index.html', {'login_user': login_user})
+        else:
+            return redirect('/login/')
+    except Exception as e:
+        print(e)

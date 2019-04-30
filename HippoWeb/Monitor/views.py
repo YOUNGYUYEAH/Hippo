@@ -63,8 +63,6 @@ def monitor_cpu(req):
 def monitor_disk(req):
     s = MonitorORM.LoadData()
     diskdata = s.load_disk()
-    for i in diskdata:
-        print(i[0])
     return render(req, 'monitor/disk.html', {'diskdata': diskdata})
 
 
