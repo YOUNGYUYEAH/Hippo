@@ -118,3 +118,13 @@ def monitordata(req):
         return render(req, 'monitor/monitordata.html', {'data': s})
     except Exception as error:
         return render(req, 'monitor/monitordata.html', {'error': error})
+
+
+def addserver(req):
+    """添加新的监控服务器,分配agent,需要通过saltstack分配安装"""
+    pass
+
+
+def charts(req):
+    """根据数据出图"""
+    pass

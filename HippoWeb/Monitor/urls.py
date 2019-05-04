@@ -9,4 +9,6 @@ urlpatterns = [
     url(r'^disk$', views.monitor_disk, name='/monitor/disk'),
     url(r'^memory$', views.monitor_memory, name='/monitor/memory'),
     url(r'^network$', views.monitor_network, name='/monitor/network'),
+    url(r'^addserver$', views.addserver, name='/monitor/addserver'),
+    url(r'^charts$', views.charts, name='/monitor/charts'),
 ]
