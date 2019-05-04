@@ -49,10 +49,13 @@ def serverlist(req):
     """
     返回所有info服务器的基本信息
     """
-    s = MonitorORM.LoadData()
-    serverinfo = s.load_info()
-    return render(req, 'monitor/serverlist.html', {'data': serverinfo})
-
+    try:
+        s = MonitorORM.LoadData()
+        serverinfo = s.load_info()
+        return render(req, 'monitor/serverlist.html', {'data': serverinfo})
+    except Exception as e:
+        data = e
+        return render(req, 'monitor/serverlist.html', {'error': e})
 
 def monitor_cpu(req):
     s = MonitorORM.LoadData()
