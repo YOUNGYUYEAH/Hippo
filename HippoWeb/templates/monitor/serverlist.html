@@ -30,21 +30,21 @@
 
 {% block table_data_body %}
     {% if data %}
-    <tbody>
-        {% for d in data %}
-            <tr>
-                <td>{{ d.ip }}</td>
-                <td>{{ d.host }}</td>
-                <td>{{ d.type }}</td>
-                <td>{{ d.kernel }}</td>
-                <td>{{ d.arch }}</td>
-                <td>{{ d.status }}</td>
-                <td>{{ d.ctime }}</td>
-                <td>{{ d.utime }}</td>
-                <td>{{ d.remark }}</td>
-            </tr>
-        {% endfor %}
-    </tbody>
+        <tbody>
+            {% for d in data %}
+                <tr>
+                    <td>{{ d.ip }}</td>
+                    <td>{{ d.host }}</td>
+                    <td>{{ d.type }}</td>
+                    <td>{{ d.kernel }}</td>
+                    <td>{{ d.arch }}</td>
+                    <td>{{ d.status }}</td>
+                    <td>{{ d.ctime }}</td>
+                    <td>{{ d.utime }}</td>
+                    <td>{{ d.remark }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
     {% elif error %}
         <tbody>
             <tr>

@@ -1,7 +1,39 @@
-{% if data %}
-    {% for c in data %}
-        <p>{{ c }}</p>
-    {% endfor %}
-{% elif error %}
-    <p>{{ error }}</p>
-{% endif %}
+{% extends "module/table.html" %}
+
+{% block table_name %}
+    CPU Data
+{% endblock %}
+
+{% block table_data_head %}
+    {% if data %}
+        <thead>
+            <tr>
+                <td>IP</td>
+            </tr>
+        </thead>
+    {% elif error %}
+        <thead>
+            <tr>
+                <td>Error Messages</td>
+            </tr>
+        </thead>
+    {% endif %}
+{% endblock %}
+
+{% block table_data_body %}
+    {% if data %}
+        <tbody>
+            {% for d in data %}
+                <tr>
+                    <td>{{ d.ip }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    {% elif error %}
+        <tbody>
+            <tr>
+                <td>{{ error }}</td>
+            </tr>
+        </tbody>
+    {% endif %}
+{% endblock %}

@@ -77,7 +77,10 @@ def monitor_disk(req):
 
 def monitor_memory(req):
     try:
-        unit = "GB"
+        """
+        通过前端获取回来的option值,如果没有则默认值MB
+        """
+        unit = "MB"
         memorydata = []
         s = MonitorORM.LoadData()
         _data = s.load_memory()
@@ -88,7 +91,7 @@ def monitor_memory(req):
                     if unit == "MB":
                         value = round(value/1024/1024, 2)
                     elif unit == "GB":
-                        value = round(value/1024/1024/1024,2)
+                        value = round(value/1024/1024/1024, 2)
                 _ipdata.append(value)
             memorydata.append(_ipdata)
         return render(req, 'monitor/memory.html', {'data': memorydata, 'unit': unit})
