@@ -56,6 +56,7 @@ def serverlist(req):
     except Exception as error:
         return render(req, 'monitor/serverlist.html', {'error': error})
 
+
 def monitor_cpu(req):
     try:
         s = MonitorORM.LoadData()

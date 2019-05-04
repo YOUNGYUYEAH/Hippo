@@ -7,18 +7,14 @@
 {% block table_option %}
     <div>
         <select class="form-control form-control-sm" id="memoryunit">
-            {% if unit == "MB" %}
-                <option value="MB">MB</option>
-                <option value="GB">GB</option>
-            {% else %}
-                <option value="GB">GB</option>
-                <option value="MB">MB</option>
-            {% endif %}
+            <option value="GB">GB</option>
+            <option value="MB">MB</option>
         </select>
     </div>
 {% endblock %}
 
 {% block table_data_head %}
+    {% if data %}
     <thead>
         <tr>
             <td>IP</td>
@@ -35,6 +31,13 @@
             <td>Checktime</td>
         </tr>
     </thead>
+    {% elif error %}
+        <thead>
+            <tr>
+                <td>Error Messages</td>
+            </tr>
+        </thead>
+    {% endif %}
 {% endblock %}
 
 {% block table_data_body %}
@@ -53,6 +56,12 @@
                 {% endfor %}
             </tr>
         {% endfor %}
+        </tbody>
+    {% elif error %}
+        <tbody>
+            <tr>
+                <td>{{ error }}</td>
+            </tr>
         </tbody>
     {% endif %}
 {% endblock %}
