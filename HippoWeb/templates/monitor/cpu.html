@@ -2,4 +2,6 @@
     {% for c in data %}
         <p>{{ c }}</p>
     {% endfor %}
+{% elif error %}
+    <p>{{ error }}</p>
 {% endif %}

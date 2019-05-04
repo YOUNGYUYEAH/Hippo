@@ -53,54 +53,64 @@ def serverlist(req):
         s = MonitorORM.LoadData()
         serverinfo = s.load_info()
         return render(req, 'monitor/serverlist.html', {'data': serverinfo})
-    except Exception as e:
-        data = e
-        return render(req, 'monitor/serverlist.html', {'error': e})
+    except Exception as error:
+        return render(req, 'monitor/serverlist.html', {'error': error})
 
 def monitor_cpu(req):
-    s = MonitorORM.LoadData()
-    cpudata = s.load_cpu()
-    return render(req, 'monitor/cpu.html', {'data': cpudata})
+    try:
+        s = MonitorORM.LoadData()
+        cpudata = s.load_cpu()
+        return render(req, 'monitor/cpu.html', {'data': cpudata})
+    except Exception as error:
+        return render(req, 'monitor/cpu.html', {'error': error})
 
 
 def monitor_disk(req):
-    s = MonitorORM.LoadData()
-    diskdata = s.load_disk()
-    return render(req, 'monitor/disk.html', {'diskdata': diskdata})
+    try:
+        s = MonitorORM.LoadData()
+        diskdata = s.load_disk()
+        return render(req, 'monitor/disk.html', {'diskdata': diskdata})
+    except Exception as error:
+        return render(req, 'monitor/disk.html', {'error': error})
 
 
 def monitor_memory(req):
-    unit = "GB"
-    memorydata = []
-    s = MonitorORM.LoadData()
-    _data = s.load_memory()
-    for ip in _data:
-        _ipdata = []
-        for value in ip:
-            if isinstance(value, int):
-                if unit == "MB":
-                    value = round(value/1024/1024, 2)
-                elif unit == "GB":
-                    value = round(value/1024/1024/1024,2)
-            _ipdata.append(value)
-        memorydata.append(_ipdata)
-    return render(req, 'monitor/memory.html', {'data': memorydata, 'unit': unit})
+    try:
+        unit = "GB"
+        memorydata = []
+        s = MonitorORM.LoadData()
+        _data = s.load_memory()
+        for ip in _data:
+            _ipdata = []
+            for value in ip:
+                if isinstance(value, int):
+                    if unit == "MB":
+                        value = round(value/1024/1024, 2)
+                    elif unit == "GB":
+                        value = round(value/1024/1024/1024,2)
+                _ipdata.append(value)
+            memorydata.append(_ipdata)
+        return render(req, 'monitor/memory.html', {'data': memorydata, 'unit': unit})
+    except Exception as error:
+        return render(req, 'monitor/memory.html', {'error': error})
 
 
 def monitor_network(req):
-    s = MonitorORM.LoadData()
-    networkdata = s.load_network()
-    return render(req, 'monitor/network.html', {'data': networkdata})
+    try:
+        s = MonitorORM.LoadData()
+        networkdata = s.load_network()
+        return render(req, 'monitor/network.html', {'data': networkdata})
+    except Exception as error:
+        return render(req, 'monitor/network.html', {'error': error})
 
 
 def monitordata(req):
     """
     根据选择返回监控数据,HostMode
     """
-    if req.method == 'GET':
-        # 根据前端传递的参,调取不同的方法,然后将数据范围给前端页面
-        try:
-            s = MonitorORM.LoadData()
-            return render(req, 'monitor/monitordata.html')
-        except Exception as e:
-            print(e)
+    try:
+        s = MonitorORM.LoadData()
+        data = s
+        return render(req, 'monitor/monitordata.html', {'data': s})
+    except Exception as error:
+        return render(req, 'monitor/monitordata.html', {'error': error})
