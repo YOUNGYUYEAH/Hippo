@@ -76,7 +76,7 @@ class LoadData(object):
         self.ip = ip
         self.timerange = timerange
         self.options = item
-        self.count = models.Info.objects.all().count()
+        # self.count = models.Info.objects.all().count()
 
     def load_info(self):
         """ORM提取回来的时间格式非正常显示,需要进一步处理"""
