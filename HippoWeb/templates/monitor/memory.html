@@ -45,15 +45,6 @@
         <tbody>
         {% for d in data %}
             <tr>
-                {% for i in range(0,12) %}
-                    {% if i==0 or i==11 %}
-                        <td>{{ d[i] }}</td>
-                    {% elif d[i] == 0 %}
-                        <td>0</td>
-                    {% else %}
-                        <td>{{ d[i] }}{{ unit }}</td>
-                    {% endif %}
-                {% endfor %}
             </tr>
         {% endfor %}
         </tbody>
