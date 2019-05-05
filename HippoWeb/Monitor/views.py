@@ -39,8 +39,8 @@ def collect(req):
                     response = HttpResponse()
                     response.status_code = 200
                     return response
-            except Exception as e:
-                return HttpResponse("Bad Requests.", {'error': e})
+            except Exception as error:
+                return HttpResponse("Bad Requests.", {'error': error})
         else:
             return HttpResponse("Empty Requests.")
 
@@ -61,6 +61,7 @@ def monitor_cpu(req):
     try:
         s = MonitorORM.LoadData()
         cpudata = s.load_cpu()
+        print(cpudata)
         return render(req, 'monitor/cpu.html', {'data': cpudata})
     except Exception as error:
         return render(req, 'monitor/cpu.html', {'error': error})
@@ -76,11 +77,18 @@ def monitor_disk(req):
 
 
 def monitor_memory(req):
+    """
+    通过前端获取回来的option值,如果没有则默认值MB
+    额外计算一个内存使用占百分比回显页面
+    """
     try:
-        """
-        通过前端获取回来的option值,如果没有则默认值MB
-        """
-        unit = "MB"
+        if req.is_ajax():
+            if req.GET.get('unit'):
+                unit = req.GET.get('unit')
+            elif req.POST.get('unit'):
+                unit = req.POST.get('unit')
+            else:
+                unit = "GB"
         memorydata = []
         s = MonitorORM.LoadData()
         _data = s.load_memory()
@@ -88,13 +96,16 @@ def monitor_memory(req):
             _ipdata = []
             for value in ip:
                 if isinstance(value, int):
-                    if unit == "MB":
-                        value = round(value/1024/1024, 2)
-                    elif unit == "GB":
-                        value = round(value/1024/1024/1024, 2)
+                    if value != 0:
+                        if unit == "MB":
+                                value = round(value/1024/1024, 2)
+                        elif unit == "GB":
+                                value = round(value/1024/1024/1024, 2)
                 _ipdata.append(value)
             memorydata.append(_ipdata)
-        return render(req, 'monitor/memory.html', {'data': memorydata, 'unit': unit})
+        response = render(req, 'monitor/memory.html', {'data': memorydata, 'unit': unit})
+        response.status_code = 200
+        return response
     except Exception as error:
         return render(req, 'monitor/memory.html', {'error': error})
 

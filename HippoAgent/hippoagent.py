@@ -50,6 +50,8 @@ def cpuinfo():
     _cpuinfo['irq'] = psutil.cpu_times().irq
     _cpuinfo['softirq'] = psutil.cpu_times().softirq
     _cpuinfo['steal'] = psutil.cpu_times().steal
+    _cpuinfo['total'] = psutil.cpu_times()
+    print(_cpuinfo)
     _cpu_times_total = 0
     for c in range(len(psutil.cpu_times())):
         _cpu_times_total += psutil.cpu_times()[c]

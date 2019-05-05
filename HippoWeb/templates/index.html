@@ -182,14 +182,16 @@
     <script>
         $("#serverlist").click(function(){
             $("#mainWeb").load("{{ url('/monitor/serverlist') }}",function(){
-                $("#dataTable").DataTable()});
+                $("#dataTable").DataTable();
+            });
         });
         $("#monitordata").click(function(){
             $("#mainWeb").load("{{ url('/monitor/monitordata') }}",function(){
-                jQuery.getScript("{{ static('js/monitordata.js') }}");
+                jQuery.getScript("{{ static('js/monitor.js') }}");
             });
-        });
+        })
     </script>
+    <script src="{{ static('js/heart.js') }}"></script>
     <!-- 用于将左侧边栏收进去,但是影响小页面下的按钮列表缺少文字的问题 -->
 </body>
 

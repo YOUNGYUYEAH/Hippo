@@ -33,6 +33,7 @@ class Cpu(models.Model):
     irq = models.FloatField(verbose_name="硬中断消耗时间比")
     softirq = models.FloatField(verbose_name="软中断消耗时间比")
     steal = models.FloatField(verbose_name="虚拟机偷取时间比")
+    total = models.FloatField(verbose_name="总时间")
     checktime = models.DateTimeField(null=True)
 
     class Meta:

@@ -95,7 +95,10 @@ class LoadData(object):
 
     def load_cpu(self):
         """读取CPU信息需做差值处理和百分比计算"""
-        pass
+        if self.ip is not None:
+            pass
+        elif self.ip is None:
+            pass
 
     def load_disk(self):
         """读取磁盘信息,磁盘信息需要进行JSON串处理"""

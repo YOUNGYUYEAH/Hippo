@@ -108,5 +108,5 @@ def index(req):
             return render(req, 'index.html', {'login_user': login_user})
         else:
             return redirect('/login/')
-    except Exception as e:
-        print(e)
+    except Exception as error:
+        print(error)

@@ -7,8 +7,8 @@
 {% block table_option %}
     <div>
         <select class="form-control form-control-sm" id="memoryunit">
-            <option value="GB">GB</option>
             <option value="MB">MB</option>
+            <option value="GB">GB</option>
         </select>
     </div>
 {% endblock %}
@@ -45,6 +45,13 @@
         <tbody>
             {% for d in data %}
                 <tr>
+                    {% for m in d %}
+                        {% if m.0 or m.11 or m == 0 %}
+                            <td>{{ m }}</td>
+                        {% else %}
+                            <td>{{ m }}{{ unit }}</td>
+                        {% endif %}
+                    {% endfor %}
                 </tr>
             {% endfor %}
         </tbody>
