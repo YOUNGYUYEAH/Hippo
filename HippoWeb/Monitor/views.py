@@ -74,7 +74,7 @@ def monitor_disk(req):
     try:
         s = MonitorORM.LoadData()
         diskdata = s.load_disk()
-        return render(req, 'monitor/disk.html', {'diskdata': diskdata})
+        return render(req, 'monitor/disk.html', {'data': diskdata})
     except Exception as error:
         return render(req, 'monitor/disk.html', {'error': error})
 

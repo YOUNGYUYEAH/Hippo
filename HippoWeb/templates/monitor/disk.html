@@ -1,0 +1,45 @@
+{% extends "module/table.html" %}
+
+{% block table_name %}
+    Disk Data
+{% endblock %}
+
+{% block table_data_head %}
+    {% if data %}
+        <thead>
+            <tr>
+                <td>IP</td>
+                <td>Diskusage</td>
+                <td>IOusage</td>
+                <td>Checktime</td>
+            </tr>
+        </thead>
+    {% elif error %}
+        <thead>
+            <tr>
+                <td>Error Messages</td>
+            </tr>
+        </thead>
+    {% endif %}
+{% endblock %}
+
+{% block table_data_body %}
+    {% if data %}
+        <tbody>
+            {% for d in data %}
+                <tr>
+                    <td>{{ d[0] }}</td>
+                    <td>{{ d[1] }}</td>
+                    <td>{{ d[2] }}</td>
+                    <td>{{ d[3] }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    {% elif error %}
+        <tbody>
+            <tr>
+                <td>{{ error }}</td>
+            </tr>
+        </tbody>
+    {% endif %}
+{% endblock %}
