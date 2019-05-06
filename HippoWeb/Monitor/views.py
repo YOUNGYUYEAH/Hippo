@@ -59,8 +59,13 @@ def serverlist(req):
 def monitor_cpu(req):
     try:
         s = MonitorORM.LoadData()
-        cpudata = s.load_cpu()
-        return render(req, 'monitor/cpu.html', {'data': cpudata})
+        value = False
+        if value:
+            cpudata = s.load_cpu(percent=None)
+            return render(req, 'monitor/cpu.html', {'data': cpudata, 'value': value})
+        else:
+            cpudata = s.load_cpu(percent=True)
+            return render(req, 'monitor/cpu.html', {'data': cpudata})
     except Exception as error:
         return render(req, 'monitor/cpu.html', {'error': error})
 
@@ -94,11 +99,10 @@ def monitor_memory(req):
             _ipdata = []
             for value in ip:
                 if isinstance(value, int):
-                    if value != 0:
-                        if unit == "MB":
-                                value = round(value/1024/1024, 2)
-                        elif unit == "GB":
-                                value = round(value/1024/1024/1024, 2)
+                    if unit == "MB":
+                        value = round(value/1024/1024, 2)
+                    elif unit == "GB":
+                        value = round(value/1024/1024/1024, 2)
                 _ipdata.append(value)
             memorydata.append(_ipdata)
         response = render(req, 'monitor/memory.html', {'data': memorydata, 'unit': unit})
