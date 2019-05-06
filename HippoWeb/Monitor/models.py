@@ -33,6 +33,14 @@ class Cpu(models.Model):
     softirq = models.FloatField(verbose_name="软中断消耗时间比")
     steal = models.FloatField(verbose_name="虚拟机偷取时间比")
     total = models.FloatField(verbose_name="总时间")
+    p_user = models.FloatField(verbose_name="us百分比")
+    p_nice = models.FloatField(verbose_name="ni百分比")
+    p_system = models.FloatField(verbose_name="sy百分比")
+    p_idle = models.FloatField(verbose_name="id百分比")
+    p_iowait = models.FloatField(verbose_name="wa百分比")
+    p_irq = models.FloatField(verbose_name="hi百分比")
+    p_softirq = models.FloatField(verbose_name="si百分比")
+    p_steal = models.FloatField(verbose_name="st百分比")
     checktime = models.DateTimeField(null=True)
 
     class Meta:
