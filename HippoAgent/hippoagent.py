@@ -42,6 +42,15 @@ def cpuinfo():
             load['15min'] = _v[2]
         _cpuinfo['loadavg'] = load
     _cpuinfo['count'] = psutil.cpu_count()
+    time_percent = psutil.cpu_times_percent(interval=1)
+    _cpuinfo['p_user'] = time_percent[0]
+    _cpuinfo['p_nice'] = time_percent[1]
+    _cpuinfo['p_system'] = time_percent[2]
+    _cpuinfo['p_idle'] = time_percent[3]
+    _cpuinfo['p_iowait'] = time_percent[4]
+    _cpuinfo['p_irq'] = time_percent[5]
+    _cpuinfo['p_softirq'] = time_percent[6]
+    _cpuinfo['p_steal'] = time_percent[7]
     _cpuinfo['user'] = psutil.cpu_times().user
     _cpuinfo['nice'] = psutil.cpu_times().nice
     _cpuinfo['system'] = psutil.cpu_times().system
@@ -50,8 +59,6 @@ def cpuinfo():
     _cpuinfo['irq'] = psutil.cpu_times().irq
     _cpuinfo['softirq'] = psutil.cpu_times().softirq
     _cpuinfo['steal'] = psutil.cpu_times().steal
-    _cpuinfo['total'] = psutil.cpu_times()
-    print(_cpuinfo)
     _cpu_times_total = 0
     for c in range(len(psutil.cpu_times())):
         _cpu_times_total += psutil.cpu_times()[c]

@@ -32,7 +32,6 @@ def collect(req):
                         type=monitorjson_system['type'],
                         kernel=monitorjson_system['kernel'],
                         arch=monitorjson_system['arch'],
-                        period=monitorjson_system['period']
                     )
                     s = MonitorORM.SaveData(monitorjson)
                     s.save_all()
@@ -61,7 +60,6 @@ def monitor_cpu(req):
     try:
         s = MonitorORM.LoadData()
         cpudata = s.load_cpu()
-        print(cpudata)
         return render(req, 'monitor/cpu.html', {'data': cpudata})
     except Exception as error:
         return render(req, 'monitor/cpu.html', {'error': error})

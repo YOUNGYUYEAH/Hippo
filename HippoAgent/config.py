@@ -8,5 +8,5 @@ ServerHost = "192.168.20.228"
 ServerPost = "8000"
 
 # 数据发送时间间隔
-Period = "180"
+Period = "60"
 

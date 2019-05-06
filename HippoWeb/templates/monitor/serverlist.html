@@ -25,6 +25,12 @@
                 <td>Error Messages</td>
             </tr>
         </tbody>
+    {% else %}
+        <thead>
+            <tr>
+                <td>Messages</td>
+            </tr>
+        </thead>
     {% endif %}
 {% endblock %}
 
@@ -49,6 +55,12 @@
         <tbody>
             <tr>
                 <td>{{ error }}</td>
+            </tr>
+        </tbody>
+    {% else %}
+        <tbody>
+            <tr>
+                <td>Can't find Data</td>
             </tr>
         </tbody>
     {% endif %}

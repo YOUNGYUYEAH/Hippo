@@ -14,7 +14,6 @@ class Info(models.Model):
     create_time = models.DateField(auto_now_add=True, verbose_name="创建时间")
     update_time = models.DateField(null=True, verbose_name="基本信息更新时间")
     status = models.BooleanField(default=True, verbose_name="机器状态")
-    period = models.IntegerField(verbose_name="记录检查时间间隔")
     remark = models.TextField(null=True, verbose_name="描述")
 
     class Meta:
