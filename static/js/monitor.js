@@ -1,4 +1,4 @@
-$("#monitordata_cpu").click(function(){
+$("#monitordata_cpu").click(function() {
     $("#monitorSubweb").load("/monitor/cpu");
 });
 $("#monitordata_disk").click(function(){

@@ -100,15 +100,15 @@ def diskinfo():
         _iousage = dict()
         device = _io
         if re.match(device_regex, _io):
-            _iousage['read_count'] = iopart[device][0]
-            _iousage['write_count'] = iopart[device][1]
-            _iousage['read_bytes'] = iopart[device][2]
-            _iousage['write_bytes'] = iopart[device][3]
-            _iousage['read_time'] = iopart[device][4]
-            _iousage['write_time'] = iopart[device][5]
-            _iousage['read_merged_count'] = iopart[device][6]
-            _iousage['write_merged_count'] = iopart[device][7]
-            _iousage['busy_time'] = iopart[device][8]
+            _iousage['read_count'] = iopart[device].read_count
+            _iousage['write_count'] = iopart[device].write_count
+            _iousage['read_bytes'] = iopart[device].read_bytes
+            _iousage['write_bytes'] = iopart[device].write_bytes
+            _iousage['read_time'] = iopart[device].read_time
+            _iousage['write_time'] = iopart[device].write_time
+            _iousage['read_merged_count'] = iopart[device].read_merged_count
+            _iousage['write_merged_count'] = iopart[device].write_merged_count
+            _iousage['busy_time'] = iopart[device].busy_time
         if _iousage:
             _diskiousage[device] = _iousage
     _diskinfo['io'] = _diskiousage
@@ -120,9 +120,9 @@ def diskinfo():
         inode_usage = subshell.stdout.readline()
         inode_usage = inode_usage.decode('utf-8').split('\n')[0]
         usage = psutil.disk_usage(mountpoint)
-        _partusage['total'] = usage[0]
-        _partusage['used'] = usage[1]
-        _partusage['free'] = usage[2]
+        _partusage['total'] = round(usage[0]/pow(1024, 3), 2)
+        _partusage['used'] = round(usage[1]/pow(1024, 3), 2)
+        _partusage['free'] = round(usage[2]/pow(1024, 3), 2)
         _partusage['percent'] = usage[3]
         if inode_usage:
             _partusage['inode'] = inode_usage
@@ -180,5 +180,5 @@ def pusher():
 
 
 if __name__ == '__main__':
-    print(monitorjson())
-
+    # print(monitorjson())
+    print(diskinfo())

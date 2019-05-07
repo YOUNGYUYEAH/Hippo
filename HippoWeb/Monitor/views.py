@@ -100,9 +100,9 @@ def monitor_memory(req):
             for value in ip:
                 if isinstance(value, int):
                     if unit == "MB":
-                        value = round(value/1024/1024, 2)
+                        value = round(value/pow(1024, 2), 2)
                     elif unit == "GB":
-                        value = round(value/1024/1024/1024, 2)
+                        value = round(value/pow(1024, 3), 2)
                 _ipdata.append(value)
             memorydata.append(_ipdata)
         response = render(req, 'monitor/memory.html', {'data': memorydata, 'unit': unit})

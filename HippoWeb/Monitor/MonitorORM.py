@@ -150,8 +150,9 @@ class LoadData(object):
         cursor = connection.cursor()
         try:
             if self.ip is None:
-                _querysql = """SELECT `ip`,`diskusage`,`iousage`,DATE_FORMAT(`checktime`,'%Y-%m-%d %H:%i:%S') 
-                FROM monitor_disk WHERE `checktime` IN (SELECT Max(`checktime`) FROM monitor_disk GROUP BY `ip`);"""
+                _querysql = """SELECT `ip`,`diskusage`,JSON_KEYS(`iousage`),
+                DATE_FORMAT(`checktime`,'%Y-%m-%d %H:%i:%S') FROM monitor_disk WHERE `checktime` IN 
+                (SELECT Max(`checktime`) FROM monitor_disk GROUP BY `ip`);"""
                 cursor.execute(_querysql)
                 _load_disk_result = cursor.fetchall()
                 return _load_disk_result
