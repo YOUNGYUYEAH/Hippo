@@ -1,7 +1,7 @@
 # -*- encoding:utf-8 -*-
 import psutil
 import config
-
+import os
 
 def systeminfo():
     """
@@ -29,7 +29,6 @@ def systeminfo():
 def cpuinfo():
     """
     CPU和负载信息采集
-    cpu时间都是累积值,需要于下一次采集进行运算
     """
     import platform
     _cpuinfo = dict()
@@ -131,6 +130,23 @@ def diskinfo():
     return _diskinfo
 
 
+def test():
+    import time
+    import re
+    device_regex = re.compile(r'sd[a-z]|vd[a-z]')
+    ioport1 = psutil.disk_io_counters(perdisk=True, nowrap=True)
+    time.sleep(2)
+    ioport2 = psutil.disk_io_counters(perdisk=True, nowrap=True)
+    for io in ioport2:
+        if re.match(device_regex, io):
+            read_count = ioport2[io].read_count - ioport1[io].read_count
+            read_bytes = ioport2[io].read_bytes - ioport1[io].read_bytes
+            read_time = ioport2[io].read_time - ioport1[io].read_time
+            write_bytes = ioport2[io].write_bytes - ioport1[io].write_bytes
+            write_count = ioport2[io].write_count - ioport1[io].write_count
+            write_time = ioport2[io].write_time - ioport1[io].write_time
+
+
 def netinfo():
     """
     获取网卡总量用量和流量情况,需要于下次采集进行运算
@@ -181,4 +197,4 @@ def pusher():
 
 if __name__ == '__main__':
     # print(monitorjson())
-    print(diskinfo())
+    print(test())
