@@ -22,7 +22,9 @@ class Info(models.Model):
 
 class Cpu(models.Model):
     ip = models.CharField(max_length=20, verbose_name="主机ip")
-    loadavg = models.CharField(max_length=500, verbose_name="负载")
+    load_1 = models.CharField(max_length=20, verbose_name="1min负载")
+    load_5 = models.CharField(max_length=20, verbose_name="5min负载")
+    load_15 = models.CharField(max_length=20, verbose_name="15min负载")
     count = models.CharField(max_length=4, verbose_name="cpu核数")
     user = models.FloatField(verbose_name="用户态使用cpu时间比")
     system = models.FloatField(verbose_name="系统态使用cpu时间比")

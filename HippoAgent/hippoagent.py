@@ -35,11 +35,9 @@ def cpuinfo():
     if platform.system() == 'Linux':
         with open('/proc/loadavg', 'r') as f:
             _v = f.read().split()
-            load = dict()
-            load['1min'] = _v[0]
-            load['5min'] = _v[1]
-            load['15min'] = _v[2]
-        _cpuinfo['loadavg'] = load
+            _cpuinfo['load_1'] = _v[0]
+            _cpuinfo['load_5'] = _v[1]
+            _cpuinfo['load_15'] = _v[2]
     _cpuinfo['count'] = psutil.cpu_count()
     time_percent = psutil.cpu_times_percent(interval=1)
     _cpuinfo['p_user'] = time_percent[0]
@@ -196,5 +194,5 @@ def pusher():
 
 
 if __name__ == '__main__':
-    # print(monitorjson())
-    print(test())
+    print(monitorjson())
+    # print(test())

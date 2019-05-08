@@ -188,13 +188,19 @@
                 $("#monitordata").click(function(){
                     $("#mainWeb").load("{{ url('/monitor/monitordata') }}",function(){
                         $("#monitordata_cpu").click(function() {
-                             $("#monitorSubweb").load("/monitor/cpu");
+                             $("#monitorSubweb").load("/monitor/cpu",function(){
+                                 $("#dataTable").DataTable();
+                             });
                         });
                         $("#monitordata_disk").click(function(){
-                            $("#monitorSubweb").load("/monitor/disk");
+                            $("#monitorSubweb").load("/monitor/disk",function(){
+                                $("#dataTable").DataTable();
+                            });
                         });
                         $("#monitordata_memory").click(function(){
-                            $("#monitorSubweb").load("/monitor/memory");
+                            $("#monitorSubweb").load("/monitor/memory",function(){
+                                $("#dataTable").DataTable();
+                            });
                         });
                     });
                 })

@@ -57,15 +57,15 @@ def serverlist(req):
 
 
 def monitor_cpu(req):
+    value = False
     try:
         s = MonitorORM.LoadData()
-        value = False
         if value:
             cpudata = s.load_cpu(percent=None)
             return render(req, 'monitor/cpu.html', {'data': cpudata, 'value': value})
         else:
             cpudata = s.load_cpu(percent=True)
-            return render(req, 'monitor/cpu.html', {'data': cpudata})
+            return render(req, 'monitor/cpu.html', {'data': cpudata, 'value': value})
     except Exception as error:
         return render(req, 'monitor/cpu.html', {'error': error})
 

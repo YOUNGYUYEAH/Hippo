@@ -19,7 +19,9 @@ class SaveData(object):
         try:
             models.Cpu.objects.create(
                 ip=self.system['ip'],
-                loadavg=self.cpu['loadavg'],
+                load_1=self.cpu['load_1'],
+                load_5=self.cpu['load_5'],
+                load_15=self.cpu['load_15'],
                 user=self.cpu['user'],
                 count=float(self.cpu['count']),
                 system=float(self.cpu['system']),
@@ -112,14 +114,14 @@ class LoadData(object):
         try:
             if self.ip is None:
                 if percent:
-                    _query_percent_sql = """SELECT `ip`,`loadavg`,`count`,`p_user`,`p_system`,`p_nice`,`p_idle`,
-                    `p_iowait`,`p_irq`,`p_softirq`,`p_steal`,DATE_FORMAT(`checktime`,'%Y-%m-%d %H:%i:%S') 
+                    _query_percent_sql = """SELECT `ip`,`load_1`,`load_5`,`load_15`,`count`,`p_user`,`p_system`,`p_nice`,
+                    `p_idle`,`p_iowait`,`p_irq`,`p_softirq`,`p_steal`,DATE_FORMAT(`checktime`,'%Y-%m-%d %H:%i:%S') 
                     FROM monitor_cpu WHERE `checktime` IN (SELECT Max(`checktime`) FROM monitor_cpu GROUP BY `ip`);"""
                     cursor.execute(_query_percent_sql)
                     _load_percent_result = cursor.fetchall()
                     return _load_percent_result
                 else:
-                    _query_value_sql = """SELECT `ip`,`loadavg`,`count`,`user`,`system`,`nice`,`idle`,
+                    _query_value_sql = """SELECT `ip`,`load_1`,`load_5`,`load_15`,`count`,`user`,`system`,`nice`,`idle`,
                     `iowait`,`irq`,`softirq`,`steal`,`total`,DATE_FORMAT(`checktime`,'%Y-%m-%d %H:%i:%S') 
                     FROM monitor_cpu WHERE `checktime` IN (SELECT Max(`checktime`) FROM monitor_cpu GROUP BY `ip`);"""
                     cursor.execute(_query_value_sql)
@@ -127,16 +129,16 @@ class LoadData(object):
                     return _load_value_result
             else:
                 if percent:
-                    _query_percent_sql = """SELECT `ip`,`loadavg`,`count`,`p_user`,`p_system`,`p_nice`,`p_idle`,
-                    `p_iowait`,`p_irq`,`p_softirq`,`p_steal`,DATE_FORMAT(Max(`checktime`),'%%Y-%%m-%%d %%H:%%i:%%S')
+                    _query_percent_sql = """SELECT `ip`,`load_1`,`load_5`,`load_15`,`count`,`p_user`,`p_system`,`p_nice`,
+                    `p_idle`,`p_iowait`,`p_irq`,`p_softirq`,`p_steal`,DATE_FORMAT(Max(`checktime`),'%%Y-%%m-%%d %%H:%%i:%%S')
                     FROM monitor_cpu WHERE `ip` = '%s';""" % self.ip
                     cursor.execute(_query_percent_sql)
                     _load_percent_result = cursor.fetchall()
                     return _load_percent_result
                 else:
-                    _query_value_sql = """SELECT `ip`,`loadavg`,`count`,`user`,`system`,`nice`,`idle`,`iowait`,
-                    `irq`,`softirq`,`steal`,`total`,DATE_FORMAT(Max(`checktime`),'%%Y-%%m-%%d %%H:%%i:%%S') FROM
-                    monitor_cpu WHERE `ip` = '%s';""" % self.ip
+                    _query_value_sql = """SELECT `ip`,`load_1`,`load_5`,`load_15`,`count`,`user`,`system`,`nice`,`idle`,
+                    `iowait`,`irq`,`softirq`,`steal`,`total`,DATE_FORMAT(Max(`checktime`),'%%Y-%%m-%%d %%H:%%i:%%S') 
+                    FROM monitor_cpu WHERE `ip` = '%s';""" % self.ip
                     cursor.execute(_query_value_sql)
                     _load_value_result = cursor.fetchall()
                     return _load_value_result
@@ -150,9 +152,8 @@ class LoadData(object):
         cursor = connection.cursor()
         try:
             if self.ip is None:
-                _querysql = """SELECT `ip`,`diskusage`,JSON_KEYS(`iousage`),
-                DATE_FORMAT(`checktime`,'%Y-%m-%d %H:%i:%S') FROM monitor_disk WHERE `checktime` IN 
-                (SELECT Max(`checktime`) FROM monitor_disk GROUP BY `ip`);"""
+                _querysql = """SELECT `ip`,`diskusage`,JSON_KEYS(`iousage`),DATE_FORMAT(`checktime`,'%Y-%m-%d %H:%i:%S') 
+                FROM monitor_disk WHERE `checktime` IN (SELECT Max(`checktime`) FROM monitor_disk GROUP BY `ip`);"""
                 cursor.execute(_querysql)
                 _load_disk_result = cursor.fetchall()
                 return _load_disk_result

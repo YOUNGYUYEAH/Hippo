@@ -343,3 +343,6 @@ footer.sticky-footer {
 #mainWeb {
   padding-top: 10px;
 }
+.table-li {
+  padding: 0 1rem 0 0;
+}
