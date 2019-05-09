@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    {% block CssFiles %}
+        <link href="{{ static('vendor/bootstrap-4.1.3/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link href="{{ static('css/index.css') }}" rel="stylesheet" type="text/css">
+    {% endblock %}
+
+    <title>{% block WebTitle %}Hippo OPS Platform{% endblock %}</title>
+</head>
+
+<body class="fixed-nav sticky-footer" id="page-top">
+
+    {% block NavBar %}
+        {% include "module/navbar.html" %}
+    {% endblock %}
+
+    <div class="content-wrapper">
+        <div class="container-fluid">
+            {% block MainWeb %}
+            {% endblock %}
+        </div>
+    </div>
+
+
+    <footer class="sticky-footer">
+        {% block Footer %}
+            <div class="container">
+                <div class="text-center">
+                    <small>Copyright © Your Website 2019</small>
+                    <small>- Author - YOUNGYUYEAH</small>
+                    <span class="align-right">
+                        <a class="mr-3 d-inline-block" href="https://github.com/YOUNGYUYEAH/Hippo" target="_blank">
+                            <i class="fa fa-fw fa-thumbs-up">Like</i>
+                        </a>
+                    </span>
+                </div>
+            </div>
+        {% endblock %}
+    </footer>
+
+    {% block JsFiles %}
+        <script src="{{ static('vendor/jquery-3.3.1/jquery.js') }}"></script>
+        <script src="{{ static('vendor/bootstrap-4.1.3/js/bootstrap.bundle.min.js') }}"></script>
+        <script src="{{ static('js/index.js') }}"></script>
+        <script src="{{ static('js/heart.js') }}"></script>
+    {% endblock %}
+
+</body>
+</html>

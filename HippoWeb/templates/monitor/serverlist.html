@@ -1,67 +1,86 @@
-{% extends "module/table.html" %}
+{% extends "module/base.html" %}
 
-{% block table_name %}
-    Server List
+{% block CssFiles %}
+    {{ super() }}
+    <link href="{{ static('vendor/datatables/dataTables.bootstrap4.css') }}" rel="stylesheet" type="text/css">
 {% endblock %}
 
-{% block table_data_head %}
-    {% if data %}
-        <thead>
-            <tr>
-                <td>ServerIP</td>
-                <td>HostName</td>
-                <td>OS</td>
-                <td>Kernel</td>
-                <td>Arch</td>
-                <td>Status</td>
-                <td>CreateTime</td>
-                <td>UpdateTime</td>
-                <td>Remark</td>
-            </tr>
-        </thead>
-    {% elif error %}
-        <tbody>
-            <tr>
-                <td>Error Messages</td>
-            </tr>
-        </tbody>
-    {% else %}
-        <thead>
-            <tr>
-                <td>Messages</td>
-            </tr>
-        </thead>
-    {% endif %}
+{% block MainWeb %}
+    <div class="card mb-8">
+        <div class="card-header navbar">
+            <div>
+                <i class="fa fa-table"></i>
+                    Server List
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    {% if data %}
+                        <thead>
+                            <tr>
+                                <td>ServerIP</td>
+                                <td>HostName</td>
+                                <td>OS</td>
+                                <td>Kernel</td>
+                                <td>Arch</td>
+                                <td>Status</td>
+                                <td>CreateTime</td>
+                                <td>UpdateTime</td>
+                                <td>Remark</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for d in data %}
+                            <tr>
+                                <td>{{ d.ip }}</td>
+                                <td>{{ d.host }}</td>
+                                <td>{{ d.type }}</td>
+                                <td>{{ d.kernel }}</td>
+                                <td>{{ d.arch }}</td>
+                                <td>{{ d.status }}</td>
+                                <td>{{ d.ctime }}</td>
+                                <td>{{ d.utime }}</td>
+                                <td>{{ d.remark }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    {% elif error %}
+                        <tbody>
+                            <tr>
+                                <td>Error Messages</td>
+                            </tr>
+                        </tbody>
+                        <tbody>
+                            <tr>
+                                <td>{{ error }}</td>
+                            </tr>
+                        </tbody>
+                    {% else %}
+                        <thead>
+                            <tr>
+                                <td>Messages</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                             <tr>
+                                 <td>Can't find Data</td>
+                             </tr>
+                        </tbody>
+                    {% endif %}
+                </table>
+            </div>
+        </div>
+    </div>
 {% endblock %}
 
-{% block table_data_body %}
-    {% if data %}
-        <tbody>
-            {% for d in data %}
-                <tr>
-                    <td>{{ d.ip }}</td>
-                    <td>{{ d.host }}</td>
-                    <td>{{ d.type }}</td>
-                    <td>{{ d.kernel }}</td>
-                    <td>{{ d.arch }}</td>
-                    <td>{{ d.status }}</td>
-                    <td>{{ d.ctime }}</td>
-                    <td>{{ d.utime }}</td>
-                    <td>{{ d.remark }}</td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    {% elif error %}
-        <tbody>
-            <tr>
-                <td>{{ error }}</td>
-            </tr>
-        </tbody>
-    {% else %}
-        <tbody>
-            <tr>
-                <td>Can't find Data</td>
-            </tr>
-        </tbody>
-    {% endif %}
+{% block JsFiles %}
+    {{ super() }}
+    <script src="{{ static('vendor/datatables/jquery.dataTables.js') }}"></script>
+    <script src="{{ static('vendor/datatables/dataTables.bootstrap4.js') }}"></script>
+    <script>
+        $(document).ready(function(){
+            $("#dataTable").DataTable();
+        });
+    </script>
 {% endblock %}

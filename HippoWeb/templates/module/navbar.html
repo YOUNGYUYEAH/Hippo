@@ -1,0 +1,155 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
+    <a class="navbar-brand" href="#">
+        <span><img src="{{ static('images/hippo-logo.png') }}" width="40px" height="40px"></span>
+        Hippo OPS Platform
+    </a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+        <div class="collapse navbar-collapse show" id="navbarResponsive">
+            {% block NavBarMenu %}
+            <ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
+                <li class="nav-item" data-toggle="tooltip" data-placement="right" title
+                    data-original-title="Dashboard">
+                    <a class="nav-link" href="{{ url('/index/') }}">
+                        <i class="fa fa-fw fa-tachometer"></i>
+                        <span class="nav-link-text">Dashbord</span>
+                    </a>
+                </li>
+                <li class="nav-item" data-toggle="tooltip" data-placement="right" title
+                    data-original-title="Monitor">
+                    <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse"
+                       href="#MonitorcollapsePages" data-parent="#exampleAccordion" aria-expanded="false">
+                        <i class="fa fa-fw fa-area-chart"></i>
+                        <span class="nav-link-text">Server Monitor</span>
+                    </a>
+                    <ul class="sidenav-second-level collapse" id="MonitorcollapsePages">
+                        <li>
+                            <a class="nav-link" id="serverlist" href="{{ url('/monitor/serverlist') }}">
+                                <i class="fa fa-fw fa-list"></i>
+                                <span class="nav-link-text">Server List</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="nav-link" id="monitordata" href="{{ url('/monitor/monitordata') }}">
+                                <i class="fa fa-fw fa-linode"></i>
+                                <span class="nav-link-text">Monitor Data</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="nav-link" id="addserver">
+                                <i class="fa fa-fw fa-plus-circle"></i>
+                                <span class="nav-link-text">Add Server</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="nav-link" id="charts">
+                                <i class="fa fa-fw fa-pie-chart"></i>
+                                <span class="nav-link-text">Charts</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item" data-toggle="tooltip" data-placement="right" title
+                    data-original-title="Performance">
+                    <a class="nav-link" href="/Performance">
+                        <i class="fa fa-fw fa-lightbulb-o"></i>
+                        <span class="nav-link-text">Service Performance</span>
+                    </a>
+                </li>
+                <li class="nav-item" data-toggle="tooltip" data-placement="right" title
+                    data-original-title="Config">
+                    <a class="nav-link" href="/Config">
+                        <i class="fa fa-fw fa-cogs"></i>
+                        <span class="nav-link-text">Configuration Center</span>
+                    </a>
+                </li>
+                <li class="nav-item" data-toggle="tooltip" data-placement="right" title
+                    data-original-title="Deploy">
+                    <a class="nav-link" href="/Deploy">
+                        <i class="fa fa-fw fa-tasks"></i>
+                        <span class="nav-link-text">Deployment System</span>
+                    </a>
+                </li>
+                <li class="nav-item" data-toggle="tooltip" data-placement="right" title data-original-title="Log">
+                    <a class="nav-link" href="/Log">
+                        <i class="fa fa-fw fa-file-text-o"></i>
+                        <span class="nav-link-text">Logging System</span>
+                    </a>
+                </li>
+                <li class="nav-item" data-toggle="tooltip" data-placement="right" title
+                    data-original-title="Terminal">
+                    <a class="nav-link" id="Terminal">
+                        <i class="fa fa-fw fa-terminal"></i>
+                        <span class="nav-link-text">Terminal</span>
+                    </a>
+                </li>
+            </ul>
+            {% endblock %}
+
+            {% block NavBarTop %}
+            <ul class="navbar-nav sidenav-toggler">
+                <li class="nav-item">
+                    <a class="nav-link text-center" id="sidenavToggler">
+                        <i class="fa fa-fw fa-arrow-circle-left"></i>
+                    </a>
+                </li>
+            </ul>
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <form class="form-inline my-2 my-lg-0 mr-lg-2">
+                        <div class="input-group">
+                            <input class="form-control" type="text" placeholder="Search for..">
+                            <span class="input-group-btn">
+                                <button class="btn btn-primary" type="button">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </span>
+                        </div>
+                    </form>
+                </li>
+            </ul>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle mr-lg-2" id="messagesDropdown" href="#"
+                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-fw fa-envelope"></i>
+                        <span class="d-lg-none">
+                                Messages
+                                <span class="badge badge-pill badge-primary">6 New</span>
+                            </span>
+                        <span class="indicator text-primary d-none d-lg-block">
+                                <i class="fa fa-fw fa-circle"></i>
+                            </span>
+                    </a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle mr-lg-2" id="alertsDropdown" href="#" data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-fw fa-bell"></i>
+                        <span class="d-lg-none">
+                                Alerts
+                                <span class="badge badge-pill badge-warning">12 New</span>
+                            </span>
+                        <span class="indicator text-warning d-none d-lg-block">
+                                <i class="fa fa-fw fa-circle"></i>
+                            </span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link mr-lg-2" id="options" href="#" data-toggle="modal">
+                        <i class="fa fa-fw fa-wrench"></i>
+                        Options
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link mr-lg-2" id="logout" href="{{ url('/logout/') }}">
+                        <i class="fa fa-fw fa-sign-out"></i>
+                        Logout
+                    </a>
+                </li>
+            </ul>
+            {% endblock %}
+    </div>
+</nav>
