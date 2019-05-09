@@ -41,4 +41,29 @@
             </li>
         </ul>
     </div>
+    <div id="mainSubweb">
+    </div>
+{% endblock %}
+
+{% block JsFiles %}
+    {{ super() }}
+    <script src="{{ static('vendor/datatables/dataTables.bootstrap4.js') }}"></script>
+    <script>
+        $("#monitordata_cpu").click(function(){
+           $.ajax({
+               url: "{{ url('/monitor/c') }}",
+               type: 'POST',
+               data: {'option': "percent"},
+               success: function(data, value){
+                   if (value = "percent")
+                       alert("ok");
+               }
+           });
+        });
+    </script>
+    <script>
+        $(document).ready(function(){
+            $("#dataTable").DataTable();
+        });
+    </script>
 {% endblock %}

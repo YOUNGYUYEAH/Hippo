@@ -57,17 +57,18 @@ def serverlist(req):
 
 
 def monitor_cpu(req):
-    value = False
+    option = "value"
+    if req.is_ajax():
+        if req.POST.get('option'):
+            option = req.POST.get('option')
     try:
         s = MonitorORM.LoadData()
-        if value:
-            cpudata = s.load_cpu(percent=None)
-            return render(req, 'monitor/cpu.html', {'data': cpudata, 'value': value})
-        else:
-            cpudata = s.load_cpu(percent=True)
-            return render(req, 'monitor/cpu.html', {'data': cpudata, 'value': value})
+        cpudata = s.load_cpu(percent=True)
+        response = render(req, 'monitor/monitordata.html', {'data': cpudata, 'option': option})
+        response.status_code = 200
+        return response
     except Exception as error:
-        return render(req, 'monitor/cpu.html', {'error': error})
+        return render(req, 'monitor/monitordata.html', {'error': error})
 
 
 def monitor_disk(req):
@@ -126,9 +127,7 @@ def monitordata(req):
     根据选择返回监控数据,HostMode
     """
     try:
-        s = MonitorORM.LoadData()
-        data = s
-        return render(req, 'monitor/monitordata.html', {'data': s})
+        return render(req, 'monitor/monitordata.html')
     except Exception as error:
         return render(req, 'monitor/monitordata.html', {'error': error})
 
