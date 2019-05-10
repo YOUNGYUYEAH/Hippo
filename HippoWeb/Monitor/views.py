@@ -3,33 +3,27 @@ import json
 from HippoWeb.Monitor import models
 from HippoWeb.Monitor import MonitorORM
 from django.shortcuts import HttpResponse, render
-
-
-def api_error():
-    response = HttpResponse("API error")
-    return response
+from django.contrib.auth.decorators import login_required
 
 
 def collect(req):
     """
-    接收agent数据的接口,仅接收方法为POST的请求,
-    将数据判断后入库
+    接收agent数据的接口,仅接收方法为POST的请求,将数据判断后入库.
     """
-    if req.method == 'GET':
-        api_error()
-    elif req.method == 'POST':
+    if req.method == 'POST':
         if req.body:
             try:
                 monitorjson = json.loads(req.body, encoding='utf-8')
                 monitorjson_system = monitorjson['system']
                 if models.Info.objects.filter(ip=monitorjson_system['ip']):
-                    # 需要判断新的数据是否跟源数据不同,若不同需要更新
+                    # 需要判断新的数据是否跟源数据不同,若不同需要更新.
                     s = MonitorORM.SaveData(monitorjson)
                     s.save_all()
                     response = HttpResponse()
                     response.status_code = 200
                     return response
                 else:
+                    # 若不存在对应IP数据,则进行添加,顺便存入数据,返回API正常.
                     models.Info.objects.create(
                         host=monitorjson_system['hostname'],
                         ip=monitorjson_system['ip'],
@@ -44,49 +38,78 @@ def collect(req):
                     response.status_code = 200
                     return response
             except Exception as error:
-                return HttpResponse("Bad Requests.", {'error': error})
+                # 请求异常,需要补充记录日志.
+                response = HttpResponse("Bad Requests. \n")
+                response.status_code = 412
+                return response
         else:
-            api_error()
+            # 无任何请求报错.
+            response = HttpResponse("Empty Request. =.=? \n")
+            response.status_code = 412
+            return response
+    else:
+        # 非POST方法报错.
+        response = HttpResponse("API Error. :(  \n")
+        response.status_code = 405
+        return response
 
 
+@login_required
 def serverlist(req):
     """
-    返回所有info服务器的基本信息
+    读取monitor_info返回所有服务器的基本信息.
     """
     try:
         s = MonitorORM.LoadData()
-        serverinfo = s.load_info()
-        return render(req, 'monitor/serverlist.html', {'data': serverinfo})
+        _serverdata = s.load_info()
+        return render(req, 'monitor/serverlist.html', {'data': _serverdata})
     except Exception as error:
         return render(req, 'monitor/serverlist.html', {'error': error})
 
 
 def monitor_cpu(req):
+    """
+    查询所有服务CPU信息的接口,提供数值和百分比.
+    """
     if req.is_ajax():
         if req.method == 'POST':
+            title = "CPU List"
             try:
-                thead = ["IP", "Load_1", "Load_5", "Load_15", "Count", "User", "System", "Nice",
-                         "Idle", "IOwait", "Irq", "Softirq", "Steal", "Total", "Checktime"]
-                # 如果是查询百分比,删除统计列
-                thead.pop(-2)
-                s = MonitorORM.LoadData()
-                cpudata = s.load_cpu(percent=True)
-                response = HttpResponse(json.dumps({'head': thead, 'value': cpudata}),
-                                        content_type='application/json')
-                return response
+                if req.POST.get('option'):
+                    option = req.POST.get('option')
+                    print(option)
+                # 初始化前端页面所需要的数据.
+                    thead = ["IP", "Load_1", "Load_5", "Load_15", "Count", "User", "System", "Nice",
+                             "Idle", "IOwait", "Irq", "Softirq", "Steal", "Total", "Checktime"]
+                    s = MonitorORM.LoadData()
+                    if option == "percent":
+                        thead.pop(-2)
+                        cpudata = s.load_cpu(percent=True)
+                    else:
+                        cpudata = s.load_cpu(percent=False)
+                    response = HttpResponse(json.dumps({'title': title, 'head': thead, 'value': cpudata}),
+                                            content_type='application/json')
+                    return response
             except Exception as error:
-                response = HttpResponse(json.dumps({'error': error}))
+                # 如果有异常,将报错返回前端.
+                thead = "Error Messages"
+                response = HttpResponse(json.dumps({'title': title, 'head': thead, 'value': error}),
+                                        content_type='application/json')
+                response.status_code = 417
                 return response
-        else:
-            api_error()
     else:
-        api_error()
+        # 仅接受AJAX.
+        response = HttpResponse("ONLY AJAX. :(  \n")
+        response.status_code = 405
+        return response
 
 
 def monitor_disk(req):
+    """未完成"""
     try:
         s = MonitorORM.LoadData()
         diskdata = s.load_disk()
+        print(diskdata)
         return render(req, 'monitor/disk.html', {'data': diskdata})
     except Exception as error:
         return render(req, 'monitor/disk.html', {'error': error})
@@ -94,44 +117,58 @@ def monitor_disk(req):
 
 def monitor_memory(req):
     """
-    通过前端获取回来的option值,如果没有则默认值MB
-    额外计算一个内存使用占百分比回显页面
+    查询所有服务Memeory信息的接口,提供GB和MB单位.
     """
     if req.is_ajax():
         if req.method == 'POST':
-            unit = "GB"
-    try:
-        thead = ["IP", "Total", "Available", "Used", "Free", "Active", "Inactive", "Buffers",
-                 "Cached", "Shared", "Slab", "Checktime"]
-        s = MonitorORM.LoadData()
-        _data = s.load_memory()
-        memorydata = []
-        for ip in _data:
-            _ipdata = []
-            for value in ip:
-                if isinstance(value, int):
-                    if unit == "MB":
-                        value = round(value/pow(1024, 2), 2)
-                    elif unit == "GB":
-                        value = round(value/pow(1024, 3), 2)
-                _ipdata.append(value)
-            memorydata.append(_ipdata)
-        response = HttpResponse(json.dumps({'head': thead, 'value': memorydata}),
-                                content_type='application/json')
+            title = "Memory List"
+            unit = req.POST.get('option')
+            try:
+                thead = ["IP", "Total", "Available", "Used", "Free", "Active", "Inactive", "Buffers",
+                         "Cached", "Shared", "Slab", "Checktime"]
+                s = MonitorORM.LoadData()
+                _data = s.load_memory()
+                memorydata = []
+                for ip in _data:
+                    _ipdata = []
+                    for value in ip:
+                        if isinstance(value, int):
+                            if unit == "MB":
+                                value = round(value/pow(1024, 2), 2)
+                            elif unit == "GB":
+                                value = round(value/pow(1024, 3), 2)
+                        _ipdata.append(value)
+                    memorydata.append(_ipdata)
+                response = HttpResponse(json.dumps({'title': title, 'head': thead, 'value': memorydata}),
+                                        content_type='application/json')
+                return response
+            except Exception as error:
+                thead = "Error Messages"
+                response = HttpResponse(json.dumps({'title': title, 'head': thead, 'value': error}),
+                                        content_type='application/json')
+                response.status_code = 417
+                return response
+    else:
+        # 仅接受AJAX.
+        response = HttpResponse("ONLY AJAX. :(  \n")
+        response.status_code = 405
         return response
-    except Exception as error:
-        return render(req, 'monitor/memory.html', {'error': error})
 
 
 def monitor_network(req):
     try:
+        title = "Network List"
+        thead = ["IP"]
         s = MonitorORM.LoadData()
         networkdata = s.load_network()
-        return render(req, 'monitor/network.html', {'data': networkdata})
+        response = HttpResponse(json.dumps({'title': title, 'head': thead, 'value': networkdata}),
+                                content_type='application/json')
+        return response
     except Exception as error:
         return render(req, 'monitor/network.html', {'error': error})
 
 
+@login_required
 def monitordata(req):
     """
     根据选择返回监控数据,HostMode
@@ -143,10 +180,14 @@ def monitordata(req):
 
 
 def addserver(req):
-    """添加新的监控服务器,分配agent,需要通过saltstack分配安装"""
+    """
+    添加新的监控服务器,分配agent,需要通过saltstack分配安装
+    """
     pass
 
 
 def charts(req):
-    """根据数据出图"""
+    """
+    根据数据出图
+    """
     pass

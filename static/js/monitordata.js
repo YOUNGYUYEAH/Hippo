@@ -5,9 +5,19 @@ $("#monitordata_cpu").click(function() {
         url: '/monitor/c',
         type: 'POST',
         dataType: 'json',
-        data: {'option':"percent"},
+        data: {'type':"cpu",'option':"percent"},
         success: DataFunc
     });
+});
+$("#monitordata_disk").click(function(){
+     CreateTableFunc();
+     $.ajax({
+         url: '/monitor/d',
+         type: 'POST',
+         dataType: 'json',
+         data: {'type':"disk"},
+         success: DataFunc
+     });
 });
 $("#monitordata_memory").click(function(){
      CreateTableFunc();
@@ -15,7 +25,17 @@ $("#monitordata_memory").click(function(){
          url: '/monitor/m',
          type: 'POST',
          dataType: 'json',
-         data: {'option':"GB"},
+         data: {'type':"memory",'option':"GB"},
+         success: DataFunc
+     });
+});
+$("#monitordata_network").click(function(){
+     CreateTableFunc();
+     $.ajax({
+         url: '/monitor/n',
+         type: 'POST',
+         dataType: 'json',
+         data: {'type':"network"},
          success: DataFunc
      });
 });
@@ -25,6 +45,7 @@ $("#monitordata_memory").click(function(){
         } else {
             var cardText = "";
             cardText += '<div class="card mb-8">';
+            cardText += '<div class="card-header navbar"></div>';
             cardText += '<div class="card-body">';
             cardText += '<div class="table-responsive">';
             cardText += '<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">';
@@ -49,6 +70,9 @@ $("#monitordata_memory").click(function(){
         }
     }
     function DataFunc(data) {
+        var titleText = "";
+        titleText += '<div><i class="fa fa-table"></i>'+ "\n" + data["title"] +'</div>';
+        $(".card-header").html(titleText);
         var theadText = "";
         theadText += "<tr>" + "\n";
         for (var x = 0; x<data["head"].length; x++) {
