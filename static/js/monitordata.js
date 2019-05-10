@@ -1,4 +1,3 @@
-// 切换表格的时候出现格式异常
 $("#monitordata_cpu").click(function() {
     CreateTableFunc();
     $.ajax({
@@ -53,20 +52,6 @@ $("#monitordata_network").click(function(){
             cardText += '<tbody id="monitortable_tbody"></tbody>';
             cardText += '</table></div></div></div>';
             $("#mainSubweb").html(cardText);
-
-            // var carddiv = $('<div></div>');
-            // carddiv.addClass("card mb-8").attr('id',"card-table");
-            // $("#mainSubweb").append(carddiv);
-            // var cardbodydiv = $('<div></div>');
-            // cardbodydiv.addClass("card-body").appendTo(carddiv);
-            // var cardtablediv = $('<div></div>');
-            // cardtablediv.addClass("table-responsive").appendTo(cardbodydiv);
-            // var tablediv = $('<table></table>');
-            // tablediv.addClass("table table-bordered").attr({'id':"dataTable","width":"100%","cellspacing":"0"}).appendTo(cardtablediv);
-            // var theaddiv = $('<thead></thead>');
-            // var tbodydiv = $('<tbody></tbody>');
-            // theaddiv.attr('id',"monitortable_thead").appendTo(tablediv);
-            // tbodydiv.attr('id',"monitortable_tbody").appendTo(tablediv);
         }
     }
     function DataFunc(data) {
@@ -90,8 +75,8 @@ $("#monitordata_network").click(function(){
             tbodyText += "</tr>";
         }
         $("#monitortable_thead").html(theadText);
-        $("#monitortable_tbody").html(tbodyText);
-        $("#dataTable").DataTable({
-            "destroy": true
-        });
+        // $("#monitortable_tbody").html(tbodyText);
+        // $("#dataTable").DataTable({
+        //    "destroy": true
+        // });
     }

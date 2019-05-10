@@ -73,12 +73,11 @@ def monitor_cpu(req):
     """
     if req.is_ajax():
         if req.method == 'POST':
-            title = "CPU List"
-            try:
-                if req.POST.get('option'):
-                    option = req.POST.get('option')
-                    print(option)
-                # 初始化前端页面所需要的数据.
+            if req.POST.get('option'):
+                option = req.POST.get('option')
+                title = "CPU List"
+                try:
+                    # 初始化前端页面所需要的数据.
                     thead = ["IP", "Load_1", "Load_5", "Load_15", "Count", "User", "System", "Nice",
                              "Idle", "IOwait", "Irq", "Softirq", "Steal", "Total", "Checktime"]
                     s = MonitorORM.LoadData()
@@ -90,13 +89,14 @@ def monitor_cpu(req):
                     response = HttpResponse(json.dumps({'title': title, 'head': thead, 'value': cpudata}),
                                             content_type='application/json')
                     return response
-            except Exception as error:
-                # 如果有异常,将报错返回前端.
-                thead = "Error Messages"
-                response = HttpResponse(json.dumps({'title': title, 'head': thead, 'value': error}),
-                                        content_type='application/json')
-                response.status_code = 417
-                return response
+                except Exception as error:
+                    print("cpu here1")
+                    # 如果有异常,将报错返回前端.
+                    thead = ["Error Messages",]
+                    response = HttpResponse(json.dumps({'title': title, 'head': thead, 'value': error}),
+                                            content_type='application/json')
+                    response.status_code = 417
+                    return response
     else:
         # 仅接受AJAX.
         response = HttpResponse("ONLY AJAX. :(  \n")
@@ -121,33 +121,35 @@ def monitor_memory(req):
     """
     if req.is_ajax():
         if req.method == 'POST':
-            title = "Memory List"
-            unit = req.POST.get('option')
-            try:
-                thead = ["IP", "Total", "Available", "Used", "Free", "Active", "Inactive", "Buffers",
-                         "Cached", "Shared", "Slab", "Checktime"]
-                s = MonitorORM.LoadData()
-                _data = s.load_memory()
-                memorydata = []
-                for ip in _data:
-                    _ipdata = []
-                    for value in ip:
-                        if isinstance(value, int):
-                            if unit == "MB":
-                                value = round(value/pow(1024, 2), 2)
-                            elif unit == "GB":
-                                value = round(value/pow(1024, 3), 2)
-                        _ipdata.append(value)
-                    memorydata.append(_ipdata)
-                response = HttpResponse(json.dumps({'title': title, 'head': thead, 'value': memorydata}),
-                                        content_type='application/json')
-                return response
-            except Exception as error:
-                thead = "Error Messages"
-                response = HttpResponse(json.dumps({'title': title, 'head': thead, 'value': error}),
-                                        content_type='application/json')
-                response.status_code = 417
-                return response
+            if req.POST.get('option'):
+                unit = req.POST.get('option')
+                title = "Memory List"
+                try:
+                    thead = ["IP", "Total", "Available", "Used", "Free", "Active", "Inactive", "Buffers",
+                             "Cached", "Shared", "Slab", "Checktime"]
+                    s = MonitorORM.LoadData()
+                    _data = s.load_memory()
+                    memorydata = []
+                    if _data:
+                        for ip in _data:
+                            _ipdata = []
+                            for value in ip:
+                                if isinstance(value, int):
+                                    if unit == "MB":
+                                        value = round(value/pow(1024, 2), 2)
+                                    elif unit == "GB":
+                                        value = round(value/pow(1024, 3), 2)
+                                _ipdata.append(value)
+                            memorydata.append(_ipdata)
+                    response = HttpResponse(json.dumps({'title': title, 'head': thead, 'value': memorydata}),
+                                            content_type='application/json')
+                    return response
+                except Exception as error:
+                    thead = ["Error Messages",]
+                    response = HttpResponse(json.dumps({'title': title, 'head': thead, 'value': error}),
+                                            content_type='application/json')
+                    response.status_code = 417
+                    return response
     else:
         # 仅接受AJAX.
         response = HttpResponse("ONLY AJAX. :(  \n")
