@@ -1,5 +1,10 @@
 {% extends "module/base.html" %}
 
+{% block CssFiles %}
+    {{ super() }}
+    <link href="{{ static('vendor/datatables/dataTables.bootstrap4.css') }}" rel="stylesheet" type="text/css">
+{% endblock %}
+
 {% block MainWeb %}
     <div class="row-fluid">
         <ul class="nav nav-tabs justify-content-center nav-justified" id="monitorDatatab" role="tablist">
@@ -42,28 +47,24 @@
         </ul>
     </div>
     <div id="mainSubweb">
+        <!--<div class="card mb-8">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                        <thead id="monitortable_thead">
+                        </thead>
+                        <tbody id="monitortable_tbody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>-->
     </div>
 {% endblock %}
 
 {% block JsFiles %}
     {{ super() }}
+    <script src="{{ static('vendor/datatables/jquery.dataTables.js') }}"></script>
     <script src="{{ static('vendor/datatables/dataTables.bootstrap4.js') }}"></script>
-    <script>
-        $("#monitordata_cpu").click(function(){
-           $.ajax({
-               url: "{{ url('/monitor/c') }}",
-               type: 'POST',
-               data: {'option': "percent"},
-               success: function(data, value){
-                   if (value = "percent")
-                       alert("ok");
-               }
-           });
-        });
-    </script>
-    <script>
-        $(document).ready(function(){
-            $("#dataTable").DataTable();
-        });
-    </script>
+    <script src="{{ static('js/monitordata.js') }}"></script>
 {% endblock %}

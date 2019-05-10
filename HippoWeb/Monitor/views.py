@@ -5,13 +5,18 @@ from HippoWeb.Monitor import MonitorORM
 from django.shortcuts import HttpResponse, render
 
 
+def api_error():
+    response = HttpResponse("API error")
+    return response
+
+
 def collect(req):
     """
     接收agent数据的接口,仅接收方法为POST的请求,
     将数据判断后入库
     """
     if req.method == 'GET':
-        return HttpResponse("API error(405).")
+        api_error()
     elif req.method == 'POST':
         if req.body:
             try:
@@ -41,7 +46,7 @@ def collect(req):
             except Exception as error:
                 return HttpResponse("Bad Requests.", {'error': error})
         else:
-            return HttpResponse("Empty Requests.")
+            api_error()
 
 
 def serverlist(req):
@@ -57,18 +62,25 @@ def serverlist(req):
 
 
 def monitor_cpu(req):
-    option = "value"
     if req.is_ajax():
-        if req.POST.get('option'):
-            option = req.POST.get('option')
-    try:
-        s = MonitorORM.LoadData()
-        cpudata = s.load_cpu(percent=True)
-        response = render(req, 'monitor/monitordata.html', {'data': cpudata, 'option': option})
-        response.status_code = 200
-        return response
-    except Exception as error:
-        return render(req, 'monitor/monitordata.html', {'error': error})
+        if req.method == 'POST':
+            try:
+                thead = ["IP", "Load_1", "Load_5", "Load_15", "Count", "User", "System", "Nice",
+                         "Idle", "IOwait", "Irq", "Softirq", "Steal", "Total", "Checktime"]
+                # 如果是查询百分比,删除统计列
+                thead.pop(-2)
+                s = MonitorORM.LoadData()
+                cpudata = s.load_cpu(percent=True)
+                response = HttpResponse(json.dumps({'head': thead, 'value': cpudata}),
+                                        content_type='application/json')
+                return response
+            except Exception as error:
+                response = HttpResponse(json.dumps({'error': error}))
+                return response
+        else:
+            api_error()
+    else:
+        api_error()
 
 
 def monitor_disk(req):
@@ -85,17 +97,15 @@ def monitor_memory(req):
     通过前端获取回来的option值,如果没有则默认值MB
     额外计算一个内存使用占百分比回显页面
     """
+    if req.is_ajax():
+        if req.method == 'POST':
+            unit = "GB"
     try:
-        if req.is_ajax():
-            if req.GET.get('unit'):
-                unit = req.GET.get('unit')
-            elif req.POST.get('unit'):
-                unit = req.POST.get('unit')
-            else:
-                unit = "GB"
-        memorydata = []
+        thead = ["IP", "Total", "Available", "Used", "Free", "Active", "Inactive", "Buffers",
+                 "Cached", "Shared", "Slab", "Checktime"]
         s = MonitorORM.LoadData()
         _data = s.load_memory()
+        memorydata = []
         for ip in _data:
             _ipdata = []
             for value in ip:
@@ -106,8 +116,8 @@ def monitor_memory(req):
                         value = round(value/pow(1024, 3), 2)
                 _ipdata.append(value)
             memorydata.append(_ipdata)
-        response = render(req, 'monitor/memory.html', {'data': memorydata, 'unit': unit})
-        response.status_code = 200
+        response = HttpResponse(json.dumps({'head': thead, 'value': memorydata}),
+                                content_type='application/json')
         return response
     except Exception as error:
         return render(req, 'monitor/memory.html', {'error': error})
