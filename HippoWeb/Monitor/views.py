@@ -78,7 +78,7 @@ def monitor_cpu(req):
                 title = "CPU List"
                 try:
                     # 初始化前端页面所需要的数据.
-                    thead = ["IP", "Load_1", "Load_5", "Load_15", "Count", "User", "System", "Nice",
+                    thead = ["IP", "Load(1min)", "Load(5min)", "Load(15min)", "Count", "User", "System", "Nice",
                              "Idle", "IOwait", "Irq", "Softirq", "Steal", "Total", "Checktime"]
                     s = MonitorORM.LoadData()
                     if option == "percent":
@@ -90,7 +90,6 @@ def monitor_cpu(req):
                                             content_type='application/json')
                     return response
                 except Exception as error:
-                    print("cpu here1")
                     # 如果有异常,将报错返回前端.
                     thead = ["Error Messages",]
                     response = HttpResponse(json.dumps({'title': title, 'head': thead, 'value': error}),
@@ -106,13 +105,28 @@ def monitor_cpu(req):
 
 def monitor_disk(req):
     """未完成"""
-    try:
-        s = MonitorORM.LoadData()
-        diskdata = s.load_disk()
-        print(diskdata)
-        return render(req, 'monitor/disk.html', {'data': diskdata})
-    except Exception as error:
-        return render(req, 'monitor/disk.html', {'error': error})
+    if req.is_ajax():
+        if req.method == 'POST':
+            try:
+                title = "Disk List"
+                thead = ["IP", "MountUsage", "Checktime"]
+                s = MonitorORM.LoadData()
+                _data = s.load_disk()
+                for _ip in _data:
+                    mount = _ip[1][1:-1].split(",")
+                    usage = _ip[2][2:-2].split("}, {")
+                    for i in range(len(mount)):
+                        print(usage[i])
+                    response = HttpResponse(json.dumps({'title': title, 'head': thead, 'value': _data}),
+                                            content_type='application/json')
+                return response
+            except Exception as error:
+                print(error)
+    else:
+        # 仅接受AJAX.
+        response = HttpResponse("ONLY AJAX. :(  \n")
+        response.status_code = 405
+        return response
 
 
 def monitor_memory(req):

@@ -17,6 +17,7 @@ def subtimer():
 
 
 if __name__ == '__main__':
+    # 添加pid文件,判断程序是否启动,需要设置不允许重复启动
     if config.Switch == "On":
         print("定时器已启动..")
         t = int(config.Period)

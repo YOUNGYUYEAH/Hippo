@@ -62,12 +62,15 @@ class SaveData(object):
         )
 
     def save_disk(self):
-        models.Disk.objects.create(
+        try:
+            models.Disk.objects.create(
             ip=self.system["ip"],
-            diskusage=json.dumps(self.disk["usage"]),
-            iousage=json.dumps(self.disk["io"]),
+            diskmount=self.disk["mount"],
+            diskusage=self.disk["usage"],
             checktime=self.checktime
-        )
+            )
+        except Exception as error:
+            print(error)
 
     def save_network(self):
         models.Network.objects.create(
@@ -89,7 +92,15 @@ class LoadData(object):
         self.ip = ip
         self.timerange = timerange
         self.options = item
+        self.cursor = connection.cursor()
         # self.count = models.Info.objects.all().count()
+
+    def dictfetchall(self):
+        columns = [col[0] for col in self.cursor.description]
+        return [
+            dict(zip(columns, row))
+            for row in self.cursor.fetchall()
+        ]
 
     def load_info(self):
         """ORM提取回来的时间格式非正常显示,需要进一步处理"""
@@ -107,66 +118,62 @@ class LoadData(object):
             return _load_info_result
 
     def load_cpu(self, percent=True):
-        """
-        读取CPU信息需做差值处理和百分比计算
-        """
-        cursor = connection.cursor()
         try:
             if self.ip is None:
                 if percent:
                     _query_percent_sql = """SELECT `ip`,`load_1`,`load_5`,`load_15`,`count`,`p_user`,`p_system`,`p_nice`,
                     `p_idle`,`p_iowait`,`p_irq`,`p_softirq`,`p_steal`,DATE_FORMAT(`checktime`,'%Y-%m-%d %H:%i:%S') 
                     FROM monitor_cpu WHERE `checktime` IN (SELECT Max(`checktime`) FROM monitor_cpu GROUP BY `ip`);"""
-                    cursor.execute(_query_percent_sql)
-                    _load_percent_result = cursor.fetchall()
+                    self.cursor.execute(_query_percent_sql)
+                    _load_percent_result = self.cursor.fetchall()
                     return _load_percent_result
                 else:
                     _query_value_sql = """SELECT `ip`,`load_1`,`load_5`,`load_15`,`count`,`user`,`system`,`nice`,`idle`,
                     `iowait`,`irq`,`softirq`,`steal`,`total`,DATE_FORMAT(`checktime`,'%Y-%m-%d %H:%i:%S') 
                     FROM monitor_cpu WHERE `checktime` IN (SELECT Max(`checktime`) FROM monitor_cpu GROUP BY `ip`);"""
-                    cursor.execute(_query_value_sql)
-                    _load_value_result = cursor.fetchall()
+                    self.cursor.execute(_query_value_sql)
+                    _load_value_result = self.cursor.fetchall()
                     return _load_value_result
             else:
                 if percent:
                     _query_percent_sql = """SELECT `ip`,`load_1`,`load_5`,`load_15`,`count`,`p_user`,`p_system`,`p_nice`,
                     `p_idle`,`p_iowait`,`p_irq`,`p_softirq`,`p_steal`,DATE_FORMAT(Max(`checktime`),'%%Y-%%m-%%d %%H:%%i:%%S')
                     FROM monitor_cpu WHERE `ip` = '%s';""" % self.ip
-                    cursor.execute(_query_percent_sql)
-                    _load_percent_result = cursor.fetchall()
+                    self.cursor.execute(_query_percent_sql)
+                    _load_percent_result = self.cursor.fetchall()
                     return _load_percent_result
                 else:
                     _query_value_sql = """SELECT `ip`,`load_1`,`load_5`,`load_15`,`count`,`user`,`system`,`nice`,`idle`,
                     `iowait`,`irq`,`softirq`,`steal`,`total`,DATE_FORMAT(Max(`checktime`),'%%Y-%%m-%%d %%H:%%i:%%S') 
                     FROM monitor_cpu WHERE `ip` = '%s';""" % self.ip
-                    cursor.execute(_query_value_sql)
-                    _load_value_result = cursor.fetchall()
+                    self.cursor.execute(_query_value_sql)
+                    _load_value_result = self.cursor.fetchall()
                     return _load_value_result
         except Exception as e:
             print(e)
         finally:
-            cursor.close()
+            self.cursor.close()
 
     def load_disk(self):
-        """读取磁盘信息,磁盘信息需要进行JSON串处理"""
-        cursor = connection.cursor()
+        """读取磁盘信息"""
         try:
             if self.ip is None:
-                _querysql = """SELECT `ip`,`diskusage`,JSON_KEYS(`iousage`),DATE_FORMAT(`checktime`,'%Y-%m-%d %H:%i:%S') 
-                FROM monitor_disk WHERE `checktime` IN (SELECT Max(`checktime`) FROM monitor_disk GROUP BY `ip`);"""
-                cursor.execute(_querysql)
-                _load_disk_result = cursor.fetchall()
+                _querysql = """SELECT `ip`,`diskmount`,`diskusage`,DATE_FORMAT(`checktime`,'%Y-%m-%d %H:%i:%S') 
+                AS `checktime` FROM monitor_disk WHERE `checktime` 
+                IN (SELECT Max(`checktime`) FROM monitor_disk GROUP BY `ip`);"""
+                self.cursor.execute(_querysql)
+                _load_disk_result = self.cursor.fetchall()
                 return _load_disk_result
             else:
-                _querysql = """SELECT `diskusage`,`iousage`,DATE_FORMAT(Max(`checktime`),'%%Y-%%m-%%d %%H:%%i:%%S') 
-                FROM monitor_disk WHERE `ip` = '%s';""" % self.ip
-                cursor.execute(_querysql)
-                _load_disk_result = cursor.fetchall()
+                _querysql = """SELECT `ip`,`diskmount`,`diskusage`,DATE_FORMAT(Max(`checktime`) as `checktime`,
+                '%%Y-%%m-%%d %%H:%%i:%%S') FROM monitor_disk WHERE `ip` = '%s';""" % self.ip
+                self.cursor.execute(_querysql)
+                _load_disk_result = self.cursor.fetchall()
                 return _load_disk_result
         except Exception as e:
             print(e)
         finally:
-            cursor.close()
+            self.cursor.close()
 
     def load_disk_range(self):
         """读取时间范围内的磁盘信息"""
@@ -174,26 +181,25 @@ class LoadData(object):
 
     def load_memory(self):
         """读取内存信息需进行单位换算,使用原生SQL,注意由于%和%%使用的不同"""
-        cursor = connection.cursor()
         try:
             if self.ip is None:
                 _querysql = """SELECT `ip`,`total`,`available`,`used`,`free`,`active`,`inactive`,`buffers`,`cached`,
                 `shared`,`slab`,DATE_FORMAT(`checktime`,'%Y-%m-%d %H:%i:%S') FROM monitor_memory WHERE `checktime` 
                 IN (SELECT Max(`checktime`) FROM monitor_memory GROUP BY `ip`);"""
-                cursor.execute(_querysql)
-                _load_memory_result = cursor.fetchall()
+                self.cursor.execute(_querysql)
+                _load_memory_result = self.cursor.fetchall()
                 return _load_memory_result
             else:
                 _querysql = """SELECT `total`,`available`,`used`,`free`,`active`,`inactive`,`buffers`,`cached`,
                 `shared`,`slab`,DATE_FORMAT(Max(`checktime`),'%%Y-%%m-%%d %%H:%%i:%%S') FROM monitor_memory WHERE 
                 `ip` = '%s';""" % self.ip
-                cursor.execute(_querysql)
-                _load_memory_result = cursor.fetchall()
+                self.cursor.execute(_querysql)
+                _load_memory_result = self.cursor.fetchall()
                 return _load_memory_result
         except Exception as e:
             print(e)
         finally:
-            cursor.close()
+            self.cursor.close()
 
     def load_memory_range(self):
         """读取时间范围内的内存信息"""

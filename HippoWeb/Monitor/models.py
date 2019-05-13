@@ -69,7 +69,7 @@ class Memory(models.Model):
 
 class Disk(models.Model):
     """
-    建表语句
+    [弃用] 建表语句
     CREATE TABLE `monitor_disk` (
     `id` int(11) NOT NULL AUTO_INCREMENT,
     `ip` varchar(20) NOT NULL,
@@ -83,8 +83,8 @@ class Disk(models.Model):
     注意根目录需要加双引号""
     """
     ip = models.CharField(max_length=20, verbose_name="主机ip")
-    diskusage = models.TextField(verbose_name="磁盘用量JSON串")
-    iousage = models.TextField(verbose_name="磁盘IO用量JSON串")
+    diskmount = models.CharField(max_length=100, verbose_name="磁盘挂载点")
+    diskusage = models.CharField(max_length=500, verbose_name="磁盘挂载点用量")
     checktime = models.DateTimeField(null=True)
 
     class Meta:
