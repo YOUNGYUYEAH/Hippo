@@ -109,16 +109,17 @@ def monitor_disk(req):
         if req.method == 'POST':
             try:
                 title = "Disk List"
-                thead = ["IP", "MountUsage", "Checktime"]
+                thead = ["IP", "Mount", "Usage", "Checktime"]
                 s = MonitorORM.LoadData()
                 _data = s.load_disk()
+                diskdata = []
                 for _ip in _data:
-                    mount = _ip[1][1:-1].split(",")
-                    usage = _ip[2][2:-2].split("}, {")
-                    for i in range(len(mount)):
-                        print(usage[i])
-                    response = HttpResponse(json.dumps({'title': title, 'head': thead, 'value': _data}),
-                                            content_type='application/json')
+                    arr = _ip[2].replace("'", '')
+                    ipvalue = [_ip[0], _ip[1][1:-1].split(","), arr, _ip[3]]
+                    diskdata.append(ipvalue)
+                print(diskdata)
+                response = HttpResponse(json.dumps({'title': title, 'head': thead, 'value': diskdata}),
+                                        content_type='application/json')
                 return response
             except Exception as error:
                 print(error)

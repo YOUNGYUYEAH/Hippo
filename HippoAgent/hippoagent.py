@@ -2,6 +2,7 @@
 import psutil
 import config
 import os
+import json
 
 def systeminfo():
     """
@@ -94,11 +95,11 @@ def diskinfo():
         inode = subshell.stdout.readline().decode("utf-8").split("\n")[0]
         if inode:
             mount_info['inode'] = inode
-            mount_info['total'] = psutil.disk_usage(i[1]).total
-            mount_info['used'] = psutil.disk_usage(i[1]).used
+            mount_info['total'] = round(psutil.disk_usage(i[1]).total/pow(1024, 3), 2)
+            mount_info['used'] = round(psutil.disk_usage(i[1]).used/pow(1024, 3), 2)
             mount_info['percent'] = psutil.disk_usage(i[1]).percent
             diskmount.append(i[1])
-            diskusage.append(mount_info)
+            diskusage.append(json.dumps(mount_info))
         else:
             pass
     _diskinfo["mount"] = diskmount
@@ -179,7 +180,6 @@ def tcpinfo():
 
 
 def monitorjson():
-    import json
     _monitorjson = dict()
     _monitorjson['system'] = systeminfo()
     _monitorjson['cpu'] = cpuinfo()

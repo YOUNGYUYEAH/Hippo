@@ -48,8 +48,8 @@ function CreateTableFunc() {
         cardText += '<div class="card-body">';
         cardText += '<div class="table-responsive">';
         cardText += '<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">';
-        cardText += '<thead id="monitortable_thead"><thead>';
-        cardText += '<tbody id="monitortable_tbody"></tbody>';
+        cardText += '<thead id="monitortable_thead">';
+        cardText += '<tbody id="monitortable_tbody">';
         cardText += '</table></div></div></div>';
         $("#mainSubweb").html(cardText);
     }
@@ -59,15 +59,30 @@ function DataFunc(data) {
     titleText += '<div><i class="fa fa-table"></i>'+ "\n" + data["title"] +'</div>';
     $(".card-header").html(titleText);
     var theadText = "";
-    theadText += "<tr>" + "\n";
-    for (var x = 0; x < data["head"].length; x++) {
-        var title = data["head"][x];
+    theadText += "<tr>";
+    for (var a = 0; a < data["head"].length; a++) {
+        var title = data["head"][a];
         theadText += "<td>" + title + "</td>";
     }
-    if (data["title"] === "Disk List") {
-        alert("ok");
+    theadText += "</tr>";
+    $("#monitortable_thead").html(theadText);
+    if ( data["title"] === "Disk List") {
+        var diskText = "";
+        for (var x=0; x< data["value"].length; x++) {
+            var arr = JSON.parse(data["value"][x][2]);
+            for (var y=0; y< data["value"][x][1].length; y++) {
+                diskText += "<tr>";
+                diskText += "<td>" + data["value"][x][1][y] + "</td>";
+                diskText += "<td><ul>";
+                diskText += "<li>" + "Used:" + arr[y].used + "GB" + "</li>";
+                diskText += "<li>" + "Total:" + arr[y].total + "GB" + "</li>";
+                diskText += "<li>" + "Percent:" + arr[y].percent + "%" + "</li>";
+                diskText += "<li>" + "Inode:" + arr[y].inode + "%" + "</li>";
+                diskText += "</ul></td></tr>";
+            }
+        }
+        $("#monitortable_tbody").html(diskText);
     } else {
-        theadText += "</tr>";
         var tbodyText = "";
         for (var i = 0; i < data["value"].length; i++) {
             tbodyText += "<tr>";
@@ -77,10 +92,9 @@ function DataFunc(data) {
             }
             tbodyText += "</tr>";
         }
+        $("#monitortable_tbody").html(tbodyText);
     }
-    $("#monitortable_thead").html(theadText);
-    $("#monitortable_tbody").html(tbodyText);
-    $("#dataTable").DataTable({
-        "destroy": true
-    });
+    // $("#dataTable").DataTable({
+    //     "destroy": true
+    // });
 }
