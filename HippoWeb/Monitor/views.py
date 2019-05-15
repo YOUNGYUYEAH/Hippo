@@ -176,7 +176,7 @@ def monitor_memory(req):
 def monitor_network(req):
     try:
         title = "Network List"
-        thead = ["IP"]
+        thead = ["IP", "Interface", "IPaddress", "Packages_sent", "Packages_recv", "Checktime"]
         s = MonitorORM.LoadData()
         networkdata = s.load_network()
         response = HttpResponse(json.dumps({'title': title, 'head': thead, 'value': networkdata}),

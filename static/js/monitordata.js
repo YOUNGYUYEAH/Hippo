@@ -105,7 +105,6 @@ function DataFunc(data) {
         $("#monitortable_tbody").html(tbodyText);
     }
     $("#dataTable").DataTable({
-        "destroy": true,
-        "scrollX": true
+        "destroy": true
     });
 }
