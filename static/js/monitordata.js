@@ -70,16 +70,26 @@ function DataFunc(data) {
         var diskText = "";
         for (var x=0; x< data["value"].length; x++) {
             var arr = JSON.parse(data["value"][x][2]);
+            diskText += "<tr><td>" + data["value"][x][0] + "</td>";
+            diskText += "<td><ul class='table-ul'>";
             for (var y=0; y< data["value"][x][1].length; y++) {
-                diskText += "<tr>";
-                diskText += "<td>" + data["value"][x][1][y] + "</td>";
-                diskText += "<td><ul>";
-                diskText += "<li>" + "Used:" + arr[y].used + "GB" + "</li>";
-                diskText += "<li>" + "Total:" + arr[y].total + "GB" + "</li>";
-                diskText += "<li>" + "Percent:" + arr[y].percent + "%" + "</li>";
-                diskText += "<li>" + "Inode:" + arr[y].inode + "%" + "</li>";
-                diskText += "</ul></td></tr>";
+                diskText += "<li class='table-ul-li'>" + data["value"][x][1][y] + "</li>";
+                if ( y !== arr.length -1 ) {
+                    diskText += "<hr class='table-hr' />";
+                }
             }
+            diskText += "</ul></td><td><ul class='table-ul'>";
+            for (var z=0; z< arr.length; z++) {
+                diskText += "<li>" + "Used: " + arr[z].used + "</li>";
+                diskText += "<li>" + "Total: " +arr[z].total + "</li>";
+                diskText += "<li>" + "Percent: " +arr[z].percent + "%" + "</li>";
+                diskText += "<li>" + "Inode: " +arr[z].inode + "</li>";
+                if ( z !== arr.length -1 ) {
+                    diskText += "<hr class='table-hr' />";
+                }
+            }
+            diskText += "</td></ul>";
+            diskText += "<td>" + data["value"][x][3] + "</td></tr>";
         }
         $("#monitortable_tbody").html(diskText);
     } else {
@@ -94,7 +104,8 @@ function DataFunc(data) {
         }
         $("#monitortable_tbody").html(tbodyText);
     }
-    // $("#dataTable").DataTable({
-    //     "destroy": true
-    // });
+    $("#dataTable").DataTable({
+        "destroy": true,
+        "scrollX": true
+    });
 }

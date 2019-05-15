@@ -104,7 +104,9 @@ def monitor_cpu(req):
 
 
 def monitor_disk(req):
-    """未完成"""
+    """
+    查询所有服务磁盘用量信息的接口.
+    """
     if req.is_ajax():
         if req.method == 'POST':
             try:
@@ -117,7 +119,6 @@ def monitor_disk(req):
                     arr = _ip[2].replace("'", '')
                     ipvalue = [_ip[0], _ip[1][1:-1].split(","), arr, _ip[3]]
                     diskdata.append(ipvalue)
-                print(diskdata)
                 response = HttpResponse(json.dumps({'title': title, 'head': thead, 'value': diskdata}),
                                         content_type='application/json')
                 return response

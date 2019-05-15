@@ -89,19 +89,22 @@ def diskinfo():
     diskusage = []
     diskmount = []
     for i in psutil.disk_partitions():
-        mount_info = dict()
-        inode_shell = "df -i | grep -w %s | awk '{print $(NF-1)}'" % (i[1], )
-        subshell = subprocess.Popen([inode_shell], shell=True, stdout=subprocess.PIPE)
-        inode = subshell.stdout.readline().decode("utf-8").split("\n")[0]
-        if inode:
-            mount_info['inode'] = inode
-            mount_info['total'] = round(psutil.disk_usage(i[1]).total/pow(1024, 3), 2)
-            mount_info['used'] = round(psutil.disk_usage(i[1]).used/pow(1024, 3), 2)
-            mount_info['percent'] = psutil.disk_usage(i[1]).percent
-            diskmount.append(i[1])
-            diskusage.append(json.dumps(mount_info))
-        else:
+        if i[1] == "/boot":
             pass
+        else:
+            mount_info = dict()
+            inode_shell = "df -i | grep -w %s | awk '{print $(NF-1)}'" % (i[1], )
+            subshell = subprocess.Popen([inode_shell], shell=True, stdout=subprocess.PIPE)
+            inode = subshell.stdout.readline().decode("utf-8").split("\n")[0]
+            if inode:
+                mount_info['inode'] = inode
+                mount_info['total'] = round(psutil.disk_usage(i[1]).total/pow(1024, 3), 2)
+                mount_info['used'] = round(psutil.disk_usage(i[1]).used/pow(1024, 3), 2)
+                mount_info['percent'] = psutil.disk_usage(i[1]).percent
+                diskmount.append(i[1])
+                diskusage.append(json.dumps(mount_info))
+            else:
+                pass
     _diskinfo["mount"] = diskmount
     _diskinfo["usage"] = diskusage
     return _diskinfo
