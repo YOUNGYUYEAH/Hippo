@@ -92,6 +92,26 @@ function DataFunc(data) {
             diskText += "<td>" + data["value"][x][3] + "</td></tr>";
         }
         $("#monitortable_tbody").html(diskText);
+    } else if ( data["title"] === "Network List" ) {
+        var netText = "";
+        for (var X=0; X< data["value"].length; X++) {
+            var Arr = JSON.parse(data["value"][X][2]);
+            netText += "<tr><td>" + data["value"][X][0] + "</td>";
+            netText += "<td><ul class='table-ul'>";
+            for (var Y=0; Y< data["value"][X][1].length; Y++) {
+                netText += "<li>" + data["value"][X][1][Y] + "</li>";
+                if ( Y !== Arr.length -1 ) {
+                    netText += "<hr class='table-hr' />";
+                }
+            }
+            netText += "</ul></td>";
+            for(var Z=0; Z<data["head"].length-3; Z++) {
+                netText += "<td>";
+                //循环每个ip的数,来获取值
+                netText += "</td>";
+            }
+        }
+        $("#monitortable_tbody").html(netText)
     } else {
         var tbodyText = "";
         for (var i = 0; i < data["value"].length; i++) {
@@ -105,6 +125,6 @@ function DataFunc(data) {
         $("#monitortable_tbody").html(tbodyText);
     }
     $("#dataTable").DataTable({
-        "destroy": true
+       "destroy": true
     });
 }

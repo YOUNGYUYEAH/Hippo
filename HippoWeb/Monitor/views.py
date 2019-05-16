@@ -39,6 +39,7 @@ def collect(req):
                     return response
             except Exception as error:
                 # 请求异常,需要补充记录日志.
+                print(error)
                 response = HttpResponse("Bad Requests. \n")
                 response.status_code = 412
                 return response
@@ -76,10 +77,10 @@ def monitor_cpu(req):
             if req.POST.get('option'):
                 option = req.POST.get('option')
                 title = "CPU List"
+                thead = ["IP", "Load(1min)", "Load(5min)", "Load(15min)", "Count", "User", "System", "Nice",
+                         "Idle", "IOwait", "Irq", "Softirq", "Steal", "Total", "Checktime"]
                 try:
                     # 初始化前端页面所需要的数据.
-                    thead = ["IP", "Load(1min)", "Load(5min)", "Load(15min)", "Count", "User", "System", "Nice",
-                             "Idle", "IOwait", "Irq", "Softirq", "Steal", "Total", "Checktime"]
                     s = MonitorORM.LoadData()
                     if option == "percent":
                         thead.pop(-2)
@@ -103,34 +104,6 @@ def monitor_cpu(req):
         return response
 
 
-def monitor_disk(req):
-    """
-    查询所有服务磁盘用量信息的接口.
-    """
-    if req.is_ajax():
-        if req.method == 'POST':
-            try:
-                title = "Disk List"
-                thead = ["IP", "Mount", "Usage", "Checktime"]
-                s = MonitorORM.LoadData()
-                _data = s.load_disk()
-                diskdata = []
-                for _ip in _data:
-                    arr = _ip[2].replace("'", '')
-                    ipvalue = [_ip[0], _ip[1][1:-1].split(","), arr, _ip[3]]
-                    diskdata.append(ipvalue)
-                response = HttpResponse(json.dumps({'title': title, 'head': thead, 'value': diskdata}),
-                                        content_type='application/json')
-                return response
-            except Exception as error:
-                print(error)
-    else:
-        # 仅接受AJAX.
-        response = HttpResponse("ONLY AJAX. :(  \n")
-        response.status_code = 405
-        return response
-
-
 def monitor_memory(req):
     """
     查询所有服务Memeory信息的接口,提供GB和MB单位.
@@ -140,9 +113,9 @@ def monitor_memory(req):
             if req.POST.get('option'):
                 unit = req.POST.get('option')
                 title = "Memory List"
+                thead = ["IP", "Total", "Available", "Used", "Free", "Active", "Inactive", "Buffers",
+                         "Cached", "Shared", "Slab", "Checktime"]
                 try:
-                    thead = ["IP", "Total", "Available", "Used", "Free", "Active", "Inactive", "Buffers",
-                             "Cached", "Shared", "Slab", "Checktime"]
                     s = MonitorORM.LoadData()
                     _data = s.load_memory()
                     memorydata = []
@@ -173,12 +146,49 @@ def monitor_memory(req):
         return response
 
 
+def monitor_disk(req):
+    """
+    查询所有服务磁盘用量信息的接口.
+    """
+    if req.is_ajax():
+        if req.method == 'POST':
+            title = "Disk List"
+            thead = ["IP", "Mount", "Usage", "Checktime"]
+            try:
+                s = MonitorORM.LoadData()
+                _data = s.load_disk()
+                diskdata = []
+                for _ip in _data:
+                    arr = _ip[2].replace("'", '')
+                    ipvalue = [_ip[0], _ip[1][1:-1].split(","), arr, _ip[3]]
+                    diskdata.append(ipvalue)
+                response = HttpResponse(json.dumps({'title': title, 'head': thead, 'value': diskdata}),
+                                        content_type='application/json')
+                return response
+            except Exception as error:
+                print(error)
+    else:
+        # 仅接受AJAX.
+        response = HttpResponse("ONLY AJAX. :(  \n")
+        response.status_code = 405
+        return response
+
+
 def monitor_network(req):
+    """
+    查询服务器网卡接口信息
+    """
+    title = "Network List"
+    thead = ["IP", "Interface", "Netaddr", "Packages_sent", "Packages_recv", "pps[1s]",
+             "Bytes_sent", "Bytes_recv", "bps[1s]", "Other", "Checktime"]
     try:
-        title = "Network List"
-        thead = ["IP", "Interface", "IPaddress", "Packages_sent", "Packages_recv", "Checktime"]
         s = MonitorORM.LoadData()
-        networkdata = s.load_network()
+        _data = s.load_network()
+        networkdata = []
+        for _ip in _data:
+            arr = _ip[2].replace("'", '')
+            ipvalue = [_ip[0], _ip[1][1:-1].split(","), arr, _ip[3]]
+            networkdata.append(ipvalue)
         response = HttpResponse(json.dumps({'title': title, 'head': thead, 'value': networkdata}),
                                 content_type='application/json')
         return response

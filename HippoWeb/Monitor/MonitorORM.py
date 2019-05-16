@@ -120,30 +120,24 @@ class LoadData(object):
                     `p_idle`,`p_iowait`,`p_irq`,`p_softirq`,`p_steal`,DATE_FORMAT(`checktime`,'%Y-%m-%d %H:%i:%S') 
                     FROM monitor_cpu WHERE `checktime` IN (SELECT Max(`checktime`) FROM monitor_cpu GROUP BY `ip`);"""
                     self.cursor.execute(_query_percent_sql)
-                    _load_percent_result = self.cursor.fetchall()
-                    return _load_percent_result
                 else:
                     _query_value_sql = """SELECT `ip`,`load_1`,`load_5`,`load_15`,`count`,`user`,`system`,`nice`,`idle`,
                     `iowait`,`irq`,`softirq`,`steal`,`total`,DATE_FORMAT(`checktime`,'%Y-%m-%d %H:%i:%S') 
                     FROM monitor_cpu WHERE `checktime` IN (SELECT Max(`checktime`) FROM monitor_cpu GROUP BY `ip`);"""
                     self.cursor.execute(_query_value_sql)
-                    _load_value_result = self.cursor.fetchall()
-                    return _load_value_result
             else:
                 if percent:
                     _query_percent_sql = """SELECT `ip`,`load_1`,`load_5`,`load_15`,`count`,`p_user`,`p_system`,`p_nice`,
                     `p_idle`,`p_iowait`,`p_irq`,`p_softirq`,`p_steal`,DATE_FORMAT(Max(`checktime`),'%%Y-%%m-%%d %%H:%%i:%%S')
                     FROM monitor_cpu WHERE `ip` = '%s';""" % self.ip
                     self.cursor.execute(_query_percent_sql)
-                    _load_percent_result = self.cursor.fetchall()
-                    return _load_percent_result
                 else:
                     _query_value_sql = """SELECT `ip`,`load_1`,`load_5`,`load_15`,`count`,`user`,`system`,`nice`,`idle`,
                     `iowait`,`irq`,`softirq`,`steal`,`total`,DATE_FORMAT(Max(`checktime`),'%%Y-%%m-%%d %%H:%%i:%%S') 
                     FROM monitor_cpu WHERE `ip` = '%s';""" % self.ip
                     self.cursor.execute(_query_value_sql)
-                    _load_value_result = self.cursor.fetchall()
-                    return _load_value_result
+            _load_value_result = self.cursor.fetchall()
+            return _load_value_result
         except Exception as e:
             print(e)
         finally:
@@ -156,15 +150,12 @@ class LoadData(object):
                 _querysql = """SELECT `ip`,`diskmount`,`diskusage`,DATE_FORMAT(`checktime`,'%Y-%m-%d %H:%i:%S') 
                 AS `checktime` FROM monitor_disk WHERE `checktime` 
                 IN (SELECT Max(`checktime`) FROM monitor_disk GROUP BY `ip`);"""
-                self.cursor.execute(_querysql)
-                _load_disk_result = self.cursor.fetchall()
-                return _load_disk_result
             else:
                 _querysql = """SELECT `ip`,`diskmount`,`diskusage`,DATE_FORMAT(Max(`checktime`) as `checktime`,
                 '%%Y-%%m-%%d %%H:%%i:%%S') FROM monitor_disk WHERE `ip` = '%s';""" % self.ip
-                self.cursor.execute(_querysql)
-                _load_disk_result = self.cursor.fetchall()
-                return _load_disk_result
+            self.cursor.execute(_querysql)
+            _load_disk_result = self.cursor.fetchall()
+            return _load_disk_result
         except Exception as e:
             print(e)
         finally:
@@ -181,16 +172,13 @@ class LoadData(object):
                 _querysql = """SELECT `ip`,`total`,`available`,`used`,`free`,`active`,`inactive`,`buffers`,`cached`,
                 `shared`,`slab`,DATE_FORMAT(`checktime`,'%Y-%m-%d %H:%i:%S') FROM monitor_memory WHERE `checktime` 
                 IN (SELECT Max(`checktime`) FROM monitor_memory GROUP BY `ip`);"""
-                self.cursor.execute(_querysql)
-                _load_memory_result = self.cursor.fetchall()
-                return _load_memory_result
             else:
                 _querysql = """SELECT `total`,`available`,`used`,`free`,`active`,`inactive`,`buffers`,`cached`,
                 `shared`,`slab`,DATE_FORMAT(Max(`checktime`),'%%Y-%%m-%%d %%H:%%i:%%S') FROM monitor_memory WHERE 
                 `ip` = '%s';""" % self.ip
-                self.cursor.execute(_querysql)
-                _load_memory_result = self.cursor.fetchall()
-                return _load_memory_result
+            self.cursor.execute(_querysql)
+            _load_memory_result = self.cursor.fetchall()
+            return _load_memory_result
         except Exception as e:
             print(e)
         finally:
@@ -201,4 +189,20 @@ class LoadData(object):
         pass
 
     def load_network(self):
-        pass
+        """读取网卡信息"""
+        try:
+            if self.ip is None:
+                _querysql = """SELECT `ip`,`netpic`,`netusage`,DATE_FORMAT(`checktime`,'%Y-%m-%d %H:%i:%S') 
+                AS `checktime` FROM monitor_network WHERE `checktime` IN 
+                (SELECT Max(`checktime`) FROM monitor_network GROUP BY `ip`);"""
+            else:
+                _querysql = """SELECT `netpic`,`netusage`,DATE_FORMAT(`checktime`,'%Y-%m%-d %H:%i:%S')
+                AS `checktime` FROM monitor_network WHERE `checktime` IN 
+                (SELECT  Max(`checktime`) FROM monitor_network GROUP BY `IP`);"""
+            self.cursor.execute(_querysql)
+            _load_network_result = self.cursor.fetchall()
+            return _load_network_result
+        except Exception as error:
+            print(error)
+        finally:
+            self.cursor.close()
