@@ -16,34 +16,31 @@ class SaveData(object):
         self.checktime = strftime('%Y-%m-%d %H:%M:%S', localtime(time()))
 
     def save_cpu(self):
-        try:
-            models.Cpu.objects.create(
-                ip=self.system['ip'],
-                load_1=self.cpu['load_1'],
-                load_5=self.cpu['load_5'],
-                load_15=self.cpu['load_15'],
-                user=self.cpu['user'],
-                count=float(self.cpu['count']),
-                system=float(self.cpu['system']),
-                nice=float(self.cpu['nice']),
-                idle=float(self.cpu['idle']),
-                iowait=float(self.cpu['iowait']),
-                irq=float(self.cpu['irq']),
-                softirq=float(self.cpu['softirq']),
-                steal=float(self.cpu['steal']),
-                total=float(self.cpu['total']),
-                p_user=float(self.cpu['p_user']),
-                p_nice=float(self.cpu['p_nice']),
-                p_system=float(self.cpu['p_system']),
-                p_idle=float(self.cpu['p_idle']),
-                p_iowait=float(self.cpu['p_iowait']),
-                p_irq=float(self.cpu['p_irq']),
-                p_softirq=float(self.cpu['p_softirq']),
-                p_steal=float(self.cpu['p_steal']),
-                checktime=self.checktime
-            )
-        except Exception as error:
-            print(error)
+        models.Cpu.objects.create(
+            ip=self.system['ip'],
+            load_1=self.cpu['load_1'],
+            load_5=self.cpu['load_5'],
+            load_15=self.cpu['load_15'],
+            user=self.cpu['user'],
+            count=float(self.cpu['count']),
+            system=float(self.cpu['system']),
+            nice=float(self.cpu['nice']),
+            idle=float(self.cpu['idle']),
+            iowait=float(self.cpu['iowait']),
+            irq=float(self.cpu['irq']),
+            softirq=float(self.cpu['softirq']),
+            steal=float(self.cpu['steal']),
+            total=float(self.cpu['total']),
+            p_user=float(self.cpu['p_user']),
+            p_nice=float(self.cpu['p_nice']),
+            p_system=float(self.cpu['p_system']),
+            p_idle=float(self.cpu['p_idle']),
+            p_iowait=float(self.cpu['p_iowait']),
+            p_irq=float(self.cpu['p_irq']),
+            p_softirq=float(self.cpu['p_softirq']),
+            p_steal=float(self.cpu['p_steal']),
+            checktime=self.checktime
+        )
 
     def save_memory(self):
         models.Memory.objects.create(
@@ -62,20 +59,18 @@ class SaveData(object):
         )
 
     def save_disk(self):
-        try:
-            models.Disk.objects.create(
+        models.Disk.objects.create(
             ip=self.system["ip"],
             diskmount=self.disk["mount"],
             diskusage=self.disk["usage"],
             checktime=self.checktime
             )
-        except Exception as error:
-            print(error)
 
     def save_network(self):
         models.Network.objects.create(
             ip=self.system['ip'],
-            network=json.dumps(self.network),
+            netpic=self.network["pernic"],
+            netusage=self.network["usage"],
             checktime=self.checktime
         )
 

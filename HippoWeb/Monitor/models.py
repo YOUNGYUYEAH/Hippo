@@ -68,23 +68,9 @@ class Memory(models.Model):
 
 
 class Disk(models.Model):
-    """
-    [弃用] 建表语句
-    CREATE TABLE `monitor_disk` (
-    `id` int(11) NOT NULL AUTO_INCREMENT,
-    `ip` varchar(20) NOT NULL,
-    `diskusage` json DEFAULT NULL,
-    `iousage` json DEFAULT NULL,
-    `checktime` datetime(6) DEFAULT NULL,
-    PRIMARY KEY (`id`)
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8
-
-    SELECT `ip`,`diskusage`->'$."/".free' FROM Hippo.monitor_disk limit 1;
-    注意根目录需要加双引号""
-    """
     ip = models.CharField(max_length=20, verbose_name="主机ip")
     diskmount = models.CharField(max_length=100, verbose_name="磁盘挂载点")
-    diskusage = models.CharField(max_length=500, verbose_name="磁盘挂载点用量")
+    diskusage = models.CharField(max_length=1000, verbose_name="磁盘挂载点用量")
     checktime = models.DateTimeField(null=True)
 
     class Meta:
@@ -92,9 +78,9 @@ class Disk(models.Model):
 
 
 class Network(models.Model):
-    """network使用JSON类型"""
     ip = models.CharField(max_length=20, verbose_name="主机ip")
-    network = models.TextField(verbose_name="网卡情况JSON串")
+    netpic = models.CharField(max_length=100, verbose_name="网卡名列表")
+    netusage = models.CharField(max_length=1000, verbose_name="网卡用量")
     checktime = models.DateTimeField(null=True)
 
     class Meta:
