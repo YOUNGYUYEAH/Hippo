@@ -179,8 +179,8 @@ def monitor_network(req):
     查询服务器网卡接口信息
     """
     title = "Network List"
-    thead = ["IP", "Interface", "Netaddr", "Packages_sent", "Packages_recv", "pps[1s]",
-             "Bytes_sent", "Bytes_recv", "bps[1s]", "Other", "Checktime"]
+    thead = ["IP", "Interface", "Netaddr", "Speed", "pps[1s] sent/recv",
+             "bps[1s] sent/recv", "Err in/out", "Checktime"]
     try:
         s = MonitorORM.LoadData()
         _data = s.load_network()

@@ -44,7 +44,7 @@ function CreateTableFunc() {
     } else {
         var cardText = "";
         cardText += '<div class="card mb-8">';
-        cardText += '<div class="card-header navbar"></div>';
+        cardText += '<div class="card-header"></div>';
         cardText += '<div class="card-body">';
         cardText += '<div class="table-responsive">';
         cardText += '<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">';
@@ -80,10 +80,10 @@ function DataFunc(data) {
             }
             diskText += "</ul></td><td><ul class='table-ul'>";
             for (var z=0; z< arr.length; z++) {
-                diskText += "<li>" + "Used: " + arr[z].used + "</li>";
-                diskText += "<li>" + "Total: " +arr[z].total + "</li>";
-                diskText += "<li>" + "Percent: " +arr[z].percent + "%" + "</li>";
-                diskText += "<li>" + "Inode: " +arr[z].inode + "</li>";
+                diskText += "<li>" + "Used: " + arr[z]["used"] + "</li>";
+                diskText += "<li>" + "Total: " +arr[z]["total"] + "</li>";
+                diskText += "<li>" + "Percent: " +arr[z]["percent"] + "%" + "</li>";
+                diskText += "<li>" + "Inode: " +arr[z]["inode"] + "</li>";
                 if ( z !== arr.length -1 ) {
                     diskText += "<hr class='table-hr' />";
                 }
@@ -94,6 +94,20 @@ function DataFunc(data) {
         $("#monitortable_tbody").html(diskText);
     } else if ( data["title"] === "Network List" ) {
         var netText = "";
+        function _netvalue(v1,v2) {
+            netText += "<td><ul class='table-ul'>";
+            $.each(Arr, function (index, item) {
+                if(!v2) {
+                    netText += "<li>" + item[v1] + "</li>";
+                } else {
+                    netText += "<li>" + item[v1] + " / " + item[v2] + "</li>";
+                }
+                if (index !== Arr.length - 1) {
+                    netText += "<hr class='table-hr' />";
+                }
+            });
+            netText += "</ul></td>";
+        }
         for (var X=0; X< data["value"].length; X++) {
             var Arr = JSON.parse(data["value"][X][2]);
             netText += "<tr><td>" + data["value"][X][0] + "</td>";
@@ -105,11 +119,13 @@ function DataFunc(data) {
                 }
             }
             netText += "</ul></td>";
-            for(var Z=0; Z<data["head"].length-3; Z++) {
-                netText += "<td>";
-                //循环每个ip的数,来获取值
-                netText += "</td>";
-            }
+            // 先手工赋值,后期考虑如何数组传参
+            _netvalue("ipaddr");
+            _netvalue("speed");
+            _netvalue("pps_sent","pps_recv");
+            _netvalue("bps_sent","bps_recv");
+            _netvalue("errin","errout");
+            netText += "<td>" + data["value"][X][3] + "</td>";
         }
         $("#monitortable_tbody").html(netText)
     } else {
