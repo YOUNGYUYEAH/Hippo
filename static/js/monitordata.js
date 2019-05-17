@@ -1,3 +1,14 @@
+$(document).ready(function(){
+   if($("#select_host_ip").length > 0 ) {
+       var selectText = "";
+       selectText += "<option data-hidden='true' value=' ' disabled='disabled'>Search Server.</option>";
+       $("#select_host_ip option:first").before(selectText);
+       $
+   }
+});
+$("#monitordata_hostmode").click(function() {
+    window.location.reload();
+});
 $("#monitordata_cpu").click(function() {
     CreateTableFunc();
     $.ajax({

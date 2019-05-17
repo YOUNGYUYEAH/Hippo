@@ -4,6 +4,7 @@ from HippoWeb.Monitor import models
 from HippoWeb.Monitor import MonitorORM
 from django.shortcuts import HttpResponse, render
 from django.contrib.auth.decorators import login_required
+from HippoWeb.forms import HostModeForm
 
 
 def collect(req):
@@ -202,7 +203,9 @@ def monitordata(req):
     根据选择返回监控数据,HostMode
     """
     try:
-        return render(req, 'monitor/monitordata.html')
+        s = MonitorORM.LoadData()
+        hostmode_form = HostModeForm()
+        return render(req, 'monitor/monitordata.html', {'hostmode_form': hostmode_form})
     except Exception as error:
         return render(req, 'monitor/monitordata.html', {'error': error})
 

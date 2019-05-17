@@ -83,12 +83,10 @@ class SaveData(object):
 
 class LoadData(object):
     """根据提交回来的ip进行数据库查询"""
-    def __init__(self, ip=None, timerange=None, item=None):
+    def __init__(self, ip=None, timerange=None):
         self.ip = ip
         self.timerange = timerange
-        self.options = item
         self.cursor = connection.cursor()
-        # self.count = models.Info.objects.all().count()
 
     def dictfetchall(self):
         columns = [col[0] for col in self.cursor.description]
@@ -96,6 +94,18 @@ class LoadData(object):
             dict(zip(columns, row))
             for row in self.cursor.fetchall()
         ]
+
+    def count(self):
+        _count_result = models.Info.objects.all().count()
+        return _count_result
+
+    def load_server(self):
+        server_list = []
+        _load_server_result = models.Info.objects.all().values('id', 'ip', 'host')
+        for i in _load_server_result:
+            _server = [i["id"], "("+i["ip"]+") "+i["host"] ]
+            server_list.append(_server)
+        return server_list
 
     def load_info(self):
         """ORM提取回来的时间格式非正常显示,需要进一步处理"""

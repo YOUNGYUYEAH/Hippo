@@ -2,7 +2,7 @@
 from django.shortcuts import render, redirect, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib import auth
-from HippoWeb.forms import *
+from HippoWeb.forms import LoginForm
 import rsa
 import json
 
@@ -24,7 +24,7 @@ def page_error(request):
 def rsa_encrypt(req):
     """使用RSA生成公钥私钥,并拆分存放private key"""
     (public, private) = rsa.newkeys(512)
-    private_key = {}
+    private_key = dict()
     private_key['n'] = private.n
     private_key['e'] = private.e
     private_key['d'] = private.d
