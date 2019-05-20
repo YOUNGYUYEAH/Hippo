@@ -1,6 +1,6 @@
 $(document).ready(function(){
     if ( $("#select_host_ip").length > 0 ) {
-        var selectText = "";
+        let selectText = "";
         selectText += "<option data-hidden='true' disabled selected>Select Server To Search &nbsp :D</option>";
         $("#select_host_ip option:first").before(selectText);
     }
@@ -8,17 +8,17 @@ $(document).ready(function(){
 });
 
 $("#hostmode_form").click(function(){
-    if ( $("#select_host_ip option:selected").prop("disabled") == false ) {
-        var search_text = $("#select_host_ip option:selected").text();
-        var search_val = $("#select_host_ip option:selected").val();
-        var search_title = "<i class='fa fa-yelp'></i>" + "&nbsp Information For &nbsp" + "<strong>"
+    if (!$("#select_host_ip option:selected").prop("disabled")) {
+        let search_text = $(this).text();
+        let search_val = $(this).val();
+        let search_title = "<i class='fa fa-yelp'></i>" + "&nbsp Information For &nbsp" + "<strong>"
             + search_text + "</strong>";
         $.ajax({
             url: '/monitor/s',
             type: 'POST',
             dataType: 'json',
             data: {'type':"host", 'option': search_val}
-        })
+        });
         $("#search_info_title").html(search_title);
         $("#search_info").show();
     }
@@ -87,7 +87,7 @@ function CreateTableFunc() {
     if ($("#card-table").length > 0) {
         console.log("find card-table");
     } else {
-        var cardText = "";
+        let cardText = "";
         cardText += '<div class="card mb-8">';
         cardText += '<div class="card-header"></div>';
         cardText += '<div class="card-body">';
@@ -101,31 +101,31 @@ function CreateTableFunc() {
 }
 
 function DataFunc(data) {
-    var titleText = "";
+    let titleText = "";
     titleText += "<div><i class='fa fa-table'></i>" + "&nbsp" + data["title"] + "</div>";
     $(".card-header").html(titleText);
-    var theadText = "";
+    let theadText = "";
     theadText += "<tr>";
-    for (var a = 0; a < data["head"].length; a++) {
-        var title = data["head"][a];
+    for (let a = 0; a < data["head"].length; a++) {
+        let title = data["head"][a];
         theadText += "<td><strong>" + title + "</strong></td>";
     }
     theadText += "</tr>";
     $("#monitortable_thead").html(theadText);
     if ( data["title"] === "Disk List") {
-        var diskText = "";
-        for (var x=0; x< data["value"].length; x++) {
-            var arr = JSON.parse(data["value"][x][2]);
+        let diskText = "";
+        for (let x=0; x< data["value"].length; x++) {
+            let arr = JSON.parse(data["value"][x][2]);
             diskText += "<tr><td>" + data["value"][x][0] + "</td>";
             diskText += "<td><ul class='table-ul'>";
-            for (var y=0; y< data["value"][x][1].length; y++) {
+            for (let y=0; y< data["value"][x][1].length; y++) {
                 diskText += "<li class='table-ul-li'>" + data["value"][x][1][y] + "</li>";
                 if ( y !== arr.length -1 ) {
                     diskText += "<hr class='table-hr' />";
                 }
             }
             diskText += "</ul></td><td><ul class='table-ul'>";
-            for (var z=0; z< arr.length; z++) {
+            for (let z=0; z< arr.length; z++) {
                 diskText += "<li>" + "Used: " + arr[z]["used"] + "</li>";
                 diskText += "<li>" + "Total: " +arr[z]["total"] + "</li>";
                 diskText += "<li>" + "Percent: " +arr[z]["percent"] + "%" + "</li>";
@@ -139,32 +139,33 @@ function DataFunc(data) {
         }
         $("#monitortable_tbody").html(diskText);
     } else if ( data["title"] === "Network List" ) {
-        var netText = "";
-        function _netvalue(v1,v2) {
-            netText += "<td><ul class='table-ul'>";
-            $.each(Arr, function (index, item) {
-                if(!v2) {
-                    netText += "<li>" + item[v1] + "</li>";
-                } else {
-                    netText += "<li>" + item[v1] + " / " + item[v2] + "</li>";
-                }
-                if (index !== Arr.length - 1) {
-                    netText += "<hr class='table-hr' />";
-                }
-            });
-            netText += "</ul></td>";
-        }
-        for (var X=0; X< data["value"].length; X++) {
-            var Arr = JSON.parse(data["value"][X][2]);
+        let netText = "";
+
+        for (let X=0; X< data["value"].length; X++) {
+            let Arr = JSON.parse(data["value"][X][2]);
             netText += "<tr><td>" + data["value"][X][0] + "</td>";
             netText += "<td><ul class='table-ul'>";
-            for (var Y=0; Y< data["value"][X][1].length; Y++) {
+            for (let Y=0; Y< data["value"][X][1].length; Y++) {
                 netText += "<li>" + data["value"][X][1][Y] + "</li>";
                 if ( Y !== Arr.length -1 ) {
                     netText += "<hr class='table-hr' />";
                 }
             }
             netText += "</ul></td>";
+            function _netvalue(v1,v2) {
+                netText += "<td><ul class='table-ul'>";
+                $.each(Arr, function (index, item) {
+                    if(!v2) {
+                        netText += "<li>" + item[v1] + "</li>";
+                    } else {
+                        netText += "<li>" + item[v1] + " / " + item[v2] + "</li>";
+                    }
+                    if (index !== Arr.length - 1) {
+                        netText += "<hr class='table-hr' />";
+                    }
+                });
+                netText += "</ul></td>";
+            }
             // 先手工赋值,后期考虑如何数组传参
             _netvalue("ipaddr");
             _netvalue("speed");
@@ -175,11 +176,11 @@ function DataFunc(data) {
         }
         $("#monitortable_tbody").html(netText)
     } else {
-        var tbodyText = "";
-        for (var i = 0; i < data["value"].length; i++) {
+        let tbodyText = "";
+        for (let i = 0; i < data["value"].length; i++) {
             tbodyText += "<tr>";
-            for (var j = 0; j < data["value"][i].length; j++) {
-                var value = data["value"][i][j];
+            for (let j = 0; j < data["value"][i].length; j++) {
+                let value = data["value"][i][j];
                 tbodyText += "<td>" + value + "</td>";
             }
             tbodyText += "</tr>";
