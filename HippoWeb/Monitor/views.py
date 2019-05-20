@@ -56,7 +56,7 @@ def collect(req):
         return response
 
 
-def monitor_host(option):
+def monitor_host(_id):
     """前端返回需要搜索的服务器的id,通过id获取ip,然后获取值"""
     pass
 
@@ -188,8 +188,9 @@ def search(req):
         if req.method == 'POST':
             search_type = req.POST.get('type')
             if search_type == "host":
-                _option = req.POST.get('option')
-                print(_option)
+                _id = req.POST.get('option')
+                response = monitor_host(_id)
+                return response
                 #  待完善
             elif search_type == "server":
                 response = monitor_server()
