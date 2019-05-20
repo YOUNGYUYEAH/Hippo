@@ -19,11 +19,12 @@
 
     <div class="content-wrapper">
         <div class="container-fluid">
-            {% block MainWeb %}
-            {% endblock %}
+            <div id="mainWeb">
+                {% block MainWeb %}
+                {% endblock %}
+            </div>
         </div>
     </div>
-
 
     <footer class="sticky-footer">
         {% block Footer %}
@@ -33,7 +34,8 @@
                     <small>- Author - YOUNGYUYEAH</small>
                     <span class="align-right">
                         <a class="mr-3 d-inline-block" href="https://github.com/YOUNGYUYEAH/Hippo" target="_blank">
-                            <i class="fa fa-fw fa-thumbs-up">Like</i>
+                            <i class="fa fa-fw fa-thumbs-up"></i>
+                            <span>Like</span>
                         </a>
                     </span>
                 </div>

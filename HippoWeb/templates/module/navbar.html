@@ -26,21 +26,27 @@
                     </a>
                     <ul class="sidenav-second-level collapse" id="MonitorcollapsePages">
                         <li>
-                            <a class="nav-link" id="monitordata" href="{{ url('/monitor/monitordata') }}">
+                            <a class="nav-link" id="monitordata" href="{{ url('/monitor/monitordata') }}" >
                                 <i class="fa fa-fw fa-linode"></i>
                                 <span class="nav-link-text">Monitor Data</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a class="nav-link" id="addserver">
-                                <i class="fa fa-fw fa-plus-circle"></i>
-                                <span class="nav-link-text">Add Server</span>
                             </a>
                         </li>
                         <li>
                             <a class="nav-link" id="charts">
                                 <i class="fa fa-fw fa-pie-chart"></i>
                                 <span class="nav-link-text">Monitor Chart</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="nav-link" id="charts">
+                                <i class="fa fa-fw fa-exclamation-triangle"></i>
+                                <span class="nav-link-text">Monitor Alarm</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="nav-link" id="addserver">
+                                <i class="fa fa-fw fa-plus-circle"></i>
+                                <span class="nav-link-text">Add Server</span>
                             </a>
                         </li>
                     </ul>
@@ -77,7 +83,7 @@
                 <li class="nav-item" data-toggle="tooltip" data-placement="right" title
                     data-original-title="Terminal">
                     <a class="nav-link" id="Terminal">
-                        <i class="fa fa-fw fa-terminal"></i>
+                        <i class="fa fa-fw fa-connectdevelop"></i>
                         <span class="nav-link-text">Terminal</span>
                     </a>
                 </li>
@@ -96,12 +102,12 @@
                 <li class="nav-item">
                     <form class="form-inline my-2 my-lg-0 mr-lg-2">
                         <div class="input-group">
-                            <input class="form-control" type="text" placeholder="Search for..">
-                            <span class="input-group-btn">
-                                <button class="btn btn-primary" type="button">
+                            <input class="form-control" type="text" placeholder="Search for.." />
+                            <button class="btn btn-primary btn-fixed" type="button">
+                                <span class="input-group-btn">
                                     <i class="fa fa-search"></i>
-                                </button>
-                            </span>
+                                </span>
+                            </button>
                         </div>
                     </form>
                 </li>

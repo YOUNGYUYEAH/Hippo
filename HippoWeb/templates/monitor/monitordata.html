@@ -64,7 +64,7 @@
                 <form enctype="multipart/form-data">
                     {{ csrf_input }}
                     {% if hostmode_form %}
-                        {{ hostmode_form.as_p() }}
+                        {{ hostmode_form }}
                     {% endif %}
                     <input class="btn btn-primary" type="button" value="Search" id="hostmode_form"/>
                 </form>
