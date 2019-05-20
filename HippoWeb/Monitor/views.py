@@ -64,124 +64,93 @@ def serverlist(req):
     try:
         s = MonitorORM.LoadData()
         _serverdata = s.load_info()
-        return render(req, 'monitor/serverlist.html', {'data': _serverdata})
     except Exception as error:
-        return render(req, 'monitor/serverlist.html', {'error': error})
+        _serverdata = error
+    return render(req, 'monitor/serverlist.html', {'data': _serverdata})
 
 
-def monitor_cpu(req):
+def monitor_host(option):
+    """前端返回需要搜索的服务器的id,通过id获取ip,然后获取值"""
+    pass
+
+
+def monitor_cpu(option):
     """
     查询所有服务CPU信息的接口,提供数值和百分比.
     """
-    if req.is_ajax():
-        if req.method == 'POST':
-            if req.POST.get('option'):
-                option = req.POST.get('option')
-                title = "CPU List"
-                thead = ["IP", "Load(1min)", "Load(5min)", "Load(15min)", "Count", "User", "System", "Nice",
-                         "Idle", "IOwait", "Irq", "Softirq", "Steal", "Total", "Checktime"]
-                try:
-                    # 初始化前端页面所需要的数据.
-                    s = MonitorORM.LoadData()
-                    if option == "percent":
-                        thead.pop(-2)
-                        cpudata = s.load_cpu(percent=True)
-                    else:
-                        cpudata = s.load_cpu(percent=False)
-                    response = HttpResponse(json.dumps({'title': title, 'head': thead, 'value': cpudata}),
-                                            content_type='application/json')
-                    return response
-                except Exception as error:
-                    # 如果有异常,将报错返回前端.
-                    thead = ["Error Messages",]
-                    response = HttpResponse(json.dumps({'title': title, 'head': thead, 'value': error}),
-                                            content_type='application/json')
-                    response.status_code = 417
-                    return response
-    else:
-        # 仅接受AJAX.
-        response = HttpResponse("ONLY AJAX. :(  \n")
-        response.status_code = 405
-        return response
+    title = "CPU List"
+    thead = ["IP", "Load(1min)", "Load(5min)", "Load(15min)", "Count", "User", "System", "Nice","Idle", "IOwait",
+             "Irq", "Softirq", "Steal", "Total", "Checktime"]
+    try:
+        s = MonitorORM.LoadData()
+        if option == "percent":
+            thead.pop(-2)
+            cpudata = s.load_cpu(percent=True)
+        else:
+            cpudata = s.load_cpu(percent=False)
+    except Exception as error:
+        cpudata = error
+    _response = HttpResponse(json.dumps({'title': title, 'head': thead, 'value': cpudata}),
+                             content_type='application/json')
+    return _response
 
 
-def monitor_memory(req):
+def monitor_memory(option):
     """
     查询所有服务Memeory信息的接口,提供GB和MB单位.
     """
-    if req.is_ajax():
-        if req.method == 'POST':
-            if req.POST.get('option'):
-                unit = req.POST.get('option')
-                title = "Memory List"
-                thead = ["IP", "Total", "Available", "Used", "Free", "Active", "Inactive", "Buffers",
-                         "Cached", "Shared", "Slab", "Checktime"]
-                try:
-                    s = MonitorORM.LoadData()
-                    _data = s.load_memory()
-                    memorydata = []
-                    if _data:
-                        for ip in _data:
-                            _ipdata = []
-                            for value in ip:
-                                if isinstance(value, int):
-                                    if unit == "MB":
-                                        value = round(value/pow(1024, 2), 2)
-                                    elif unit == "GB":
-                                        value = round(value/pow(1024, 3), 2)
-                                _ipdata.append(value)
-                            memorydata.append(_ipdata)
-                    response = HttpResponse(json.dumps({'title': title, 'head': thead, 'value': memorydata}),
-                                            content_type='application/json')
-                    return response
-                except Exception as error:
-                    thead = ["Error Messages",]
-                    response = HttpResponse(json.dumps({'title': title, 'head': thead, 'value': error}),
-                                            content_type='application/json')
-                    response.status_code = 417
-                    return response
-    else:
-        # 仅接受AJAX.
-        response = HttpResponse("ONLY AJAX. :(  \n")
-        response.status_code = 405
-        return response
+    title = "Memory List"
+    thead = ["IP", "Total", "Available", "Used", "Free", "Active", "Inactive", "Buffers", "Cached", "Shared",
+             "Slab", "Checktime"]
+    try:
+        s = MonitorORM.LoadData()
+        _data = s.load_memory()
+        memorydata = []
+        if _data:
+            for ip in _data:
+                _ipdata = []
+                for value in ip:
+                    if isinstance(value, int):
+                        if option == "MB":
+                            value = round(value/pow(1024, 2), 2)
+                        elif option == "GB":
+                            value = round(value/pow(1024, 3), 2)
+                    _ipdata.append(value)
+                memorydata.append(_ipdata)
+    except Exception as error:
+        memorydata = error
+    _response = HttpResponse(json.dumps({'title': title, 'head': thead, 'value': memorydata}),
+                             content_type='application/json')
+    return _response
 
 
-def monitor_disk(req):
+def monitor_disk():
     """
     查询所有服务磁盘用量信息的接口.
     """
-    if req.is_ajax():
-        if req.method == 'POST':
-            title = "Disk List"
-            thead = ["IP", "Mount", "Usage", "Checktime"]
-            try:
-                s = MonitorORM.LoadData()
-                _data = s.load_disk()
-                diskdata = []
-                for _ip in _data:
-                    arr = _ip[2].replace("'", '')
-                    ipvalue = [_ip[0], _ip[1][1:-1].split(","), arr, _ip[3]]
-                    diskdata.append(ipvalue)
-                response = HttpResponse(json.dumps({'title': title, 'head': thead, 'value': diskdata}),
-                                        content_type='application/json')
-                return response
-            except Exception as error:
-                print(error)
-    else:
-        # 仅接受AJAX.
-        response = HttpResponse("ONLY AJAX. :(  \n")
-        response.status_code = 405
-        return response
+    title = "Disk List"
+    thead = ["IP", "Mount", "Usage", "Checktime"]
+    try:
+        s = MonitorORM.LoadData()
+        _data = s.load_disk()
+        diskdata = []
+        for _ip in _data:
+            arr = _ip[2].replace("'", '')
+            ipvalue = [_ip[0], _ip[1][1:-1].split(","), arr, _ip[3]]
+            diskdata.append(ipvalue)
+    except Exception as error:
+        diskdata = error
+    _response = HttpResponse(json.dumps({'title': title, 'head': thead, 'value': diskdata}),
+                             content_type='application/json')
+    return _response
 
 
-def monitor_network(req):
+def monitor_network():
     """
     查询服务器网卡接口信息
     """
     title = "Network List"
-    thead = ["IP", "Interface", "Netaddr", "Speed", "pps[1s] sent/recv",
-             "bps[1s] sent/recv", "Err in/out", "Checktime"]
+    thead = ["IP", "Interface", "Netaddr", "Speed", "pps[1s] sent/recv", "bps[1s] sent/recv", "Err in/out", "Checktime"]
     try:
         s = MonitorORM.LoadData()
         _data = s.load_network()
@@ -190,11 +159,11 @@ def monitor_network(req):
             arr = _ip[2].replace("'", '')
             ipvalue = [_ip[0], _ip[1][1:-1].split(","), arr, _ip[3]]
             networkdata.append(ipvalue)
-        response = HttpResponse(json.dumps({'title': title, 'head': thead, 'value': networkdata}),
-                                content_type='application/json')
-        return response
     except Exception as error:
-        return render(req, 'monitor/network.html', {'error': error})
+        networkdata = error
+    _response = HttpResponse(json.dumps({'title': title, 'head': thead, 'value': networkdata}),
+                             content_type='application/json')
+    return _response
 
 
 @login_required
@@ -203,11 +172,45 @@ def monitordata(req):
     根据选择返回监控数据,HostMode
     """
     try:
-        s = MonitorORM.LoadData()
         hostmode_form = HostModeForm()
         return render(req, 'monitor/monitordata.html', {'hostmode_form': hostmode_form})
     except Exception as error:
         return render(req, 'monitor/monitordata.html', {'error': error})
+
+
+def search(req):
+    if req.is_ajax():
+        if req.method == 'POST':
+            search_type = req.POST.get('type')
+            if search_type == "host":
+                _option = req.POST.get('option')
+                print(_option)
+            elif search_type == "cpu":
+                _option = req.POST.get('option')
+                response = monitor_cpu(_option)
+                return response
+            elif search_type == "memory":
+                _option = req.POST.get('option')
+                response = monitor_memory(_option)
+                return response
+            elif search_type == "disk":
+                _response = monitor_disk()
+                return _response
+            elif search_type == "network":
+                _response = monitor_network()
+                return _response
+            else:
+                pass
+        else:
+            # 非POST方法报错.
+            response = HttpResponse("API Error. :(  \n")
+            response.status_code = 405
+            return response
+    else:
+        # 仅接受AJAX.
+        response = HttpResponse("ONLY AJAX. :(  \n")
+        response.status_code = 405
+        return response
 
 
 def addserver(req):

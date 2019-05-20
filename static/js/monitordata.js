@@ -1,54 +1,77 @@
 $(document).ready(function(){
-   if($("#select_host_ip").length > 0 ) {
-       var selectText = "";
-       selectText += "<option data-hidden='true' value=' ' disabled='disabled'>Search Server.</option>";
-       $("#select_host_ip option:first").before(selectText);
-       $
-   }
+    if ( $("#select_host_ip").length > 0 ) {
+        var selectText = "";
+        selectText += "<option data-hidden='true' disabled selected>Search Server.</option>";
+        $("#select_host_ip option:first").before(selectText);
+    }
+    $("#search_info").hide();
 });
+
+$("#hostmode_form").click(function(){
+    if ( $("#select_host_ip option:selected").prop("disabled") == false ) {
+        var search_text = $("#select_host_ip option:selected").text();
+        var search_val = $("#select_host_ip option:selected").val();
+        var search_title = "<i class='fa fa-yelp'></i>" + "&nbsp Information For &nbsp" + "<strong>"
+            + search_text + "</strong>";
+        $.ajax({
+            url: '/monitor/s',
+            type: 'POST',
+            dataType: 'json',
+            data: {'type':"host", 'option': search_val}
+        })
+        $("#search_info_title").html(search_title);
+        $("#search_info").show();
+    }
+});
+
 $("#monitordata_hostmode").click(function() {
     window.location.reload();
 });
+
 $("#monitordata_cpu").click(function() {
     CreateTableFunc();
     $.ajax({
-        url: '/monitor/c',
+        url: '/monitor/s',
         type: 'POST',
         dataType: 'json',
         data: {'type':"cpu",'option':"percent"},
         success: DataFunc
     });
 });
+
 $("#monitordata_memory").click(function(){
      CreateTableFunc();
      $.ajax({
-         url: '/monitor/m',
+         url: '/monitor/s',
          type: 'POST',
          dataType: 'json',
          data: {'type':"memory",'option':"GB"},
          success: DataFunc
      });
 });
+
 $("#monitordata_disk").click(function(){
      CreateTableFunc();
      $.ajax({
-         url: '/monitor/d',
+         url: '/monitor/s',
          type: 'POST',
          dataType: 'json',
          data: {'type':"disk"},
          success: DataFunc
      });
 });
+
 $("#monitordata_network").click(function(){
      CreateTableFunc();
      $.ajax({
-         url: '/monitor/n',
+         url: '/monitor/s',
          type: 'POST',
          dataType: 'json',
          data: {'type':"network"},
          success: DataFunc
      });
 });
+
 function CreateTableFunc() {
     if ($("#card-table").length > 0) {
         console.log("find card-table");
@@ -65,15 +88,16 @@ function CreateTableFunc() {
         $("#mainSubweb").html(cardText);
     }
 }
+
 function DataFunc(data) {
     var titleText = "";
-    titleText += '<div><i class="fa fa-table"></i>'+ "\n" + data["title"] +'</div>';
+    titleText += "<div><i class='fa fa-table'></i>" + "&nbsp" + data["title"] + "</div>";
     $(".card-header").html(titleText);
     var theadText = "";
     theadText += "<tr>";
     for (var a = 0; a < data["head"].length; a++) {
         var title = data["head"][a];
-        theadText += "<td>" + title + "</td>";
+        theadText += "<td><strong>" + title + "</strong></td>";
     }
     theadText += "</tr>";
     $("#monitortable_thead").html(theadText);

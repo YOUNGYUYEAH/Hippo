@@ -10,7 +10,7 @@
 <body>
     <div class="login-bg">
         <div class="login-form">
-            <form enctype="multipart/form-data">
+            <form method="post" enctype="multipart/form-data">
                 {{ csrf_input }}
                 {{ login_form.as_p() }}
                 <input class="btn btn-default" type="button" value="Sign In" id="login_form" onclick="dologin()"/>

@@ -58,7 +58,19 @@
                 <form enctype="multipart/form-data">
                     {{ csrf_input }}
                     {{ hostmode_form.as_p() }}
+                    <input class="btn btn-default" type="button" value="Search" id="hostmode_form"/>
                 </form>
+            </div>
+        </div>
+        <br/>
+        <div id="search_info" class="card mb-8">
+            <div id="search_info_title" class="card-header">
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="dataTable" class="table table-bordered" width="100%" cellspacing="0">
+                    </table>
+                </div>
             </div>
         </div>
     </div>
