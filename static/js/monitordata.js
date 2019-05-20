@@ -28,6 +28,17 @@ $("#monitordata_hostmode").click(function() {
     window.location.reload();
 });
 
+$("#monitordata_server").click(function() {
+    CreateTableFunc();
+    $.ajax({
+        url: '/monitor/s',
+        type: 'POST',
+        dataType: 'json',
+        data: {'type':"server"},
+        success: DataFunc
+    });
+});
+
 $("#monitordata_cpu").click(function() {
     CreateTableFunc();
     $.ajax({

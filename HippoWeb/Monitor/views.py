@@ -56,22 +56,27 @@ def collect(req):
         return response
 
 
-@login_required
-def serverlist(req):
-    """
-    读取monitor_info返回所有服务器的基本信息.
-    """
-    try:
-        s = MonitorORM.LoadData()
-        _serverdata = s.load_info()
-    except Exception as error:
-        _serverdata = error
-    return render(req, 'monitor/serverlist.html', {'data': _serverdata})
-
-
 def monitor_host(option):
     """前端返回需要搜索的服务器的id,通过id获取ip,然后获取值"""
     pass
+
+
+def monitor_server():
+    title = "Server List"
+    thead = ["IP", "Hostname", "OS", "Kernel", "Arch", "Status", "Createtime", "Updatetime", "Remark"]
+    try:
+        s = MonitorORM.LoadData()
+        _serverdata = s.load_info()
+        serverdata = []
+        for i in _serverdata:
+            _ipvalue = [i["ip"], i["host"], i["type"], i["platform"], i["arch"], i["status"], i["ctime"],
+                        i["utime"], i["remark"]]
+            serverdata.append(_ipvalue)
+    except Exception as error:
+        serverdata = error
+    _response = HttpResponse(json.dumps({'title': title, 'head': thead, 'value': serverdata}),
+                             content_type='application/json')
+    return _response
 
 
 def monitor_cpu(option):
@@ -185,6 +190,10 @@ def search(req):
             if search_type == "host":
                 _option = req.POST.get('option')
                 print(_option)
+                #  待完善
+            elif search_type == "server":
+                response = monitor_server()
+                return response
             elif search_type == "cpu":
                 _option = req.POST.get('option')
                 response = monitor_cpu(_option)
