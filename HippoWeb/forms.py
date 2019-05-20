@@ -14,9 +14,9 @@ class HostModeForm(forms.Form):
     s = MonitorORM.LoadData()
     try:
         ip = forms.ChoiceField(label='', choices=s.load_server(),  widget=forms.Select(
-            attrs={'id': 'select_host_ip', 'class': 'form-control selectpicker',
+            attrs={'id': 'select_host_ip', 'class': 'form-control selectpicker show-tick', 'data-style': 'btn-default',
                    'data-live-search': 'true', 'data-width': '25%'}), initial=s.count())
     except Exception as error:
         ip = forms.ChoiceField(label='', choices=("", error), widget=forms.Select(
-            attrs={'id': 'select_host_ip', 'class': 'form-control selectpicker show-tick',
+            attrs={'id': 'select_host_ip', 'class': 'form-control selectpicker show-tick', 'data-style': 'btn-default',
                    'data-live-search': 'true', 'data-width': '25%'}), initial=1)

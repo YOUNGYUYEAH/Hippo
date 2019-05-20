@@ -1,7 +1,7 @@
 $(document).ready(function(){
     if ( $("#select_host_ip").length > 0 ) {
         var selectText = "";
-        selectText += "<option data-hidden='true' disabled selected>Search Server.</option>";
+        selectText += "<option data-hidden='true' disabled selected>Select Server.</option>";
         $("#select_host_ip option:first").before(selectText);
     }
     $("#search_info").hide();

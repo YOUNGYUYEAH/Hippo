@@ -13,7 +13,7 @@
             <form method="post" enctype="multipart/form-data">
                 {{ csrf_input }}
                 {{ login_form.as_p() }}
-                <input class="btn btn-default" type="button" value="Sign In" id="login_form" onclick="dologin()"/>
+                <input class="btn btn-primary" type="button" value="Sign In" id="login_form" onclick="dologin()"/>
                 <input type="hidden" id="pub_e" value={{ pub_e }} name="pub_e" />
                 <input type="hidden" id="pub_n" value={{ pub_n }} name="pub_n" />
             </form>
