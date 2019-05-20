@@ -17,6 +17,6 @@ class HostModeForm(forms.Form):
             attrs={'id': 'select_host_ip', 'class': 'form-control selectpicker',
                    'data-live-search': 'true', 'data-width': '25%'}), initial=s.count())
     except Exception as error:
-        ip = forms.ChoiceField(label='', choices=("", error), widgets=forms.Select(
+        ip = forms.ChoiceField(label='', choices=("", error), widget=forms.Select(
             attrs={'id': 'select_host_ip', 'class': 'form-control selectpicker show-tick',
                    'data-live-search': 'true', 'data-width': '25%'}), initial=1)

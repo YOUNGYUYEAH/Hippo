@@ -56,7 +56,7 @@ $("#monitordata_memory").click(function(){
          url: '/monitor/s',
          type: 'POST',
          dataType: 'json',
-         data: {'type':"memory",'option':"GB"},
+         data: {'type':"memory", 'option': "GB"},
          success: DataFunc
      });
 });

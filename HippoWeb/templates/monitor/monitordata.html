@@ -63,7 +63,9 @@
             <div class="card-body">
                 <form enctype="multipart/form-data">
                     {{ csrf_input }}
-                    {{ hostmode_form.as_p() }}
+                    {% if hostmode_form %}
+                        {{ hostmode_form.as_p() }}
+                    {% endif %}
                     <input class="btn btn-default" type="button" value="Search" id="hostmode_form"/>
                 </form>
             </div>
