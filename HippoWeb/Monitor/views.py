@@ -63,8 +63,19 @@ def monitor_host(_id):
         title = ["info", "cpu", "disk", "memory", "network"]
         _ip_info = MonitorORM.LoadData(_ip).load_info()
         _ip_cpu = MonitorORM.LoadData(_ip).load_cpu()
-        _ip_disk = MonitorORM.LoadData(_ip).load_disk()
         _ip_memory = MonitorORM.LoadData(_ip).load_memory()
+        # 磁盘信息需要切割处理
+        _ip_disk = MonitorORM.LoadData(_ip).load_disk()
+        disk_mount = _ip_disk["diskmount"][1:-1].split(",")
+        disk_usage = _ip_disk["diskusage"][2:-2].split("', '")
+        disk_checktime = _ip_disk["checktime"]
+        _ip_disk_value = []
+        for i in range(len(disk_mount)):
+            d = json.loads(disk_usage[i])
+            _mount_info = [disk_mount[i], d["used"], d["total"], d["percent"],d["inode"], d["inode"], disk_checktime]
+            _ip_disk_value.append(_mount_info)
+        print(_ip_disk_value)
+        # 网卡信息需要切割处理
         _ip_network = MonitorORM.LoadData(_ip).load_network()
         hostdata = [_ip_info, _ip_cpu, _ip_memory, _ip_disk, _ip_network]
         _response = HttpResponse(json.dumps({'title': title, 'value': hostdata}), content_type='application/json')
