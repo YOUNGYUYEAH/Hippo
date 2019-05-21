@@ -360,6 +360,6 @@ footer.sticky-footer {
   border:none;
   border-top:1px solid #dee2e6;
 }
-.table-nav-a {
-  padding-right: 1.5rem;
+.table-nav a {
+  padding-right: 3rem;
 }

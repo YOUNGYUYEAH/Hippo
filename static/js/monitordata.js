@@ -205,10 +205,24 @@ $("#hostmode_form").click(function(){
                                         var _usage_arr = ITEM.split("['")[1].split("']")[0].split("', '");
                                         for (var G=0; G<_usage_arr.length; G++) {
                                             var _usage_jsonarr = JSON.parse(_usage_arr[G]);
-                                            Value += "<li><nav>";
-                                            $.each(_usage_jsonarr, function(K,V){
-                                                Value += "<a class='table-nav-a'>"+ K + "&nbsp:&nbsp" + V +"</a>";
-                                            });
+                                            Value += "<li><nav class='table-nav'>";
+                                            if( IDX === "diskusage" ) {
+                                                Value += "<a>" + "Used: " + _usage_jsonarr["used"] +"</a>";
+                                                Value += "<a>" + "Total: " + _usage_jsonarr["total"] +"</a>";
+                                                Value += "<a>" + "Percent: " + _usage_jsonarr["percent"] +"</a>";
+                                                Value += "<a>" + "Inode:" + _usage_jsonarr["inode"] +"</a>";
+                                            } else if (IDX === "netusage") {
+                                                Value += "<a>" + "Netaddr: " + _usage_jsonarr["ipaddr"] +"</a>";
+                                                Value += "<a>" + "Speed: " + _usage_jsonarr["speed"] +"</a>";
+                                                Value += "<a>" + "Bps_Sent[1s]: " + _usage_jsonarr["bps_sent"] +"</a>";
+                                                Value += "<a>" + "Bps_Recv[1s]: " + _usage_jsonarr["bps_recv"] +"</a>";
+                                                Value += "<a>" + "Pps_Sent[1s]: " + _usage_jsonarr["pps_sent"] +"</a>";
+                                                Value += "<a>" + "Pps_Recv[1s]: " + _usage_jsonarr["pps_recv"] +"</a>";
+
+                                            }
+                                            // $.each(_usage_jsonarr, function(K,V){
+                                            //     Value += "<a class='table-nav-a'>"+ K + "&nbsp:&nbsp" + V +"</a>";
+                                            // });
                                             if ( G !== _usage_arr.length -1 ) {
                                                 Value += "<hr class='table-hr' />";
                                             }
