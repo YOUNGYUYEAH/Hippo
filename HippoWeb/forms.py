@@ -1,5 +1,6 @@
 from django import forms
 from django.forms import widgets
+from HippoWeb.Monitor import models
 from HippoWeb.Monitor import MonitorORM
 
 
@@ -11,11 +12,16 @@ class LoginForm(forms.Form):
 
 
 class HostModeForm(forms.Form):
-    s = MonitorORM.LoadData()
+    _server_list = []
+    _load_server_result = models.Info.objects.all().values('id', 'ip', 'host')
+    for i in _load_server_result:
+        _server = [i["id"], "(" + i["ip"] + ") " + i["host"]]
+        _server_list.append(_server)
+    _count_result = models.Info.objects.all().count()
     try:
-        ip = forms.ChoiceField(label='', choices=s.load_server(),  widget=forms.Select(
+        ip = forms.ChoiceField(label='', choices=_server_list,  widget=forms.Select(
             attrs={'id': 'select_host_ip', 'class': 'form-control selectpicker show-tick', 'data-style': 'btn-default',
-                   'data-live-search': 'true', 'data-width': '20%'}), initial=s.count())
+                   'data-live-search': 'true', 'data-width': '20%'}), initial=_count_result)
     except Exception as error:
         ip = forms.ChoiceField(label='', choices=("", error), widget=forms.Select(
             attrs={'id': 'select_host_ip', 'class': 'form-control selectpicker show-tick', 'data-style': 'btn-default',

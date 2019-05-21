@@ -27,12 +27,12 @@
 <script type="text/javascript">
     function dologin(){
         // http://www.ohdave.com/rsa/  加密所需js文件网址
-        let username = $('#username').val();
-        let pub_e = $('#pub_e').val();
-        let pub_n = $('#pub_n').val();
+        var username = $('#username').val();
+        var pub_e = $('#pub_e').val();
+        var pub_n = $('#pub_n').val();
         setMaxDigits(129);  // "n的位数"
-        let key = new RSAKeyPair(pub_e,"",pub_n);
-        let en_password = encryptedString(key, $('#password').val());
+        var key = new RSAKeyPair(pub_e,"",pub_n);
+        var en_password = encryptedString(key, $('#password').val());
         $.ajax({
             url: "{{ url('/login/i') }}",
             type: 'post',

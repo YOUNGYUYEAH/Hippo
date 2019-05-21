@@ -47,18 +47,6 @@ def cpuinfo():
     _cpuinfo['p_irq'] = time_percent[5]
     _cpuinfo['p_softirq'] = time_percent[6]
     _cpuinfo['p_steal'] = time_percent[7]
-    _cpuinfo['user'] = psutil.cpu_times().user
-    _cpuinfo['nice'] = psutil.cpu_times().nice
-    _cpuinfo['system'] = psutil.cpu_times().system
-    _cpuinfo['idle'] = psutil.cpu_times().idle
-    _cpuinfo['iowait'] = psutil.cpu_times().iowait
-    _cpuinfo['irq'] = psutil.cpu_times().irq
-    _cpuinfo['softirq'] = psutil.cpu_times().softirq
-    _cpuinfo['steal'] = psutil.cpu_times().steal
-    _cpu_times_total = 0
-    for c in range(len(psutil.cpu_times())):
-        _cpu_times_total += psutil.cpu_times()[c]
-    _cpuinfo['total'] = _cpu_times_total
     return _cpuinfo
 
 

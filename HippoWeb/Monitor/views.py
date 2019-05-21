@@ -58,7 +58,21 @@ def collect(req):
 
 def monitor_host(_id):
     """前端返回需要搜索的服务器的id,通过id获取ip,然后获取值"""
-    pass
+    try:
+        _ip = models.Info.objects.filter(id=_id).values('ip')[0]["ip"]
+        title = ["info", "cpu", "disk", "memory", "network"]
+        _ip_info = MonitorORM.LoadData(_ip).load_info()
+        _ip_cpu = MonitorORM.LoadData(_ip).load_cpu()
+        _ip_disk = MonitorORM.LoadData(_ip).load_disk()
+        _ip_memory = MonitorORM.LoadData(_ip).load_memory()
+        _ip_network = MonitorORM.LoadData(_ip).load_network()
+        hostdata = [_ip_info, _ip_cpu, _ip_memory, _ip_disk, _ip_network]
+        _response = HttpResponse(json.dumps({'title': title, 'value': hostdata}), content_type='application/json')
+        _response.status_code = 200
+    except Exception as error:
+        _response = HttpResponse(json.dumps({'error': error}))
+        _response.status_code = 500
+    return _response
 
 
 def monitor_server():
@@ -79,20 +93,16 @@ def monitor_server():
     return _response
 
 
-def monitor_cpu(option):
+def monitor_cpu():
     """
     查询所有服务CPU信息的接口,提供数值和百分比.
     """
     title = "CPU List"
     thead = ["IP", "Load(1min)", "Load(5min)", "Load(15min)", "Count", "User", "System", "Nice","Idle", "IOwait",
-             "Irq", "Softirq", "Steal", "Total", "Checktime"]
+             "Irq", "Softirq", "Steal", "Checktime"]
     try:
         s = MonitorORM.LoadData()
-        if option == "percent":
-            thead.pop(-2)
-            cpudata = s.load_cpu(percent=True)
-        else:
-            cpudata = s.load_cpu(percent=False)
+        cpudata = s.load_cpu()
     except Exception as error:
         cpudata = error
     _response = HttpResponse(json.dumps({'title': title, 'head': thead, 'value': cpudata}),
@@ -100,7 +110,7 @@ def monitor_cpu(option):
     return _response
 
 
-def monitor_memory(option):
+def monitor_memory():
     """
     查询所有服务Memeory信息的接口,提供GB和MB单位.
     """
@@ -115,11 +125,6 @@ def monitor_memory(option):
             for ip in _data:
                 _ipdata = []
                 for value in ip:
-                    if isinstance(value, int):
-                        if option == "MB":
-                            value = round(value/pow(1024, 2), 2)
-                        elif option == "GB":
-                            value = round(value/pow(1024, 3), 2)
                     _ipdata.append(value)
                 memorydata.append(_ipdata)
     except Exception as error:
@@ -191,17 +196,14 @@ def search(req):
                 _id = req.POST.get('option')
                 response = monitor_host(_id)
                 return response
-                #  待完善
             elif search_type == "server":
                 response = monitor_server()
                 return response
             elif search_type == "cpu":
-                _option = req.POST.get('option')
-                response = monitor_cpu(_option)
+                response = monitor_cpu()
                 return response
             elif search_type == "memory":
-                _option = req.POST.get('option')
-                response = monitor_memory(_option)
+                response = monitor_memory()
                 return response
             elif search_type == "disk":
                 _response = monitor_disk()
