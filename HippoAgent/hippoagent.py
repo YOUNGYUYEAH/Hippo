@@ -1,7 +1,6 @@
 # -*- encoding:utf-8 -*-
 import psutil
 import config
-import os
 import json
 
 

@@ -64,26 +64,8 @@ def monitor_host(_id):
         _ip_info = MonitorORM.LoadData(_ip).load_info()
         _ip_cpu = MonitorORM.LoadData(_ip).load_cpu()
         _ip_memory = MonitorORM.LoadData(_ip).load_memory()
-        # 磁盘信息需要切割处理
         _ip_disk = MonitorORM.LoadData(_ip).load_disk()
-        disk_mount = _ip_disk["diskmount"][1:-1].split(",")
-        disk_usage = _ip_disk["diskusage"][2:-2].split("', '")
-        disk_checktime = _ip_disk["checktime"]
-        _ip_disk_value = []
-        for i in range(len(disk_mount)):
-            _mount_info = [disk_mount[i], json.dumps(disk_usage[i]), disk_checktime]
-            _ip_disk_value.append(_mount_info)
-        print(_ip_disk_value)
-        # 网卡信息需要切割处理
-        _ip_network_value =[]
         _ip_network = MonitorORM.LoadData(_ip).load_network()
-        network_pic = _ip_network["netpic"][1:-1].split(",")
-        network_usage = _ip_network["netusage"][2:-2].split("', '")
-        network_checktime = _ip_network["checktime"]
-        for j in range(len(network_pic)):
-            _pic_info = [network_pic[i], json.dumps(network_usage[i]), network_checktime]
-            _ip_network_value.append(_pic_info)
-        print(_ip_network_value)
         hostdata = [_ip_info, _ip_cpu, _ip_memory, _ip_disk, _ip_network]
         _response = HttpResponse(json.dumps({'title': title, 'value': hostdata}), content_type='application/json')
         _response.status_code = 200
@@ -112,9 +94,6 @@ def monitor_server():
 
 
 def monitor_cpu():
-    """
-    查询所有服务CPU信息的接口,提供数值和百分比.
-    """
     title = "CPU List"
     thead = ["IP", "Load(1min)", "Load(5min)", "Load(15min)", "Count", "User", "System", "Nice","Idle", "IOwait",
              "Irq", "Softirq", "Steal", "Checktime"]
@@ -129,9 +108,6 @@ def monitor_cpu():
 
 
 def monitor_memory():
-    """
-    查询所有服务Memeory信息的接口,提供GB和MB单位.
-    """
     title = "Memory List"
     thead = ["IP", "Total", "Available", "Used", "Free", "Active", "Inactive", "Buffers", "Cached", "Shared",
              "Slab", "Checktime"]
@@ -153,9 +129,6 @@ def monitor_memory():
 
 
 def monitor_disk():
-    """
-    查询所有服务磁盘用量信息的接口.
-    """
     title = "Disk List"
     thead = ["IP", "Mount", "Usage", "Checktime"]
     try:
@@ -196,9 +169,6 @@ def monitor_network():
 
 @login_required
 def monitordata(req):
-    """
-    根据选择返回监控数据,HostMode
-    """
     try:
         hostmode_form = HostModeForm()
         return render(req, 'monitor/monitordata.html', {'hostmode_form': hostmode_form})

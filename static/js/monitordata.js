@@ -190,6 +190,37 @@ $("#hostmode_form").click(function(){
                                 }
                             });
                         } else {
+                            $.each(data["value"][index], function (IDX,ITEM) {
+                                Value += "<td><ul class='table-ul'>";
+                                if (IDX !== "checktime") {
+                                    if (IDX === "diskmount" || IDX === "netpic" ) {
+                                        var _value_arr = ITEM.split("[")[1].split("]")[0].split(",");
+                                        for (var W = 0; W < _value_arr.length; W++) {
+                                            Value += "<li>" + _value_arr[W] + "</li>";
+                                            if (W !== _value_arr.length - 1) {
+                                                Value += "<hr class='table-hr' />";
+                                            }
+                                        }
+                                    } else if (IDX === "diskusage" || IDX === "netusage") {
+                                        var _usage_arr = ITEM.split("['")[1].split("']")[0].split("', '");
+                                        for (var G=0; G<_usage_arr.length; G++) {
+                                            var _usage_jsonarr = JSON.parse(_usage_arr[G]);
+                                            Value += "<li><nav>";
+                                            $.each(_usage_jsonarr, function(K,V){
+                                                Value += "<a class='table-nav-a'>"+ K + "&nbsp:&nbsp" + V +"</a>";
+                                            });
+                                            if ( G !== _usage_arr.length -1 ) {
+                                                Value += "<hr class='table-hr' />";
+                                            }
+                                            Value += "</nav></li>";
+                                        }
+                                    }
+                                } else {
+                                    var _value = ITEM;
+                                    Value += "<li>" + _value + "</li>";
+                                }
+                                Value += "</ul></td>";
+                            })
                         }
                         Value += "</tr></tbody>";
                         $("#"+tid+"_data").html(Value);
