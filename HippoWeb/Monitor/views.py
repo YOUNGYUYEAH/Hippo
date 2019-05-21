@@ -71,12 +71,19 @@ def monitor_host(_id):
         disk_checktime = _ip_disk["checktime"]
         _ip_disk_value = []
         for i in range(len(disk_mount)):
-            d = json.loads(disk_usage[i])
-            _mount_info = [disk_mount[i], d["used"], d["total"], d["percent"],d["inode"], d["inode"], disk_checktime]
+            _mount_info = [disk_mount[i], json.dumps(disk_usage[i]), disk_checktime]
             _ip_disk_value.append(_mount_info)
         print(_ip_disk_value)
         # 网卡信息需要切割处理
+        _ip_network_value =[]
         _ip_network = MonitorORM.LoadData(_ip).load_network()
+        network_pic = _ip_network["netpic"][1:-1].split(",")
+        network_usage = _ip_network["netusage"][2:-2].split("', '")
+        network_checktime = _ip_network["checktime"]
+        for j in range(len(network_pic)):
+            _pic_info = [network_pic[i], json.dumps(network_usage[i]), network_checktime]
+            _ip_network_value.append(_pic_info)
+        print(_ip_network_value)
         hostdata = [_ip_info, _ip_cpu, _ip_memory, _ip_disk, _ip_network]
         _response = HttpResponse(json.dumps({'title': title, 'value': hostdata}), content_type='application/json')
         _response.status_code = 200
