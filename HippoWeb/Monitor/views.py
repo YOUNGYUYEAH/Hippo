@@ -13,6 +13,7 @@ def collect(req):
     """
     if req.method == 'POST':
         if req.body:
+            print(req.body)
             try:
                 monitorjson = json.loads(req.body, encoding='utf-8')
                 monitorjson_system = monitorjson['system']
