@@ -10,14 +10,8 @@
     <div class="row-fluid">
         <ul class="nav nav-tabs justify-content-center nav-justified" id="monitorDatatab" role="tablist">
             <li class="nav-item">
-                <a class="nav-link active" data-toggle="tab" aria-expanded="false" id="monitordata_hostmode">
+                <a class="nav-link active" data-toggle="tab" aria-expanded="false" id="monitordata_server">
                     <i class="fa fa-fw fa-television"></i>
-                    <span>Host Mode</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" data-toggle="tab" aria-expanded="false" id="monitordata_server">
-                    <i class="fa fa-fw fa-list"></i>
                     <span>Server</span>
                 </a>
             </li>
@@ -55,11 +49,6 @@
     </div>
     <div id="mainSubweb">
         <div class="card mb-8">
-            <div class="card-header">
-                <div><i class="fa fa-bars"></i>
-                    Host Mode
-                </div>
-            </div>
             <div class="card-body">
                 <form enctype="multipart/form-data">
                     {{ csrf_input }}
@@ -67,10 +56,10 @@
                         {{ hostmode_form }}
                     {% endif %}
                     <input class="btn btn-primary" type="button" value="Search" id="hostmode_form"/>
+                    <input class="btn btn-success" type="button" value="Show List" id="showlist_btn" hidden/>
                 </form>
             </div>
         </div>
-        <br/>
         <div id="search_info" class="card mb-8">
             <div id="search_info_title" class="card-header">
             </div>
@@ -88,6 +77,23 @@
                     </table>
                     <table id="tcp_data" class="table table-bordered" width="100%" cellspacing="0">
                     </table>
+                </div>
+            </div>
+        </div>
+        <div id="server_card" class="card mb-8">
+            <div>
+                <div class="card-header">
+                    <div><i class="fa fa-table"></i>
+                        Server List
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                            <thead id="monitortable_thead"></thead>
+                            <tbody id="monitortable_tbody"></tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>

@@ -1,10 +1,13 @@
 $(document).ready(function(){
-    if ( $("#select_host_ip").length > 0 ) {
-        var selectText = "";
-        selectText += "<option data-hidden='true' disabled selected>Select Server To Search &nbsp :D</option>";
-        $("#select_host_ip option:first").before(selectText);
+    {
+        if ( $("#select_host_ip").length > 0 ) {
+            var selectText = "";
+            selectText += "<option data-hidden='true' disabled selected>Select Server To Search &nbsp :D</option>";
+            $("#select_host_ip option:first").before(selectText);
+        }
+        LoadWebFunc("server");
+        $("#search_info").hide();
     }
-    $("#search_info").hide();
 });
 
 function TransBitFunc(number,basenum,fixednum) {
@@ -38,7 +41,9 @@ function CreateTableFunc() {
 }
 
 function LoadWebFunc(search_type) {
-    CreateTableFunc();
+    if ( search_type !== "server") {
+        CreateTableFunc();
+    }
     $.ajax({
         url: '/monitor/s',
         type: 'POST',
@@ -48,10 +53,9 @@ function LoadWebFunc(search_type) {
     });
 }
 
-$("#monitordata_hostmode").click(function() {
+$("#monitordata_server").click(function() {
     window.location.reload();
 });
-$("#monitordata_server").click(function(){ LoadWebFunc("server");});
 $("#monitordata_cpu").click(function(){ LoadWebFunc("cpu");});
 $("#monitordata_disk").click(function() { LoadWebFunc("disk");});
 $("#monitordata_memory").click(function() { LoadWebFunc("memory");});
@@ -158,7 +162,15 @@ function DataFunc(data) {
     });
 }
 
+$("#showlist_btn").click(function(){
+    $(this).attr("hidden","hidden");
+    $("#search_info").hide();
+    $("#server_card").show();
+});
+
 $("#hostmode_form").click(function(){
+    $("#server_card").hide();
+    $("#showlist_btn").removeAttr("hidden");
     var search_host =  $("#select_host_ip option:selected");
     if ( ! search_host.prop("disabled")) {
         var search_title = "<i class='fa fa-yelp'></i>" + "&nbsp Information For &nbsp" + "<strong>"
@@ -220,9 +232,6 @@ $("#hostmode_form").click(function(){
                                                 Value += "<a>" + "Pps_Recv[1s]: " + _usage_jsonarr["pps_recv"] +"</a>";
 
                                             }
-                                            // $.each(_usage_jsonarr, function(K,V){
-                                            //     Value += "<a class='table-nav-a'>"+ K + "&nbsp:&nbsp" + V +"</a>";
-                                            // });
                                             if ( G !== _usage_arr.length -1 ) {
                                                 Value += "<hr class='table-hr' />";
                                             }
