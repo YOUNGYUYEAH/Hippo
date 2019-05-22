@@ -1,9 +1,10 @@
 $(document).ready(function(){
     {
-        if ( $("#select_host_ip").length > 0 ) {
+        var sss = $("#select_host_ip");
+        if ( sss.length > 0 ) {
             var selectText = "";
-            selectText += "<option data-hidden='true' disabled selected>Select Server To Search &nbsp :D</option>";
-            $("#select_host_ip option:first").before(selectText);
+            selectText += "<option data-hidden='true' value='' disabled='disabled' selected='selected'>" + "Select Server To Search :D" + "</option>";
+            sss.find("option:first").before(selectText);
         }
         LoadWebFunc("server");
         $("#search_info").hide();
@@ -168,16 +169,17 @@ $("#showlist_btn").click(function(){
     $("#server_card").show();
 });
 
-$("#hostmode_form").click(function(){
-    $("#server_card").hide();
-    $("#showlist_btn").removeAttr("hidden");
-    var search_host =  $("#select_host_ip option:selected");
-    if ( ! search_host.prop("disabled")) {
+$("#hostmode_btn").click(function(){
+    var search_host =  $("#select_host_ip").find("option:selected");
+    if ( ! search_host.prop("disabled") && search_host.val() !== "" ) {
+        $("#server_card").hide();
+        $("#showlist_btn").removeAttr("hidden");
         var search_title = "<i class='fa fa-yelp'></i>" + "&nbsp Information For &nbsp" + "<strong>"
             + search_host.text() + "</strong>";
         $.ajax({
             url: '/monitor/s',
             type: 'POST',
+            cache: false,
             data: {'type':"host", 'option': search_host.val()},
             success: function(data,statusText,xhr){
                 if ( xhr.status === 200 ) {

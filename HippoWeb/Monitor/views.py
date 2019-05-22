@@ -13,7 +13,6 @@ def collect(req):
     """
     if req.method == 'POST':
         if req.body:
-            print(req.body)
             try:
                 monitorjson = json.loads(req.body, encoding='utf-8')
                 monitorjson_system = monitorjson['system']
@@ -225,4 +224,4 @@ def charts(req):
     """
     根据数据出图
     """
-    pass
+    return render(req, 'monitor/monitorchart.html')

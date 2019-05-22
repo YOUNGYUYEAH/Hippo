@@ -21,6 +21,7 @@ class SaveData(object):
             load_1=self.cpu['load_1'],
             load_5=self.cpu['load_5'],
             load_15=self.cpu['load_15'],
+            count=(self.cpu['count']),
             p_user=float(self.cpu['p_user']),
             p_nice=float(self.cpu['p_nice']),
             p_system=float(self.cpu['p_system']),
