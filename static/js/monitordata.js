@@ -1,4 +1,5 @@
 $(document).ready(function(){
+    /* 1.页面初始加载为下拉框添加一个隐藏默认值(火狐浏览器有异常); 2.执行LoadWebFunc加载server列表; 3.屏蔽查询结果的卡片显示栏 */
     {
         var sss = $("#select_host_ip");
         if ( sss.length > 0 ) {
@@ -12,6 +13,7 @@ $(document).ready(function(){
 });
 
 function TransBitFunc(number,basenum,fixednum) {
+    /* 将数字转换为进制数,且保留小数的函数 */
     var num;
     if(number > Math.pow(basenum,3)) {
         num = (number/(Math.pow(basenum,3))).toFixed(fixednum) + "GB";
@@ -25,6 +27,7 @@ function TransBitFunc(number,basenum,fixednum) {
 }
 
 function CreateTableFunc() {
+    /* 创建一个card->table用于加载AJAX传回的数据 */
     if ($("#card-table").length > 0) {
         console.log("find card-table");
     } else {
@@ -42,6 +45,7 @@ function CreateTableFunc() {
 }
 
 function LoadWebFunc(search_type) {
+    /* AJAX向后台请求对应的值,成功后拼接数据,组成页面 */
     if ( search_type !== "server") {
         CreateTableFunc();
     }
@@ -54,16 +58,8 @@ function LoadWebFunc(search_type) {
     });
 }
 
-$("#monitordata_server").click(function() {
-    window.location.reload();
-});
-$("#monitordata_cpu").click(function(){ LoadWebFunc("cpu");});
-$("#monitordata_disk").click(function() { LoadWebFunc("disk");});
-$("#monitordata_memory").click(function() { LoadWebFunc("memory");});
-$("#monitordata_network").click(function() { LoadWebFunc("network");});
-
-
 function DataFunc(data) {
+    /* 从后台获取的数据进行table的拼接和数据渲染,配合dataTable插件完成表格 */
     var titleText = "";
     titleText += "<div><i class='fa fa-table'></i>" + "&nbsp" + data["title"] + "</div>";
     $(".card-header").html(titleText);
@@ -163,17 +159,45 @@ function DataFunc(data) {
     });
 }
 
+/* 几个tab标签点击后执行对应功能 */
+$("#monitordata_server").click(function() { window.location.reload(); });
+$("#monitordata_cpu").click(function(){ LoadWebFunc("cpu");});
+$("#monitordata_disk").click(function() { LoadWebFunc("disk");});
+$("#monitordata_memory").click(function() { LoadWebFunc("memory");});
+$("#monitordata_network").click(function() { LoadWebFunc("network");});
+
 $("#showlist_btn").click(function(){
+    /* 列表展示按钮,屏蔽某IP详情,展示列表数据 */
     $(this).attr("hidden","hidden");
+    $("#charts_btn").attr("hidden","hidden");
     $("#search_info").hide();
     $("#server_card").show();
 });
+
 
 $("#hostmode_btn").click(function(){
     var search_host =  $("#select_host_ip").find("option:selected");
     if ( ! search_host.prop("disabled") && search_host.val() !== "" ) {
         $("#server_card").hide();
         $("#showlist_btn").removeAttr("hidden");
+        $("#charts_btn").removeAttr("hidden");
+        var search_title = "<i class='fa fa-yelp'></i>" + "&nbsp Information For &nbsp" + "<strong>"
+            + search_host.text() + "</strong>";
+        $("#search_info_title").html(search_title);
+        $("#search_info").show();
+    }
+});
+
+
+
+
+/*
+$("#hostmode_btn").click(function(){
+    var search_host =  $("#select_host_ip").find("option:selected");
+    if ( ! search_host.prop("disabled") && search_host.val() !== "" ) {
+        $("#server_card").hide();
+        $("#showlist_btn").removeAttr("hidden");
+        $("#charts_btn").removeAttr("hidden");
         var search_title = "<i class='fa fa-yelp'></i>" + "&nbsp Information For &nbsp" + "<strong>"
             + search_host.text() + "</strong>";
         $.ajax({
@@ -263,4 +287,4 @@ $("#hostmode_btn").click(function(){
         });
     }
 });
-
+*/
