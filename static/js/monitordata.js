@@ -118,7 +118,7 @@ function DataFunc(data) {
                     if(!v2) {
                         netText += "<li>" + item[v1] + "</li>";
                     } else {
-                        netText += "<li>" + item[v1] + " / " + item[v2] + "</li>";
+                        netText += "<li><span class='table-span'>" + item[v1] + "</span><span class='table-span'>" + item[v2] + "</span></li>";
                     }
                     if (index !== Arr.length - 1) {
                         netText += "<hr class='table-hr' />";

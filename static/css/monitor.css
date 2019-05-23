@@ -17,9 +17,8 @@
   padding-right: 3rem;
 }
 
-/* server详细信息应用列表样式调整 */
-.dl-float {
-  float: left;
-  min-width: 100px;
-  margin-right: 50px;
+/* */
+.table-span {
+  width: 100px;
+  padding-right: 50px;
 }
