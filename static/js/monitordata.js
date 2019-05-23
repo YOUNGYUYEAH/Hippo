@@ -3,9 +3,11 @@ $(document).ready(function(){
     {
         var sss = $("#select_host_ip");
         if ( sss.length > 0 ) {
+            sss.find("option:selected").removeAttr("selected");
             var selectText = "";
-            selectText += "<option data-hidden='true' value='' disabled='disabled' selected='selected'>" + "Select Server To Search :D" + "</option>";
-            sss.find("option:first").before(selectText);
+            selectText += "<option data-hidden='true' disabled='disabled' selected='selected'> "
+                + "Select Server To Search :D" + "</option>" ;
+            sss.append(selectText);
         }
         LoadWebFunc("server");
         $("#search_info").hide();
@@ -166,6 +168,7 @@ $("#monitordata_disk").click(function() { LoadWebFunc("disk");});
 $("#monitordata_memory").click(function() { LoadWebFunc("memory");});
 $("#monitordata_network").click(function() { LoadWebFunc("network");});
 
+/* 按钮点击后执行对应功能 */
 $("#showlist_btn").click(function(){
     /* 列表展示按钮,屏蔽某IP详情,展示列表数据 */
     $(this).attr("hidden","hidden");
@@ -173,9 +176,8 @@ $("#showlist_btn").click(function(){
     $("#search_info").hide();
     $("#server_card").show();
 });
-
-
 $("#hostmode_btn").click(function(){
+    /* 查询按钮,显示被选中的IP的详情页,屏蔽列表数据 */
     var search_host =  $("#select_host_ip").find("option:selected");
     if ( ! search_host.prop("disabled") && search_host.val() !== "" ) {
         $("#server_card").hide();
@@ -184,107 +186,133 @@ $("#hostmode_btn").click(function(){
         var search_title = "<i class='fa fa-yelp'></i>" + "&nbsp Information For &nbsp" + "<strong>"
             + search_host.text() + "</strong>";
         $("#search_info_title").html(search_title);
-        $("#search_info").show();
-    }
-});
-
-
-
-
-/*
-$("#hostmode_btn").click(function(){
-    var search_host =  $("#select_host_ip").find("option:selected");
-    if ( ! search_host.prop("disabled") && search_host.val() !== "" ) {
-        $("#server_card").hide();
-        $("#showlist_btn").removeAttr("hidden");
-        $("#charts_btn").removeAttr("hidden");
-        var search_title = "<i class='fa fa-yelp'></i>" + "&nbsp Information For &nbsp" + "<strong>"
-            + search_host.text() + "</strong>";
         $.ajax({
             url: '/monitor/s',
             type: 'POST',
             cache: false,
-            data: {'type':"host", 'option': search_host.val()},
-            success: function(data,statusText,xhr){
+            data: {'type': "host", 'option': search_host.val()},
+            success: function (data, statusText, xhr) {
                 if ( xhr.status === 200 ) {
-                    $("#search_info_title").html(search_title);
-                    function Objdata(index,tid) {
-                        var Value = "";
-                        Value += "<thead><tr>";
-                        for (var key in data["value"][index]) {
-                            Value += "<td><strong>" + key + "</strong></td>";
-                        }
-                        Value += "</tr></thead><tbody><tr>";
-                        if (( tid !== 'disk' ) && ( tid !== 'network')) {
-                            $.each(data["value"][index], function (idx, item) {
-                                if (index === "2") {
-                                    if (idx === "checktime") {
-                                        Value += "<td>" + item + "</td>";
-                                    } else {
-                                        Value += "<td>" + TransBitFunc(item,1024,2) + "</td>";
-                                    }
-                                } else {
-                                    Value += "<td>" + item + "</td>";
-                                }
-                            });
-                        } else {
-                            $.each(data["value"][index], function (IDX,ITEM) {
-                                Value += "<td><ul class='table-ul'>";
-                                if (IDX !== "checktime") {
-                                    if (IDX === "diskmount" || IDX === "netpic" ) {
-                                        var _value_arr = ITEM.split("[")[1].split("]")[0].split(",");
-                                        for (var W = 0; W < _value_arr.length; W++) {
-                                            Value += "<li>" + _value_arr[W] + "</li>";
-                                            if (W !== _value_arr.length - 1) {
-                                                Value += "<hr class='table-hr' />";
-                                            }
-                                        }
-                                    } else if (IDX === "diskusage" || IDX === "netusage") {
-                                        var _usage_arr = ITEM.split("['")[1].split("']")[0].split("', '");
-                                        for (var G=0; G<_usage_arr.length; G++) {
-                                            var _usage_jsonarr = JSON.parse(_usage_arr[G]);
-                                            Value += "<li><nav class='table-nav'>";
-                                            if( IDX === "diskusage" ) {
-                                                Value += "<a>" + "Used: " + _usage_jsonarr["used"] +"</a>";
-                                                Value += "<a>" + "Total: " + _usage_jsonarr["total"] +"</a>";
-                                                Value += "<a>" + "Percent: " + _usage_jsonarr["percent"] +"</a>";
-                                                Value += "<a>" + "Inode:" + _usage_jsonarr["inode"] +"</a>";
-                                            } else if (IDX === "netusage") {
-                                                Value += "<a>" + "Netaddr: " + _usage_jsonarr["ipaddr"] +"</a>";
-                                                Value += "<a>" + "Speed: " + _usage_jsonarr["speed"] +"</a>";
-                                                Value += "<a>" + "Bps_Sent[1s]: " + _usage_jsonarr["bps_sent"] +"</a>";
-                                                Value += "<a>" + "Bps_Recv[1s]: " + _usage_jsonarr["bps_recv"] +"</a>";
-                                                Value += "<a>" + "Pps_Sent[1s]: " + _usage_jsonarr["pps_sent"] +"</a>";
-                                                Value += "<a>" + "Pps_Recv[1s]: " + _usage_jsonarr["pps_recv"] +"</a>";
-
-                                            }
-                                            if ( G !== _usage_arr.length -1 ) {
-                                                Value += "<hr class='table-hr' />";
-                                            }
-                                            Value += "</nav></li>";
-                                        }
-                                    }
-                                } else {
-                                    var _value = ITEM;
-                                    Value += "<li>" + _value + "</li>";
-                                }
-                                Value += "</ul></td>";
-                            })
-                        }
-                        Value += "</tr></tbody>";
-                        $("#"+tid+"_data").html(Value);
-                    }
-                    Objdata("0", "info");
-                    Objdata("1", "cpu");
-                    Objdata("2", "memory");
-                    Objdata("3", "disk");
-                    Objdata("4", "network");
-                    $("#search_info").show();
-                } else if ( xhr.status === 500 ) {
+                    InfoFunc(data);
+                } else {
                     alert(data["error"]);
                 }
             }
         });
     }
 });
-*/
+
+function InfoFunc(data) {
+    // alert(data["value"]);
+    for (var S=0; S<data["value"].length; S++) {
+        var msgText = "";
+        $.each(data["value"][S], function (i_idx, i_item) {
+            msgText += "<dl>";
+            msgText += "<dt class='dl-float'>" + i_idx + "</dt>";
+            msgText += "<dd>" + i_item + "</dd>";
+            msgText += "</dl>";
+        });
+        $("#"+data["title"][S]).html(msgText);
+    }
+    $("#search_info").show();
+}
+
+
+
+
+
+//$("#hostmode_btn").click(function(){
+//    var search_host =  $("#select_host_ip").find("option:selected");
+//    if ( ! search_host.prop("disabled") && search_host.val() !== "" ) {
+//        $("#server_card").hide();
+//        $("#showlist_btn").removeAttr("hidden");
+//        $("#charts_btn").removeAttr("hidden");
+//        var search_title = "<i class='fa fa-yelp'></i>" + "&nbsp Information For &nbsp" + "<strong>"
+//            + search_host.text() + "</strong>";
+//        $.ajax({
+//            url: '/monitor/s',
+//            type: 'POST',
+//            cache: false,
+//            data: {'type':"host", 'option': search_host.val()},
+//            success: function(data,statusText,xhr){
+//                if ( xhr.status === 200 ) {
+//                    $("#search_info_title").html(search_title);
+//                    function Objdata(index,tid) {
+//                        var Value = "";
+//                        Value += "<thead><tr>";
+//                        for (var key in data["value"][index]) {
+//                            Value += "<td><strong>" + key + "</strong></td>";
+//                        }
+//                        Value += "</tr></thead><tbody><tr>";
+//                        if (( tid !== 'disk' ) && ( tid !== 'network')) {
+//                            $.each(data["value"][index], function (idx, item) {
+//                                if (index === "2") {
+//                                    if (idx === "checktime") {
+//                                        Value += "<td>" + item + "</td>";
+//                                    } else {
+//                                        Value += "<td>" + TransBitFunc(item,1024,2) + "</td>";
+//                                    }
+//                                } else {
+//                                    Value += "<td>" + item + "</td>";
+//                                }
+//                            });
+//                        } else {
+//                            $.each(data["value"][index], function (IDX,ITEM) {
+//                                Value += "<td><ul class='table-ul'>";
+//                                if (IDX !== "checktime") {
+//                                    if (IDX === "diskmount" || IDX === "netpic" ) {
+//                                        var _value_arr = ITEM.split("[")[1].split("]")[0].split(",");
+//                                        for (var W = 0; W < _value_arr.length; W++) {
+//                                            Value += "<li>" + _value_arr[W] + "</li>";
+//                                            if (W !== _value_arr.length - 1) {
+//                                                Value += "<hr class='table-hr' />";
+//                                            }
+//                                        }
+//                                    } else if (IDX === "diskusage" || IDX === "netusage") {
+//                                        var _usage_arr = ITEM.split("['")[1].split("']")[0].split("', '");
+//                                        for (var G=0; G<_usage_arr.length; G++) {
+//                                            var _usage_jsonarr = JSON.parse(_usage_arr[G]);
+//                                            Value += "<li><nav class='table-nav'>";
+//                                            if( IDX === "diskusage" ) {
+//                                                Value += "<a>" + "Used: " + _usage_jsonarr["used"] +"</a>";
+//                                                Value += "<a>" + "Total: " + _usage_jsonarr["total"] +"</a>";
+//                                                Value += "<a>" + "Percent: " + _usage_jsonarr["percent"] +"</a>";
+//                                                Value += "<a>" + "Inode:" + _usage_jsonarr["inode"] +"</a>";
+//                                            } else if (IDX === "netusage") {
+//                                                Value += "<a>" + "Netaddr: " + _usage_jsonarr["ipaddr"] +"</a>";
+//                                                Value += "<a>" + "Speed: " + _usage_jsonarr["speed"] +"</a>";
+//                                                Value += "<a>" + "Bps_Sent[1s]: " + _usage_jsonarr["bps_sent"] +"</a>";
+//                                                Value += "<a>" + "Bps_Recv[1s]: " + _usage_jsonarr["bps_recv"] +"</a>";
+//                                                Value += "<a>" + "Pps_Sent[1s]: " + _usage_jsonarr["pps_sent"] +"</a>";
+//                                                Value += "<a>" + "Pps_Recv[1s]: " + _usage_jsonarr["pps_recv"] +"</a>";
+//
+//                                            }
+//                                            if ( G !== _usage_arr.length -1 ) {
+//                                                Value += "<hr class='table-hr' />";
+//                                            }
+//                                            Value += "</nav></li>";
+//                                        }
+//                                    }
+//                                } else {
+//                                    var _value = ITEM;
+//                                    Value += "<li>" + _value + "</li>";
+//                                }
+//                                Value += "</ul></td>";
+//                            })
+//                        }
+//                        Value += "</tr></tbody>";
+//                        $("#"+tid).html(Value);
+//                    }
+//                    Objdata("0", "info");
+//                    Objdata("1", "cpu");
+//                    Objdata("2", "memory");
+//                    Objdata("3", "disk");
+//                    Objdata("4", "network");
+//                    $("#search_info").show();
+//                } else if ( xhr.status === 500 ) {
+//                    alert(data["error"]);
+//                }
+//            }
+//        });
+//    }
+//});

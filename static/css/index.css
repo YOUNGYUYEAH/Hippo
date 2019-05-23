@@ -349,21 +349,4 @@ footer.sticky-footer {
   border-radius: 0 .25rem .25rem 0;
 }
 
-/* monitordata数据表单样式调整 */
-.table-ul {
-  list-style: none;
-  margin-left: -40px;
-  margin-bottom: 0;
-}
-.table-ul-li {
-  height: 96px;
-}
-.table-hr {
-  margin: 0.3rem 0 0.3rem 0;
-  height:1px;
-  border:none;
-  border-top:1px solid #dee2e6;
-}
-.table-nav a {
-  padding-right: 3rem;
-}
+

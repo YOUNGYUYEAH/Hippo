@@ -1,0 +1,25 @@
+/* monitordata数据表单样式调整 */
+.table-ul {
+  list-style: none;
+  margin-left: -40px;
+  margin-bottom: 0;
+}
+.table-ul-li {
+  height: 96px;
+}
+.table-hr {
+  margin: 0.3rem 0 0.3rem 0;
+  height:1px;
+  border:none;
+  border-top:1px solid #dee2e6;
+}
+.table-nav a {
+  padding-right: 3rem;
+}
+
+/* server详细信息应用列表样式调整 */
+.dl-float {
+  float: left;
+  min-width: 100px;
+  margin-right: 50px;
+}
