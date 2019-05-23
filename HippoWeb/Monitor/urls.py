@@ -7,4 +7,5 @@ urlpatterns = [
     url(r'^data$', views.monitordata, name='/monitor/data'),
     url(r'^chart$', views.charts, name='/monitor/chart'),
     url(r'^addserver$', views.addserver, name='/monitor/addserver'),
+    url(r'^main', views.main, name='/monitor/main')
 ]

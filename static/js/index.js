@@ -44,3 +44,32 @@
     });
 })(jQuery); // End of use strict
 
+
+function monitordata(){
+    var cssfilesText = "";
+    cssfilesText += "<link href='/static/vendor/datatables/dataTables.bootstrap4.css' rel='stylesheet' type='text/css'>";
+    cssfilesText += "<link href='/static/vendor/bootstrap-select-1.13.10/css/bootstrap-select.min.css' rel='stylesheet' type='text/css'>";
+    cssfilesText += "<link href='/static/css/monitor.css' rel='stylesheet' type='text/css'>";
+    var jsfilesText = "";
+    jsfilesText += "<script src='/static/vendor/datatables/jquery.dataTables.js'></script>";
+    jsfilesText += "<script src='/static/vendor/datatables/dataTables.bootstrap4.js'></script>";
+    jsfilesText += "<script src='/static/js/monitordata.js'></script>";
+    $.get("/monitor/main",function(data){
+        $("#cssfiles").html(cssfilesText);
+        $("#mainWeb").html(data);
+        $("#jsfiles").html(jsfilesText);
+        var sss = $("#select_host_ip");
+        if ( sss.length > 0 ) {
+            sss.find("option:selected").removeAttr("selected");
+            var selectText = "";
+            selectText += "<option data-hidden='true' disabled='disabled' selected='selected'> "
+                + "Select Server To Search :D" + "</option>" ;
+            sss.append(selectText);
+        }
+        LoadWebFunc("server");
+        $("#search_info").hide();
+        $(".selectpicker").data('selectpicker',null);
+        //$(".bootstrap-select").find("button:first").remove();
+        $(".selectpicker").selectpicker();
+    })
+}

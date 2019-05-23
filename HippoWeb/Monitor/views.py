@@ -225,3 +225,8 @@ def charts(req):
     根据数据出图
     """
     return render(req, 'monitor/monitorchart.html')
+
+
+def main(req):
+    hostmode_form = HostModeForm()
+    return render(req, 'module/main.html', {'hostmode_form': hostmode_form})
