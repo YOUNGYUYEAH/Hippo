@@ -201,10 +201,10 @@ div.table-responsive > div.dataTables_wrapper > div.row > div[class^="col-"]:las
   padding-right: 0;
 }
 /* dataTable表单单双行颜色 */
-.table-responsive table tbody tr:nth-child(odd){
+.table-responsive table tbody tr:nth-child(even){
     background: rgba(197, 197, 220, 1);
 }
-.table-responsive table tbody tr:nth-child(even) {
+.table-responsive table tbody tr:nth-child(odd) {
     background: rgba(250, 250, 255, 0);
 }
 
