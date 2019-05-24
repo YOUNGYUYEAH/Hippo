@@ -1,17 +1,7 @@
-{% extends "module/base.html" %}
-
-{% block CssFiles %}
-    {{ super() }}
-    <link href="{{ static('vendor/datatables/dataTables.bootstrap4.css') }}" rel="stylesheet" type="text/css">
-    <link href="{{ static('vendor/bootstrap-select-1.13.10/css/bootstrap-select.min.css') }}" rel="stylesheet" type="text/css">
-    <link href="{{ static('css/monitor.css') }}" rel="stylesheet" type="text/css">
-{% endblock %}
-
-{% block MainWeb %}
     <div class="row-fluid">
         <ul class="nav nav-tabs justify-content-center nav-justified" id="monitorDatatab" role="tablist">
             <li class="nav-item">
-                <a class="nav-link active" data-toggle="tab" aria-expanded="false" id="monitordata_server">
+                <a class="nav-link active" data-toggle="tab" aria-expanded="false" id="monitordata_server" onclick="monitordata();">
                     <i class="fa fa-fw fa-television"></i>
                     <span>Server</span>
                 </a>
@@ -43,7 +33,7 @@
             <li class="nav-item">
                 <a class="nav-link" data-toggle="tab" aria-expanded="false" id="monitordata_tcp">
                     <i class="fa fa-fw fa-bolt"></i>
-                    <span>TCP</span>
+                    <span>TCP &nbsp[Not finished]</span>
                 </a>
             </li>
         </ul>
@@ -86,12 +76,3 @@
             </div>
         </div>
     </div>
-{% endblock %}
-
-{% block JsFiles %}
-    {{ super() }}
-    <script src="{{ static('vendor/datatables/jquery.dataTables.js') }}"></script>
-    <script src="{{ static('vendor/datatables/dataTables.bootstrap4.js') }}"></script>
-    <script src="{{ static('vendor/bootstrap-select-1.13.10/js/bootstrap-select.min.js') }}"></script>
-    <script src="{{ static('js/monitordata.js') }}"></script>
-{% endblock %}

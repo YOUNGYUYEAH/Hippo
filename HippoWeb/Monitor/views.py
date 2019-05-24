@@ -167,15 +167,6 @@ def monitor_network():
     return _response
 
 
-@login_required
-def monitordata(req):
-    try:
-        hostmode_form = HostModeForm()
-        return render(req, 'monitor/monitordata.html', {'hostmode_form': hostmode_form})
-    except Exception as error:
-        return render(req, 'monitor/monitordata.html', {'error': error})
-
-
 def search(req):
     if req.is_ajax():
         if req.method == 'POST':
@@ -225,3 +216,8 @@ def charts(req):
     根据数据出图
     """
     return render(req, 'monitor/monitorchart.html')
+
+
+def data(req):
+    hostmode_form = HostModeForm()
+    return render(req, 'monitor/monitor_data.html', {'hostmode_form': hostmode_form})

@@ -6,6 +6,7 @@
         <link href="{{ static('vendor/bootstrap-4.1.3/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
         <link href="{{ static('css/index.css') }}" rel="stylesheet" type="text/css">
+        <div id="cssfiles"></div>
     {% endblock %}
 
     <title>{% block WebTitle %}Hippo OPS Platform{% endblock %}</title>
@@ -46,8 +47,10 @@
     {% block JsFiles %}
         <script src="{{ static('vendor/jquery-3.3.1/jquery.js') }}"></script>
         <script src="{{ static('vendor/bootstrap-4.1.3/js/bootstrap.bundle.min.js') }}"></script>
+        <script src="{{ static('vendor/bootstrap-select-1.13.10/js/bootstrap-select.min.js') }}"></script>
         <script src="{{ static('vendor/heart.js') }}"></script>
         <script src="{{ static('js/index.js') }}"></script>
+        <div id="jsfiles"></div>
     {% endblock %}
 
 </body>

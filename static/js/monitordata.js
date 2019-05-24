@@ -1,18 +1,18 @@
-$(document).ready(function(){
-    /* 1.页面初始加载为下拉框添加一个隐藏默认值(火狐浏览器有异常); 2.执行LoadWebFunc加载server列表; 3.屏蔽查询结果的卡片显示栏 */
-    {
-        var sss = $("#select_host_ip");
-        if ( sss.length > 0 ) {
-            sss.find("option:selected").removeAttr("selected");
-            var selectText = "";
-            selectText += "<option data-hidden='true' disabled='disabled' selected='selected'> "
-                + "Select Server To Search :D" + "</option>" ;
-            sss.append(selectText);
-        }
-        LoadWebFunc("server");
-        $("#search_info").hide();
-    }
-});
+//$(document).ready(function(){
+//    /* 1.页面初始加载为下拉框添加一个隐藏默认值(火狐浏览器有异常); 2.执行LoadWebFunc加载server列表; 3.屏蔽查询结果的卡片显示栏 */
+//    {
+//        var sss = $("#select_host_ip");
+//        if ( sss.length > 0 ) {
+//            sss.find("option:selected").removeAttr("selected");
+//            var selectText = "";
+//            selectText += "<option data-hidden='true' disabled='disabled' selected='selected'> "
+//                + "Select Server To Search :D" + "</option>" ;
+//            sss.append(selectText);
+//        }
+//        LoadWebFunc("server");
+//        $("#search_info").hide();
+//    }
+//});
 
 function TransBitFunc(number,basenum,fixednum) {
     /* 将数字转换为进制数,且保留小数的函数 */
@@ -162,7 +162,7 @@ function DataFunc(data) {
 }
 
 /* 几个tab标签点击后执行对应功能 */
-$("#monitordata_server").click(function() { window.location.reload(); });
+//$("#monitordata_server").click(function() { window.location.reload(); });
 $("#monitordata_cpu").click(function(){ LoadWebFunc("cpu");});
 $("#monitordata_disk").click(function() { LoadWebFunc("disk");});
 $("#monitordata_memory").click(function() { LoadWebFunc("memory");});
