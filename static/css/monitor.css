@@ -17,8 +17,27 @@
   padding-right: 3rem;
 }
 
-/* */
-.table-span {
+/* 调整network列表的双值分割 */
+.table-a-fix {
   width: 100px;
-  padding-right: 50px;
+  float: left;
+  padding-right: 10px;
+}
+
+#search_info table tr td {
+  padding: .5rem;
+}
+.search_title {
+  text-align: center;
+  background-color: #f7f7f7;
+}
+.info_title {
+  border: 1px solid #dee2e6;
+  background-color: #f7f7f7;
+}
+#search_info_body table tr[id$="_head"] td {
+  color: #1b1e21;
+}
+#search_info_body table tbody[id$="_body"] td {
+  background: rgba(225, 239, 255, 1);
 }

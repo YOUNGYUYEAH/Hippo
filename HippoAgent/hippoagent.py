@@ -85,9 +85,9 @@ def diskinfo():
             subshell = subprocess.Popen([inode_shell], shell=True, stdout=subprocess.PIPE)
             inode = subshell.stdout.readline().decode("utf-8").split("\n")[0]
             if inode:
-                _mount_info['inode'] = inode
-                _mount_info['total'] = round(psutil.disk_usage(i[1]).total/pow(1024, 3), 2)
-                _mount_info['used'] = round(psutil.disk_usage(i[1]).used/pow(1024, 3), 2)
+                _mount_info['inode'] = inode.split("%")[0]
+                _mount_info['total'] = psutil.disk_usage(i[1]).total
+                _mount_info['used'] = psutil.disk_usage(i[1]).used
                 _mount_info['percent'] = psutil.disk_usage(i[1]).percent
                 diskmount.append(i[1])
                 diskusage.append(json.dumps(_mount_info))

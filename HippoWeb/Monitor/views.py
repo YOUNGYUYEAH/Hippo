@@ -60,14 +60,28 @@ def monitor_host(_id):
     """前端返回需要搜索的服务器的id,通过id获取ip,然后获取值"""
     try:
         _ip = models.Info.objects.filter(id=_id).values('ip')[0]["ip"]
-        title = ["info", "cpu", "disk", "memory", "network"]
+        title = ["Information", "CPU", "Disk", "Memory", "Network"]
+        index = dict()
+        index["Information"] = """{"IP":"ip", "Hostname":"host", "OS":"type", "Kernel":"platform", "Arch":"arch",
+         "Status":"status", "Createtime":"createtime", "Updatetime":"updatetime", "Remark":"remark"}"""
+        index["CPU"] = """{"Count":"count", "Load":"load_1", "Load":"load_5", "Load":"load_15", 
+        "user":"p_user", "system":"p_system", "nice":"p_nice", "idle":"p_idle", "iowait":"p_iowait", 
+        "irq":"p_irq", "softirq":"p_softirq","steal":"p_steal"}"""
+        index["Memory"] = """{"Total":"total", "Available":"available", "Used":"used", "Free":"free", "Active":"active", 
+        "Inactive":"inactive", "Buffers":"buffers", "Cached":"cached", "Shared":"shared", "Slab":"slab"}"""
+        index["Disk"] = """{"Mount":"diskmount", "Percent":"percent", "Total":"total", "Used":"used", 
+        "Inode":"inode"}"""
+        index["Network"] = """{"Interface":"netpic", "IPaddr":"ipaddr", "Speed":"speed", "pps_sent[1s]":"pps_sent",
+        "pps_recv[1s]":"pps_recv", "bytes_sent[1s]":"bps_sent", "bytes_recv[1s]":"bps_recv", "Error In":"errin",
+        "Error Out":"errout"}"""
         _ip_info = MonitorORM.LoadData(_ip).load_info()
         _ip_cpu = MonitorORM.LoadData(_ip).load_cpu()
         _ip_memory = MonitorORM.LoadData(_ip).load_memory()
         _ip_disk = MonitorORM.LoadData(_ip).load_disk()
         _ip_network = MonitorORM.LoadData(_ip).load_network()
         hostdata = [_ip_info, _ip_cpu, _ip_memory, _ip_disk, _ip_network]
-        _response = HttpResponse(json.dumps({'title': title, 'value': hostdata}), content_type='application/json')
+        _response = HttpResponse(json.dumps({'title': title, 'value': hostdata, 'index': index}),
+                                 content_type='application/json')
         _response.status_code = 200
     except Exception as error:
         _response = HttpResponse(json.dumps({'error': error}))

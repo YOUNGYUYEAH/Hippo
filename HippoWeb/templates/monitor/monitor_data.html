@@ -7,25 +7,25 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" data-toggle="tab" aria-expanded="false" id="monitordata_cpu">
+                <a class="nav-link" data-toggle="tab" aria-expanded="false" id="monitordata_cpu" onclick="LoadWebFunc('cpu');">
                     <i class="fa fa-fw fa-rocket"></i>
                     <span>CPU</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" data-toggle="tab" aria-expanded="false" id="monitordata_disk">
+                <a class="nav-link" data-toggle="tab" aria-expanded="false" id="monitordata_disk" onclick="LoadWebFunc('disk');">
                     <i class="fa fa-fw fa-hdd-o"></i>
                     <span>Disk</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" data-toggle="tab" aria-expanded="false" id="monitordata_memory">
+                <a class="nav-link" data-toggle="tab" aria-expanded="false" id="monitordata_memory" onclick="LoadWebFunc('memory');">
                     <i class="fa fa-fw fa-microchip"></i>
                     <span>Memory</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" data-toggle="tab" aria-expanded="false" id="monitordata_network">
+                <a class="nav-link" data-toggle="tab" aria-expanded="false" id="monitordata_network" onclick="LoadWebFunc('network');">
                     <i class="fa fa-fw fa-ravelry"></i>
                     <span>Network</span>
                 </a>
@@ -56,6 +56,11 @@
             <div id="search_info_title" class="card-header">
             </div>
             <div id="search_info_body" class="card-body">
+                <table id="Information" class="table table-bordered" width="100%" cellspacing="0"></table>
+                <table id="CPU" class="table table-bordered" width="100%" cellspacing="0"></table>
+                <table id="Memory" class="table table-bordered" width="100%" cellspacing="0"></table>
+                <table id="Disk" class="table table-bordered" width="100%" cellspacing="0"></table>
+                <table id="Network" class="table table-bordered" width="100%" cellspacing="0"></table>
             </div>
         </div>
         <div id="server_card" class="card mb-8">
@@ -68,7 +73,7 @@
                 <div class="card-body">
                     <div class="table-responsive">
                         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                            <thead id="monitortable_thead"></thead>
+                            <thead id="monitortable_thead" class="info_title"></thead>
                             <tbody id="monitortable_tbody"></tbody>
                         </table>
                     </div>

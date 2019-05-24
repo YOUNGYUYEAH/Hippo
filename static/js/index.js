@@ -71,6 +71,6 @@ function monitordata(){
         LoadWebFunc("server");
         $("#search_info").hide();
         /* bootstrap-select需要重新实例化 */
-        $(".selectpicker").data('selectpicker',null).selectpicker();
+        $(".selectpicker").data('selectpicker',null).selectpicker('refresh');
     })
 }
