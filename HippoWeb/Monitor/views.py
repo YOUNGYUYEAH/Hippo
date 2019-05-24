@@ -229,7 +229,7 @@ def chart(req):
     """
     根据数据出图
     """
-    return render(req, 'monitor/monitorchart.html')
+    return render(req, 'monitor/monitor_chart.html')
 
 
 def data(req):

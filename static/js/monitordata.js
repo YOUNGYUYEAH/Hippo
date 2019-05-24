@@ -98,7 +98,7 @@ function DataFunc(data) {
                 diskText += "<li>" + "Used: " + TransBitFunc(arr[z]["used"],1024,2,"bit") + "</li>";
                 diskText += "<li>" + "Total: " + TransBitFunc(arr[z]["total"],1024,2,"bit") + "</li>";
                 diskText += "<li>" + "Percent: " + TransBitFunc(arr[z]["percent"],1,1,"%") + "</li>";
-                diskText += "<li>" + "Inode: " + TransBitFunc(arr[z]["inode"],1,1,"%") + "%" + "</li>";
+                diskText += "<li>" + "Inode: " + TransBitFunc(arr[z]["inode"],1,1,"%") + "</li>";
                 if ( z !== arr.length -1 ) {
                     diskText += "<hr class='table-hr' />";
                 }
@@ -171,6 +171,7 @@ $("#showlist_btn").click(function(){
     /* 列表展示按钮,屏蔽某IP详情,展示列表数据 */
     $(this).attr("hidden","hidden");
     $("#charts_btn").attr("hidden","hidden");
+    $("#comparison_btn").attr("hidden","hidden");
     $("#search_info").hide();
     $("#server_card").show();
 });
@@ -181,6 +182,7 @@ $("#hostmode_btn").click(function(){
         $("#server_card").hide();
         $("#showlist_btn").removeAttr("hidden");
         $("#charts_btn").removeAttr("hidden");
+        $("#comparison_btn").removeAttr("hidden");
         $.ajax({
             url: '/monitor/s',
             type: 'POST',

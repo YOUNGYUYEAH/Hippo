@@ -4,7 +4,8 @@ body {
     padding: 0;
 }
 .login-bg {
-    background: url("/static/images/login-2.jpg") fixed no-repeat;
+    background: #343a40 fixed no-repeat;
+    /*background: url("/static/images/login.jpg") fixed no-repeat;*/
     background-size: 100% 100%;
     height: 100%;
     width: 100%;
