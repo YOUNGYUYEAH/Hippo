@@ -225,7 +225,7 @@ def addserver(req):
     pass
 
 
-def charts(req):
+def chart(req):
     """
     根据数据出图
     """
