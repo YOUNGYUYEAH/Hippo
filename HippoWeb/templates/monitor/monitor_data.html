@@ -46,10 +46,18 @@
                     {% if hostmode_form %}
                         {{ hostmode_form }}
                     {% endif %}
-                    <input class="btn btn-primary" type="button" value="Search" id="hostmode_btn"/>
-                    <input class="btn btn-dark" type="button" value="Compare" id="comparison_btn" hidden/>
-                    <input class="btn btn-info" type="button" value="Charts" id="charts_btn" hidden/>
-                    <input class="btn btn-success" type="button" value="Return" id="showlist_btn" hidden/>
+                    <button class="btn btn-primary" type="button" id="hostmode_btn" value="Search">
+                        <i class="fa fa-search"> Search</i>
+                    </button>
+                    <button class="btn btn-dark" type="button" id="comparison_btn" value="Compare" hidden>
+                        <i class="fa fa-files-o"> Compare</i>
+                    </button>
+                    <button class="btn btn-info" type="button" id="charts_btn" value="Search" hidden>
+                        <i class="fa fa-line-chart"> Chart</i>
+                    </button>
+                    <button class="btn btn-success" type="button" id="showlist_btn" value="Return" hidden>
+                        <i class="fa fa-undo"> Return</i>
+                    </button>
                 </form>
             </div>
         </div>

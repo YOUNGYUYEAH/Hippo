@@ -201,10 +201,12 @@ function InfoFunc(name,data,data_index,infoObj,is_append) {
         _bodyText += "</tr>";
         _headText += "</tr>";
     } else {
+        _headText += "<tr>";
         $.each(infoObj,function (infoObj_key,infoObj_val) {
             _count ++;
             _headText += "<td>" + infoObj_key + "</td>";
         });
+        _headText += "</tr>";
         if ( name === "Disk" ) {
             var PartArr = data["value"][data_index]["diskmount"].split("[")[1].split("]")[0].split(",");
             var ValueArr = data["value"][data_index]["diskusage"].split("['")[1].split("']")[0].split("', '");
@@ -319,7 +321,6 @@ $("#hostmode_btn").click(function(){
         SearchFunc(search_host.val(), search_host.text(),0)
     }
 });
-
 $("#comparison_btn").click(function(){
     if ( $(this).val() === "Compare" ) {
         var reference_ip = $("#search_info_title strong:first").text();
