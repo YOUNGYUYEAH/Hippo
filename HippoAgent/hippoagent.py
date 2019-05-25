@@ -2,14 +2,14 @@
 import psutil
 import config
 import json
+import platform
 
 
 def systeminfo():
     """
-    系统内核和版本,主机名,架构
+    系统内核和版本,主机名,架构 / windows下也正常
     """
     import socket
-    import platform
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     s.connect((config.ServerHost, int(config.ServerPost)))
     owner_ip = s.getsockname()[0]
@@ -28,7 +28,6 @@ def cpuinfo():
     """
     CPU和负载信息采集
     """
-    import platform
     _cpuinfo = dict()
     if platform.system() == 'Linux':
         with open('/proc/loadavg', 'r') as f:
@@ -36,16 +35,24 @@ def cpuinfo():
             _cpuinfo['load_1'] = _v[0]
             _cpuinfo['load_5'] = _v[1]
             _cpuinfo['load_15'] = _v[2]
-    _cpuinfo['count'] = psutil.cpu_count()
-    time_percent = psutil.cpu_times_percent(interval=1)
-    _cpuinfo['p_user'] = time_percent[0]
-    _cpuinfo['p_nice'] = time_percent[1]
-    _cpuinfo['p_system'] = time_percent[2]
-    _cpuinfo['p_idle'] = time_percent[3]
-    _cpuinfo['p_iowait'] = time_percent[4]
-    _cpuinfo['p_irq'] = time_percent[5]
-    _cpuinfo['p_softirq'] = time_percent[6]
-    _cpuinfo['p_steal'] = time_percent[7]
+        _cpuinfo['count'] = psutil.cpu_count()
+        time_percent = psutil.cpu_times_percent(interval=1)
+        _cpuinfo['p_user'] = time_percent[0]
+        _cpuinfo['p_nice'] = time_percent[1]
+        _cpuinfo['p_system'] = time_percent[2]
+        _cpuinfo['p_idle'] = time_percent[3]
+        _cpuinfo['p_iowait'] = time_percent[4]
+        _cpuinfo['p_irq'] = time_percent[5]
+        _cpuinfo['p_softirq'] = time_percent[6]
+        _cpuinfo['p_steal'] = time_percent[7]
+    elif platform.system() == 'Windows':
+        _cpuinfo['count'] = psutil.cpu_count()
+        time_percent = psutil.cpu_times_percent(interval=1)
+        _cpuinfo['p_user'] = time_percent[0]
+        _cpuinfo['p_system'] = time_percent[1]
+        _cpuinfo['p_idle'] = time_percent[2]
+        _cpuinfo['p_interrupt'] = time_percent[3]
+        _cpuinfo['p_dpc'] = time_percent[4]
     return _cpuinfo
 
 
@@ -58,12 +65,13 @@ def meminfo():
     _meminfo['available'] = psutil.virtual_memory().available
     _meminfo['used'] = psutil.virtual_memory().used
     _meminfo['free'] = psutil.virtual_memory().free
-    _meminfo['active'] = psutil.virtual_memory().active
-    _meminfo['inactive'] = psutil.virtual_memory().inactive
-    _meminfo['buffers'] = psutil.virtual_memory().buffers
-    _meminfo['cached'] = psutil.virtual_memory().cached
-    _meminfo['shared'] = psutil.virtual_memory().shared
-    _meminfo['slab'] = psutil.virtual_memory().slab
+    if platform.system() == 'Linux':
+        _meminfo['active'] = psutil.virtual_memory().active
+        _meminfo['inactive'] = psutil.virtual_memory().inactive
+        _meminfo['buffers'] = psutil.virtual_memory().buffers
+        _meminfo['cached'] = psutil.virtual_memory().cached
+        _meminfo['shared'] = psutil.virtual_memory().shared
+        _meminfo['slab'] = psutil.virtual_memory().slab
     return _meminfo
 
 
@@ -71,28 +79,37 @@ def diskinfo():
     """
     调用subprocess检查磁盘信息,将挂载点和挂载点数据分开存储,过滤/boot和type为tmpfs的衍生挂载点
     """
-    import subprocess
-    import re
     _diskinfo = dict()
     diskusage = []
     diskmount = []
-    for i in psutil.disk_partitions():
-        if i[1] == "/boot":
-            pass
-        else:
-            _mount_info = dict()
-            inode_shell = "df -i | grep -w %s | awk '{print $(NF-1)}'" % (i[1], )
-            subshell = subprocess.Popen([inode_shell], shell=True, stdout=subprocess.PIPE)
-            inode = subshell.stdout.readline().decode("utf-8").split("\n")[0]
-            if inode:
-                _mount_info['inode'] = inode.split("%")[0]
+    if platform.system() == 'Linux':
+        import subprocess
+        for i in psutil.disk_partitions():
+            if i[1] == "/boot":
+                pass
+            else:
+                _mount_info = dict()
+                inode_shell = "df -i | grep -w %s | awk '{print $(NF-1)}'" % (i[1], )
+                subshell = subprocess.Popen([inode_shell], shell=True, stdout=subprocess.PIPE)
+                inode = subshell.stdout.readline().decode("utf-8").split("\n")[0]
+                if inode:
+                    _mount_info['inode'] = inode.split("%")[0]
+                    _mount_info['total'] = psutil.disk_usage(i[1]).total
+                    _mount_info['used'] = psutil.disk_usage(i[1]).used
+                    _mount_info['percent'] = psutil.disk_usage(i[1]).percent
+                    diskmount.append(i[1])
+                    diskusage.append(json.dumps(_mount_info))
+                else:
+                    pass
+    elif platform.system() == 'Windows':
+        for i in psutil.disk_partitions():
+            if i[3] != "cdrom":
+                _mount_info = dict()
                 _mount_info['total'] = psutil.disk_usage(i[1]).total
                 _mount_info['used'] = psutil.disk_usage(i[1]).used
                 _mount_info['percent'] = psutil.disk_usage(i[1]).percent
-                diskmount.append(i[1])
+                diskmount.append(i[1].split(':\\')[0])
                 diskusage.append(json.dumps(_mount_info))
-            else:
-                pass
     _diskinfo["mount"] = diskmount
     _diskinfo["usage"] = diskusage
     return _diskinfo
@@ -114,7 +131,10 @@ def netinfo():
     for netport in _addr:
         netpic.append(netport)
         _net_usage = dict()
-        _net_usage['ipaddr'] = _addr[netport][0][1]
+        if platform.system() == 'Linux':
+            _net_usage['ipaddr'] = _addr[netport][0][1]
+        elif platform.system() == 'Windows':
+            _net_usage['ipaddr'] = _addr[netport][1][1]
         _net_usage['speed'] = _stat[netport][2]
         _net_usage['bytes_sent'] = _netio2[netport][0]
         _net_usage['bytes_recv'] = _netio2[netport][1]
@@ -160,5 +180,6 @@ def pusher():
 
 
 if __name__ == '__main__':
-    print(monitorjson())
+    # print(monitorjson())
     # print(netinfo())
+    print(netinfo())
