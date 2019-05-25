@@ -47,15 +47,15 @@
                         {{ hostmode_form }}
                     {% endif %}
                     <input class="btn btn-primary" type="button" value="Search" id="hostmode_btn"/>
-                    <input class="btn btn-info" type="button" value="Create Charts" id="charts_btn" hidden/>
-                    <input class="btn btn-success" type="button" value="Return List" id="showlist_btn" hidden/>
-                    <input class="btn btn-dark" type="button" value="Comparison" id="comparison_btn" hidden/>
+                    <input class="btn btn-dark" type="button" value="Compare" id="comparison_btn" hidden/>
+                    <input class="btn btn-info" type="button" value="Charts" id="charts_btn" hidden/>
+                    <input class="btn btn-success" type="button" value="Return" id="showlist_btn" hidden/>
                 </form>
             </div>
         </div>
         <div id="search_info" class="card mb-8">
-            <div id="search_info_title" class="card-header">
-            </div>
+            <div id="search_info_title" class="card-header"></div>
+            <div id="comparison_title" class="card-header" hidden></div>
             <div id="search_info_body" class="card-body">
                 <table id="Information" class="table table-bordered" width="100%" cellspacing="0"></table>
                 <table id="CPU" class="table table-bordered" width="100%" cellspacing="0"></table>

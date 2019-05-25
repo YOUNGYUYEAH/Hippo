@@ -29,15 +29,19 @@
 }
 .search_title {
   text-align: center;
-  background-color: #f7f7f7;
+  color: #C5CED6;
+  background-color: #3B6188;
 }
 .info_title {
-  border: 1px solid #dee2e6;
-  background-color: #f7f7f7;
+  color: #C5CED6;
+  background-color: #3B6188;
 }
-#search_info_body table tr[id$="_head"] td {
-  color: #1b1e21;
+.reference_tr td {
+  background-color: #E1EFFF;
 }
-#search_info_body table tbody[id$="_body"] td {
+.comparison_tr td {
+  background-color: #CBC4F9;
+}
+/*#search_info_body table tbody[id$="_body"] td {
   background: rgba(225, 239, 255, 1);
-}
+}*/

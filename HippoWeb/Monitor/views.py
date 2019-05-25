@@ -60,7 +60,7 @@ def monitor_host(_id):
     """前端返回需要搜索的服务器的id,通过id获取ip,然后获取值"""
     try:
         _ip = models.Info.objects.filter(id=_id).values('ip')[0]["ip"]
-        title = ["Information", "CPU", "Disk", "Memory", "Network"]
+        title = ["Information", "CPU", "Memory", "Disk", "Network"]
         index = dict()
         index["Information"] = """{"IP":"ip", "Hostname":"host", "OS":"type", "Kernel":"platform", "Arch":"arch",
          "Status":"status", "Createtime":"createtime", "Updatetime":"updatetime", "Remark":"remark"}"""

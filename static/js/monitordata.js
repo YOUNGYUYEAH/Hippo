@@ -71,13 +71,13 @@ function LoadWebFunc(search_type) {
 function DataFunc(data) {
     /* 从后台获取的数据进行table的拼接和数据渲染,配合dataTable插件完成表格 */
     var titleText = "";
-    titleText += "<div><i class='fa fa-table'></i>" + "&nbsp" + data["title"] + "</div>";
+    titleText += "<div><i class='fa fa-table'></i>" + "&nbsp;" + data["title"] + "</div>";
     $(".card-header").html(titleText);
     var theadText = "";
     theadText += "<tr>";
     for (var a = 0; a < data["head"].length; a++) {
         var title = data["head"][a];
-        theadText += "<td><strong>" + title + "</strong></td>";
+        theadText += "<td>" + title + "</td>";
     }
     theadText += "</tr>";
     $("#monitortable_thead").html(theadText);
@@ -166,48 +166,7 @@ function DataFunc(data) {
     });
 }
 
-/* 按钮点击后执行对应功能 */
-$("#showlist_btn").click(function(){
-    /* 列表展示按钮,屏蔽某IP详情,展示列表数据 */
-    $(this).attr("hidden","hidden");
-    $("#charts_btn").attr("hidden","hidden");
-    $("#comparison_btn").attr("hidden","hidden");
-    $("#search_info").hide();
-    $("#server_card").show();
-});
-$("#hostmode_btn").click(function(){
-    /* 查询按钮,显示被选中的IP的详情页,屏蔽列表数据 */
-    var search_host =  $("#select_host_ip").find("option:selected");
-    if ( ! search_host.prop("disabled") && search_host.val() !== "" ) {
-        $("#server_card").hide();
-        $("#showlist_btn").removeAttr("hidden");
-        $("#charts_btn").removeAttr("hidden");
-        $("#comparison_btn").removeAttr("hidden");
-        $.ajax({
-            url: '/monitor/s',
-            type: 'POST',
-            cache: false,
-            data: {'type': "host", 'option': search_host.val()},
-            success: function (data, statusText, xhr) {
-                if ( xhr.status === 200 ) {
-                    var search_title = "<i class='fa fa-yelp'></i>" + "&nbsp Information For &nbsp"
-                        + "<strong>" + search_host.text() + "</strong> &nbsp at &nbsp <strong>"
-                        + data["value"][1]["checktime"] + "</strong>";
-                    $("#search_info_title").html(search_title);
-                    InfoFunc("Information",data,0,data["index"]["Information"]);
-                    InfoFunc("CPU",data,1,data["index"]["CPU"]);
-                    InfoFunc("Memory",data,2,data["index"]["Memory"]);
-                    InfoFunc("Disk",data,3,data["index"]["Disk"]);
-                    InfoFunc("Network",data,4,data["index"]["Network"]);
-                } else {
-                    alert(data["error"]);
-                }
-            }
-        });
-    }
-});
-
-function InfoFunc(name,data,data_index,infoObj) {
+function InfoFunc(name,data,data_index,infoObj,is_append) {
     var searchinfoText = "";
     var _headText = "";
     var _bodyText = "";
@@ -215,7 +174,11 @@ function InfoFunc(name,data,data_index,infoObj) {
     infoObj = JSON.parse(infoObj);
     if ( name !== "Disk" && name !== "Network" ) {
         _headText += "<tr>";
-        _bodyText += "</tr>";
+        if ( is_append === 1) {
+            _bodyText += "<tr class='comparison_tr'>";
+        } else {
+            _bodyText += "<tr class='reference_tr'>";
+        }
         $.each(infoObj, function (infoObj_idx, infoObj_item) {
             if ( infoObj_idx === "Load" ) {
                 _count += 2;
@@ -246,7 +209,11 @@ function InfoFunc(name,data,data_index,infoObj) {
             var PartArr = data["value"][data_index]["diskmount"].split("[")[1].split("]")[0].split(",");
             var ValueArr = data["value"][data_index]["diskusage"].split("['")[1].split("']")[0].split("', '");
             for ( var Len=0; Len < PartArr.length; Len++ ) {
-                _bodyText += "<tr>";
+                if ( is_append === 1) {
+                    _bodyText += "<tr class='comparison_tr'>";
+                } else {
+                    _bodyText += "<tr class='reference_tr'>";
+                }
                 _bodyText += "<td>" + PartArr[Len] + "</td>";
                 var ValueJArr = JSON.parse(ValueArr[Len]);
                 for ( var Arrval in infoObj ) {
@@ -266,7 +233,11 @@ function InfoFunc(name,data,data_index,infoObj) {
             var PicArr = data["value"][data_index]["netpic"].split("[")[1].split("]")[0].split(",");
             var netArr = data["value"][data_index]["netusage"].split("['")[1].split("']")[0].split("', '");
             for ( var len=0; len < PicArr.length; len++ ) {
-                _bodyText += "<tr>";
+                if ( is_append === 1) {
+                    _bodyText += "<tr class='comparison_tr'>";
+                } else {
+                    _bodyText += "<tr class='reference_tr'>";
+                }
                 _bodyText += "<td>" + PicArr[len] + "</td>";
                 var netJArr = JSON.parse(netArr[len]);
                 for ( var netval in infoObj ) {
@@ -285,10 +256,86 @@ function InfoFunc(name,data,data_index,infoObj) {
         }
     }
     searchinfoText += "<thead id='" + name + "_head'><tr><td class='search_title' colspan='"
-        + _count + "'><strong>" + name + "</strong></td></tr></thead>";
+        + _count + "'>" + name + "</td></tr></thead>";
     searchinfoText += "<tbody id='" + name + "_body'></tbody>";
-    $("#"+name).html(searchinfoText);
-    $("#"+name+"_head").append(_headText);
-    $("#"+name+"_body").html(_bodyText);
+    if ( is_append === 1 ){
+        $("#" + name + "_body").append(_bodyText);
+    } else {
+        $("#" + name).html(searchinfoText);
+        $("#" + name + "_head").append(_headText);
+        $("#" + name + "_body").html(_bodyText);
+    }
     $("#search_info").show();
 }
+
+function SearchFunc(opts_val,opts2_text,is_comparison) {
+    $.ajax({
+        url: '/monitor/s',
+        type: 'POST',
+        cache: false,
+        data: {'type': "host", 'option': opts_val},
+        success: function (data, statusText, xhr) {
+            if ( xhr.status === 200 ) {
+                var search_title = "";
+                if ( is_comparison === 0 ) {
+                    search_title = "<i class='fa fa-yelp'></i>" + "&nbsp; Information For &nbsp;"
+                        + "<strong>" + opts2_text + "</strong> &nbsp; At &nbsp; <strong>"
+                        + data["value"][1]["checktime"] + "</strong>";
+                    $("#search_info_title").html(search_title);
+                } else if ( is_comparison === 1) {
+                    search_title = "<i class='fa fa-yelp'></i>" + "&nbsp; Comparison &nbsp;" + "<strong>"
+                        + $("#search_info_title strong:first").text() + "</strong>" + "&nbsp; And &nbsp;"
+                        + "<strong>" + opts2_text + "</strong>";
+                    $("#comparison_title").html(search_title).removeAttr("hidden");
+                    $("#search_info_title").attr("hidden","hidden");
+                }
+                for (var T=0; T<data["title"].length; T++) {
+                    InfoFunc(data["title"][T], data, T, data["index"][data["title"][T]],is_comparison);
+                }
+            } else {
+                alert(data["error"]);
+            }
+        }
+    });
+}
+
+/* 按钮点击后执行对应功能 */
+$("#showlist_btn").click(function(){
+    /* 列表展示按钮,屏蔽某IP详情,展示列表数据 */
+    $(this).attr("hidden","hidden");
+    $("#charts_btn").attr("hidden","hidden");
+    $("#comparison_btn").attr("hidden","hidden");
+    $("#search_info").hide();
+    $("#server_card").show();
+});
+$("#hostmode_btn").click(function(){
+    /* 查询按钮,显示被选中的IP的详情页,屏蔽列表数据 */
+    var search_host =  $("#select_host_ip").find("option:selected");
+    if ( ! search_host.prop("disabled") && search_host.val() !== "" ) {
+        $("#server_card").hide();
+        $("#showlist_btn").removeAttr("hidden");
+        $("#charts_btn").removeAttr("hidden");
+        $("#comparison_btn").removeAttr("hidden");
+        SearchFunc(search_host.val(), search_host.text(),0)
+    }
+});
+
+$("#comparison_btn").click(function(){
+    if ( $(this).val() === "Compare" ) {
+        var reference_ip = $("#search_info_title strong:first").text();
+        var compare_ip = $("#select_host_ip").find("option:selected").text();
+        if (reference_ip === compare_ip) {
+            alert("Please Choose Different IP.");
+        } else {
+            var new_select = $("#select_host_ip").find("option:selected");
+            SearchFunc(new_select.val(), new_select.text(), 1);
+            $("#comparison_btn").attr("value", "Uncompare");
+        }
+    } else if ( $(this).val() === "Uncompare" ) {
+        $(".comparison_tr").remove();
+        $("#comparison_btn").attr("value","Compare");
+        $("#search_info_title").removeAttr("hidden");
+        $("#comparison_title").empty().attr("hidden","hidden");
+    }
+});
+
