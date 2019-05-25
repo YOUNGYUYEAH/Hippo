@@ -6,9 +6,7 @@ import platform
 
 
 def systeminfo():
-    """
-    系统内核和版本,主机名,架构 / windows下也正常
-    """
+    """系统内核和版本,主机名,架构,windows下也正常"""
     import socket
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     s.connect((config.ServerHost, int(config.ServerPost)))
@@ -25,9 +23,7 @@ def systeminfo():
 
 
 def cpuinfo():
-    """
-    CPU和负载信息采集
-    """
+    """CPU和负载信息采集,Linux才有loadavg,windows的cpu信息较少"""
     _cpuinfo = dict()
     if platform.system() == 'Linux':
         with open('/proc/loadavg', 'r') as f:
@@ -57,9 +53,7 @@ def cpuinfo():
 
 
 def meminfo():
-    """
-    机器内存,用量统计
-    """
+    """机器内存,用量统计"""
     _meminfo = dict()
     _meminfo['total'] = psutil.virtual_memory().total
     _meminfo['available'] = psutil.virtual_memory().available
@@ -76,18 +70,14 @@ def meminfo():
 
 
 def diskinfo():
-    """
-    调用subprocess检查磁盘信息,将挂载点和挂载点数据分开存储,过滤/boot和type为tmpfs的衍生挂载点
-    """
+    """windows使用自带参数检测,Linux调用subprocess检查磁盘信息,将挂载点和挂载点数据分开存储,过滤/boot和type为tmpfs的衍生挂载点"""
     _diskinfo = dict()
     diskusage = []
     diskmount = []
     if platform.system() == 'Linux':
         import subprocess
         for i in psutil.disk_partitions():
-            if i[1] == "/boot":
-                pass
-            else:
+            if i[1] != "/boot":
                 _mount_info = dict()
                 inode_shell = "df -i | grep -w %s | awk '{print $(NF-1)}'" % (i[1], )
                 subshell = subprocess.Popen([inode_shell], shell=True, stdout=subprocess.PIPE)
@@ -99,8 +89,6 @@ def diskinfo():
                     _mount_info['percent'] = psutil.disk_usage(i[1]).percent
                     diskmount.append(i[1])
                     diskusage.append(json.dumps(_mount_info))
-                else:
-                    pass
     elif platform.system() == 'Windows':
         for i in psutil.disk_partitions():
             if i[3] != "cdrom":
@@ -116,9 +104,7 @@ def diskinfo():
 
 
 def netinfo():
-    """
-    获取网卡总量用量和流量情况
-    """
+    """获取网卡总量用量和流量情况"""
     import time
     _netinfo = dict()
     netpic = []
@@ -180,6 +166,4 @@ def pusher():
 
 
 if __name__ == '__main__':
-    # print(monitorjson())
-    # print(netinfo())
-    print(netinfo())
+    print(monitorjson())
