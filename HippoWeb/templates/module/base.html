@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     {% block CssFiles %}
         <link href="{{ static('vendor/bootstrap-4.1.3/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+        <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">-->
+        <link href="{{ static('vendor/font-awesome/css/font-awesome.min.css') }}" rel="stylesheet" type="text/css">
         <link href="{{ static('css/index.css') }}" rel="stylesheet" type="text/css">
         <div id="cssfiles"></div>
     {% endblock %}
@@ -31,11 +32,11 @@
         {% block Footer %}
             <div class="container">
                 <div class="text-center">
-                    <small>Copyright © Your Website 2019</small>
+                    <small>Copyright © Website 2019</small>
                     <small> - Author - YOUNGYUYEAH
                         <i class="fa fa-wheelchair"></i>
                     </small>
-                    <span class="align-right">
+                    <span class="align-right" style="margin-left:10px">
                         <a class="mr-3 d-inline-block" href="https://github.com/YOUNGYUYEAH/Hippo" target="_blank">
                             <i class="fa fa-fw fa-thumbs-up"></i>
                             <span>Like</span>
@@ -52,6 +53,15 @@
         <script src="{{ static('vendor/bootstrap-select-1.13.10/js/bootstrap-select.min.js') }}"></script>
         <script src="{{ static('vendor/heart.js') }}"></script>
         <script src="{{ static('js/index.js') }}"></script>
+        <script type="text/javascript">
+            function go(formname) {
+                var url = "https://cn.bing.com/";
+                //var url = "http://www.baidu.com/baidu"; 百度input的name为word
+                formname.method = "get";
+                formname.action = url;
+                return true;
+            }
+        </script>
         <div id="jsfiles"></div>
     {% endblock %}
 

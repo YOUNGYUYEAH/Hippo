@@ -4,7 +4,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 SECRET_KEY = 'ighh9dvuerplm)h7-@a%q(m*f@5%x)bsew1arrs4igjydhuc1b'
 
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', '192.168.20.228', '192.168.10.10']
 
@@ -56,11 +56,11 @@ WSGI_APPLICATION = 'Hippo.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'Hippo',
+        'NAME': 'hippo',
         'USER': 'root',
         'PASSWORD': '531144968',
-        'HOST': '192.168.80.100',
-        # 'HOST': '127.0.0.1',
+        # 'HOST': '192.168.80.100',
+        'HOST': '127.0.0.1',
         'PORT': 3306
     }
 }

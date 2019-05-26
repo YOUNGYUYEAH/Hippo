@@ -313,6 +313,10 @@ $("#showlist_btn").click(function(){
 $("#hostmode_btn").click(function(){
     /* 查询按钮,显示被选中的IP的详情页,屏蔽列表数据 */
     var search_host =  $("#select_host_ip").find("option:selected");
+    if ( $("#comparison_btn").val() === "UnCompare" ) {
+        $("#comparison_btn").attr("value","Compare").html(
+            "<i class='fa fa-files-o'></i>&nbsp;Compare");
+    }
     if ( ! search_host.prop("disabled") && search_host.val() !== "" ) {
         $("#server_card").hide();
         $("#showlist_btn").removeAttr("hidden");
@@ -326,15 +330,17 @@ $("#comparison_btn").click(function(){
         var reference_ip = $("#search_info_title strong:first").text();
         var compare_ip = $("#select_host_ip").find("option:selected").text();
         if (reference_ip === compare_ip) {
-            alert("Please Choose Different IP.");
+            // alert("Please Choose Different IP.");
         } else {
             var new_select = $("#select_host_ip").find("option:selected");
             SearchFunc(new_select.val(), new_select.text(), 1);
-            $("#comparison_btn").attr("value", "Uncompare");
+            $("#comparison_btn").attr("value", "Uncompare").html(
+                "<i class='fa fa-files-o'></i>&nbsp;Uncompare");
         }
     } else if ( $(this).val() === "Uncompare" ) {
         $(".comparison_tr").remove();
-        $("#comparison_btn").attr("value","Compare");
+        $("#comparison_btn").attr("value","Compare").html(
+            "<i class='fa fa-files-o'></i>&nbsp;Compare");
         $("#search_info_title").removeAttr("hidden");
         $("#comparison_title").empty().attr("hidden","hidden");
     }
