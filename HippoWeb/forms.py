@@ -1,7 +1,5 @@
 from django import forms
-from django.forms import widgets
 from HippoWeb.Monitor import models
-from HippoWeb.Monitor import MonitorORM
 
 
 class LoginForm(forms.Form):
@@ -18,11 +16,18 @@ class HostModeForm(forms.Form):
         _server = [i["id"], "(" + i["ip"] + ") " + i["host"]]
         _server_list.append(_server)
     _count_result = models.Info.objects.all().count()
-    try:
-        ip = forms.ChoiceField(label='', choices=_server_list,  widget=forms.Select(
-            attrs={'id': 'select_host_ip', 'class': 'form-control selectpicker show-tick', 'data-style': 'btn-default',
-                   'autocomplete': 'off', 'data-live-search': 'true', 'data-width': '20%'}), initial=_count_result)
-    except Exception as error:
-        ip = forms.ChoiceField(label='', choices=("", error), widget=forms.Select(
-            attrs={'id': 'select_host_ip', 'class': 'form-control selectpicker show-tick', 'data-style': 'btn-default',
-                   'autocomplete': 'off', 'data-live-search': 'true', 'data-width': '20%'}), initial=1)
+    ip = forms.ChoiceField(label='', choices=_server_list,  widget=forms.Select(
+        attrs={'id': 'select_host_ip', 'class': 'form-control selectpicker show-tick', 'data-style': 'btn-default',
+               'autocomplete': 'off', 'data-live-search': 'true', 'data-width': '20%'}), initial=_count_result)
+
+
+class ChartTypeForm(forms.Form):
+    type_list = ["CPU", "Disk", "Memory", "Network", "TCP", "ALL"]
+    _type_list = []
+    _count = 0
+    for i in type_list:
+        _count += 1
+        _type_list.append([i.lower(),i])
+    charttype = forms.ChoiceField(label='', choices=_type_list, widget=forms.Select(
+        attrs={'id': 'select_chart_type', 'class': 'form-control selectpicker show-tick', 'data-style': 'btn-default',
+               'autocomplete': 'off', 'data-width': '10%'}), initial=_count)

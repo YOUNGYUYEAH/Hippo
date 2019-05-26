@@ -4,7 +4,7 @@ from HippoWeb.Monitor import models
 from HippoWeb.Monitor import MonitorORM
 from django.shortcuts import HttpResponse, render
 from django.contrib.auth.decorators import login_required
-from HippoWeb.forms import HostModeForm
+from HippoWeb.forms import HostModeForm, ChartTypeForm
 
 
 def collect(req):
@@ -225,13 +225,15 @@ def addserver(req):
     pass
 
 
-def chart(req):
-    """
-    根据数据出图
-    """
-    return render(req, 'monitor/monitor_chart.html')
-
-
 def data(req):
+    """通过查询返回数据"""
     hostmode_form = HostModeForm()
     return render(req, 'monitor/monitor_data.html', {'hostmode_form': hostmode_form})
+
+
+def chart(req):
+    """根据查询数据出图"""
+    hostmode_form = HostModeForm()
+    charttype_form = ChartTypeForm()
+    return render(req, 'monitor/monitor_chart.html', {'hostmode_form': hostmode_form,
+                                                      'charttype_form': charttype_form})

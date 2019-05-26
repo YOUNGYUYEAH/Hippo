@@ -1,1 +1,22 @@
-{% extends "module/base.html" %}
+    <div id="mainSubweb">
+        <div class="card mb-8">
+            <div class="card-header">
+                <i class="fa fa-pie-chart"></i>
+                &nbsp;Monitor Chart
+            </div>
+            <div class="card-body">
+                <form enctype="multipart/form-data">
+                    {{ csrf_input }}
+                    {% if hostmode_form %}
+                        {{ hostmode_form }}
+                    {% endif %}
+                    {% if charttype_form %}
+                        {{ charttype_form }}
+                    {% endif %}
+                    <button class="btn btn-info" type="button" id="hostmode_btn" value="Search">
+                        <i class="fa fa-line-chart"> Chart</i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>

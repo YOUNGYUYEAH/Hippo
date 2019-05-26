@@ -45,32 +45,51 @@
 })(jQuery); // End of use strict
 
 
+var cssfilesText = "";
+var jsfilesText = "";
+function SelectDefaultFunc(){
+    /* 判断页面select初始化结果,为select添加默认值 */
+    var sss = $("#select_host_ip");
+    if ( sss.length > 0 ) {
+        sss.find("option:selected").removeAttr("selected");
+        sss.append("<option data-hidden='true' disabled='disabled' selected='selected'> "
+            + "Select Server To Search :D" + "</option>");
+    }
+}
+
 function monitordata(){
-    /* 加载monitor_data页面 */
-    var cssfilesText = "";
+    /* css */
     cssfilesText += "<link href='/static/vendor/datatables/dataTables.bootstrap4.css' rel='stylesheet' type='text/css'>";
     cssfilesText += "<link href='/static/vendor/bootstrap-select-1.13.10/css/bootstrap-select.min.css' rel='stylesheet' type='text/css'>";
     cssfilesText += "<link href='/static/css/monitor.css' rel='stylesheet' type='text/css'>";
-    var jsfilesText = "";
+    /* js */
     jsfilesText += "<script src='/static/vendor/datatables/jquery.dataTables.js'></script>";
     jsfilesText += "<script src='/static/vendor/datatables/dataTables.bootstrap4.js'></script>";
-    jsfilesText += "<script src='/static/js/monitordata.js'></script>";
+    jsfilesText += "<script src='/static/js/monitor_data.js'></script>";
     /* 通过接口页面返回html,拼接给div */
     $.get("/monitor/data",function(data){
         $("#cssfiles").html(cssfilesText);
         $("#mainWeb").html(data);
         $("#jsfiles").html(jsfilesText);
-        /* 判断页面select初始化结果,为select添加默认值 */
-        var sss = $("#select_host_ip");
-        if ( sss.length > 0 ) {
-            sss.find("option:selected").removeAttr("selected");
-            sss.append("<option data-hidden='true' disabled='disabled' selected='selected'> "
-                + "Select Server To Search :D" + "</option>");
-        }
+        SelectDefaultFunc();
         /* 载入server数据 */
         LoadWebFunc("server");
         $("#search_info").hide();
         /* bootstrap-select需要重新实例化 */
+        $(".selectpicker").data('selectpicker',null).selectpicker('refresh');
+    })
+}
+
+function monitorchart(){
+    /* css */
+    cssfilesText += "<link href='/static/vendor/bootstrap-select-1.13.10/css/bootstrap-select.min.css' rel='stylesheet' type='text/css'>";
+    /* js */
+    jsfilesText += "<script src='/static/js/monitor_chart.js'></script>";
+    $.get("/monitor/chart",function(data){
+        $("#cssfiles").html(cssfilesText);
+        $("#mainWeb").html(data);
+        $("#jsfiles").html(jsfilesText);
+        SelectDefaultFunc();
         $(".selectpicker").data('selectpicker',null).selectpicker('refresh');
     })
 }
