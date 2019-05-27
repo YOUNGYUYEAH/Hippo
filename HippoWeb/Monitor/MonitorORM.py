@@ -74,9 +74,10 @@ class SaveData(object):
 
 class LoadData(object):
     """根据提交回来的ip进行数据库查询"""
-    def __init__(self, ip=None, timerange=None):
+    def __init__(self, ip=None, time_start=None, time_end=None):
         self.ip = ip
-        self.timerange = timerange
+        self.ts = time_start
+        self.te = time_end
         self.cursor = connection.cursor()
 
     def dictfetchall(self):
@@ -105,23 +106,48 @@ class LoadData(object):
     def load_cpu(self):
         try:
             if self.ip:
-                _query_cpu_sql = """SELECT `load_1`,`load_5`,`load_15`,`count`,`p_user`,`p_system`,`p_nice`,
+                _querysql = """SELECT `load_1`,`load_5`,`load_15`,`count`,`p_user`,`p_system`,`p_nice`,
                 `p_idle`,`p_iowait`,`p_irq`,`p_softirq`,`p_steal`,DATE_FORMAT(`checktime`,'%%Y-%%m-%%d %%H:%%i:%%S') 
                 AS `checktime` FROM monitor_cpu WHERE `checktime` IN (SELECT Max(`checktime`) FROM monitor_cpu 
                 GROUP BY `ip`) AND `ip` = '%s';""" % self.ip
-                self.cursor.execute(_query_cpu_sql)
+                self.cursor.execute(_querysql)
             else:
-                _query_cpu_sql = """SELECT `ip`,`load_1`,`load_5`,`load_15`,`count`,`p_user`,`p_system`,`p_nice`,
+                _querysql = """SELECT `ip`,`load_1`,`load_5`,`load_15`,`count`,`p_user`,`p_system`,`p_nice`,
                 `p_idle`,`p_iowait`,`p_irq`,`p_softirq`,`p_steal`,DATE_FORMAT(`checktime`,'%Y-%m-%d %H:%i:%S') 
                 FROM monitor_cpu WHERE CONCAT(`ip`,`checktime`) IN (SELECT CONCAT(`ip`,Max(`checktime`)) 
-                FROM monitor_cpu GROUP BY `ip`);;"""
-                self.cursor.execute(_query_cpu_sql)
+                FROM monitor_cpu GROUP BY `ip`);"""
+                self.cursor.execute(_querysql)
             if self.ip:
                 _load_cpu_result = self.dictfetchall()
                 return _load_cpu_result[0]
             else:
                 _load_cpu_result = self.cursor.fetchall()
                 return _load_cpu_result
+        except Exception as e:
+            print(e)
+        finally:
+            self.cursor.close()
+
+    def load_cpu_loadavg_range(self):
+        try:
+            _querysql = """SELECT `load_1`,`load_5`,`load_15` FROM monitor_cpu WHERE `ip`=%s AND 
+            (DATE_FORMAT(`checktime`, '%%Y-%%m-%%d %%H:%%i:%%S') BETWEEN %s AND %s) ;""" % self.ip, self.ts, self.te
+            self.cursor.execute(_querysql)
+            _load_cpu_loadavg_result = self.cursor.fetchall()
+            return _load_cpu_loadavg_result
+        except Exception as e:
+            print(e)
+        finally:
+            self.cursor.close()
+
+    def load_cpu_time_range(self):
+        try:
+            _querysql = """SELECT `p_user`,`p_system`,`p_nice`,`p_idle`,`p_iowait`,`p_irq`,`p_softirq`,`p_steal` 
+            FROM monitor_cpu WHERE `ip`=%s AND (DATE_FORMAT(`checktime`, '%%Y-%%m-%%d %%H:%%i:%%S') 
+            BETWEEN %s AND %s);""" % self.ip, self.ts, self.te
+            self.cursor.execute(_querysql)
+            _load_cpu_time_result = self.cursor.fetchall()
+            return _load_cpu_time_result
         except Exception as e:
             print(e)
         finally:
@@ -184,7 +210,7 @@ class LoadData(object):
             else:
                 _querysql = """SELECT `ip`,`netpic`,`netusage`,DATE_FORMAT(`checktime`,'%Y-%m-%d %H:%i:%S') 
                 AS `checktime` FROM monitor_network WHERE CONCAT(`ip`,`checktime`) IN (SELECT 
-                CONCAT(`ip`,Max(`checktime`)) FROM monitor_cpu GROUP BY `ip`);;"""
+                CONCAT(`ip`,Max(`checktime`)) FROM monitor_cpu GROUP BY `ip`);"""
             self.cursor.execute(_querysql)
             if self.ip:
                 _load_network_result = self.dictfetchall()

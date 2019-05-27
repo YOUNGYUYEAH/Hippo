@@ -2,16 +2,13 @@
 import json
 from HippoWeb.Monitor import models
 from HippoWeb.Monitor import MonitorORM
-from HippoWeb.Monitor import MonitorChart
 from django.shortcuts import HttpResponse, render
 from django.contrib.auth.decorators import login_required
 from HippoWeb.forms import HostModeForm, ChartTypeForm
 
 
 def collect(req):
-    """
-    接收agent数据的接口,仅接收方法为POST的请求,将数据判断后入库.
-    """
+    """接收agent数据的接口,仅接收方法为POST的请求,将数据判断后入库."""
     if req.method == 'POST':
         if req.body:
             try:
@@ -62,6 +59,7 @@ def monitor_host(_id):
     try:
         _ip = models.Info.objects.filter(id=_id).values('ip')[0]["ip"]
         title = ["Information", "CPU", "Memory", "Disk", "Network"]
+        # 定义查询服务器详情页面时候的数据信息
         index = dict()
         index["Information"] = """{"IP":"ip", "Hostname":"host", "OS":"type", "Kernel":"platform", "Arch":"arch",
          "Status":"status", "Createtime":"createtime", "Updatetime":"updatetime", "Remark":"remark"}"""
@@ -81,7 +79,9 @@ def monitor_host(_id):
         _ip_disk = MonitorORM.LoadData(_ip).load_disk()
         _ip_network = MonitorORM.LoadData(_ip).load_network()
         hostdata = [_ip_info, _ip_cpu, _ip_memory, _ip_disk, _ip_network]
-        _response = HttpResponse(json.dumps({'title': title, 'value': hostdata, 'index': index}),
+        _response = HttpResponse(json.dumps({'title': title,
+                                             'value': hostdata,
+                                             'index': index}),
                                  content_type='application/json')
         _response.status_code = 200
     except Exception as error:
@@ -103,7 +103,9 @@ def monitor_server():
             serverdata.append(_ipvalue)
     except Exception as error:
         serverdata = error
-    _response = HttpResponse(json.dumps({'title': title, 'head': thead, 'value': serverdata}),
+    _response = HttpResponse(json.dumps({'title': title,
+                                         'head': thead,
+                                         'value': serverdata}),
                              content_type='application/json')
     return _response
 
@@ -117,7 +119,9 @@ def monitor_cpu():
         cpudata = s.load_cpu()
     except Exception as error:
         cpudata = error
-    _response = HttpResponse(json.dumps({'title': title, 'head': thead, 'value': cpudata}),
+    _response = HttpResponse(json.dumps({'title': title,
+                                         'head': thead,
+                                         'value': cpudata}),
                              content_type='application/json')
     return _response
 
@@ -138,7 +142,9 @@ def monitor_memory():
                 memorydata.append(_ipdata)
     except Exception as error:
         memorydata = error
-    _response = HttpResponse(json.dumps({'title': title, 'head': thead, 'value': memorydata}),
+    _response = HttpResponse(json.dumps({'title': title,
+                                         'head': thead,
+                                         'value': memorydata}),
                              content_type='application/json')
     return _response
 
@@ -156,15 +162,14 @@ def monitor_disk():
             diskdata.append(ipvalue)
     except Exception as error:
         diskdata = error
-    _response = HttpResponse(json.dumps({'title': title, 'head': thead, 'value': diskdata}),
+    _response = HttpResponse(json.dumps({'title': title,
+                                         'head': thead,
+                                         'value': diskdata}),
                              content_type='application/json')
     return _response
 
 
 def monitor_network():
-    """
-    查询服务器网卡接口信息
-    """
     title = "Network List"
     thead = ["IP", "Interface", "Netaddr", "Speed", "pps[1s] sent/recv", "bps[1s] sent/recv", "Err in/out", "Checktime"]
     try:
@@ -177,7 +182,9 @@ def monitor_network():
             networkdata.append(ipvalue)
     except Exception as error:
         networkdata = error
-    _response = HttpResponse(json.dumps({'title': title, 'head': thead, 'value': networkdata}),
+    _response = HttpResponse(json.dumps({'title': title,
+                                         'head': thead,
+                                         'value': networkdata}),
                              content_type='application/json')
     return _response
 
@@ -219,25 +226,49 @@ def search(req):
         return response
 
 
-def addserver(req):
-    """
-    添加新的监控服务器,分配agent,需要通过saltstack分配安装
-    """
-    pass
-
-
 def data(req):
     """通过查询返回数据"""
     hostmode_form = HostModeForm()
     return render(req, 'monitor/monitor_data.html', {'hostmode_form': hostmode_form})
 
 
+def chart_cpu(ip, ts, te):
+    c = MonitorORM.LoadData(ip=ip, time_start=ts, time_end=te)
+    _loadavg = c.load_cpu_loadavg_range()
+    _cputime = c.load_cpu_time_range()
+    _response = HttpResponse(json.dumps({'loadavg': _loadavg,
+                                         'cputime': _cputime}),
+                             content_type='application/json')
+    return _response
+
+
+def create(req):
+    if req.is_ajax():
+        if req.method == 'POST':
+            chart_ip = req.POST.get('ip')
+            chart_ts = req.POST.get('time_start')
+            chart_te = req.POST.get('time_end')
+            chart_type = req.POST.get('type')
+            if chart_type == 'cpu':
+                _response = chart_cpu(chart_ip, chart_ts, chart_te)
+                return _response
+            else:
+                pass
+        else:
+            # 非POST方法报错.
+            response = HttpResponse("API Error. :(  \n")
+            response.status_code = 405
+            return response
+    else:
+        # 仅接受AJAX.
+        response = HttpResponse("ONLY AJAX. :(  \n")
+        response.status_code = 405
+        return response
+
+
 def chart(req):
     """根据查询数据出图"""
     hostmode_form = HostModeForm()
     charttype_form = ChartTypeForm()
-    c = MonitorChart.CreateChart()
-    _chart = c.line_chart(xaxis=["1", "2", "3", "4", "5"], yaxis=[{"A": "3,2,4,7,12"}, {"B": "1,2,3,1,5"}])
     return render(req, 'monitor/monitor_chart.html', {'hostmode_form': hostmode_form,
-                                                      'charttype_form': charttype_form,
-                                                      'Chart': _chart.render_embed()})
+                                                      'charttype_form': charttype_form})
