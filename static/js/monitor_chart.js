@@ -17,5 +17,5 @@ $("#createchart_btn").click(function(){
 });
 
 function Echarts(){
-    
+
 }
