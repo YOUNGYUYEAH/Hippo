@@ -18,5 +18,10 @@
                     </button>
                 </form>
             </div>
+            <div id="Chartsweb">
+                {% if  Chart %}
+                    {{ Chart | safe }}
+                {% endif %}
+            </div>
         </div>
     </div>

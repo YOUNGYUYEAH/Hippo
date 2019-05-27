@@ -262,7 +262,7 @@ function InfoFunc(name,data,data_index,infoObj,is_append) {
     searchinfoText += "<tbody id='" + name + "_body'></tbody>";
     if ( is_append === 1 ){
         $("#" + name + "_body").append(_bodyText);
-    } else {
+    } else if ( is_append === 0 ) {
         $("#" + name).html(searchinfoText);
         $("#" + name + "_head").append(_headText);
         $("#" + name + "_body").html(_bodyText);

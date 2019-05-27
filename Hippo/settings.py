@@ -56,11 +56,11 @@ WSGI_APPLICATION = 'Hippo.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'hippo',
+        'NAME': 'Hippo',
         'USER': 'root',
         'PASSWORD': '531144968',
-        # 'HOST': '192.168.80.100',
-        'HOST': '127.0.0.1',
+        'HOST': '192.168.80.100',
+        # 'HOST': '127.0.0.1',
         'PORT': 3306
     }
 }

@@ -2,6 +2,7 @@
 import json
 from HippoWeb.Monitor import models
 from HippoWeb.Monitor import MonitorORM
+from HippoWeb.Monitor import MonitorChart
 from django.shortcuts import HttpResponse, render
 from django.contrib.auth.decorators import login_required
 from HippoWeb.forms import HostModeForm, ChartTypeForm
@@ -235,5 +236,8 @@ def chart(req):
     """根据查询数据出图"""
     hostmode_form = HostModeForm()
     charttype_form = ChartTypeForm()
+    c = MonitorChart.CreateChart()
+    _chart = c.line_chart(xaxis=["1", "2", "3", "4", "5"], yaxis=[{"A": "3,2,4,7,12"}, {"B": "1,2,3,1,5"}])
     return render(req, 'monitor/monitor_chart.html', {'hostmode_form': hostmode_form,
-                                                      'charttype_form': charttype_form})
+                                                      'charttype_form': charttype_form,
+                                                      'Chart': _chart.render_embed()})
