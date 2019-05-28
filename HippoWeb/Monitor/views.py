@@ -233,10 +233,18 @@ def data(req):
 
 
 def chart_cpu(ip, ts, te):
-    c = MonitorORM.LoadData(ip=ip, time_start=ts, time_end=te)
-    _loadavg = c.load_cpu_loadavg_range()
-    _cputime = c.load_cpu_time_range()
-    _response = HttpResponse(json.dumps({'loadavg': _loadavg,
+    _loadval = dict()
+    _load = MonitorORM.LoadData(ip=ip, time_start=ts, time_end=te).load_cpu_loadavg_range()
+    _cputime = MonitorORM.LoadData(ip=ip, time_start=ts, time_end=te).load_cpu_time_range()
+    _loadval["legend"] = ["load (1min)", "load (5min)", "load (15min)"]
+    _loadval["yaxis"] = [
+        "1, 2, 3, 13, 12, 5, 2, 1",
+        "8, 12, 3, 4, 12, 21, 5, 3",
+        "1, 2, 3, 4, 5, 6, 7, 8"
+    ]
+    _loadval["xaxis"] = ["00:00", "01:00", "02:00", "03:00",
+                         "04:00", "05:00", "06:00", "07:00"]
+    _response = HttpResponse(json.dumps({'loadval': _loadval,
                                          'cputime': _cputime}),
                              content_type='application/json')
     return _response

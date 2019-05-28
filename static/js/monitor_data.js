@@ -312,7 +312,7 @@ $("#showlist_btn").click(function(){
 });
 $("#hostmode_btn").click(function(){
     /* 查询按钮,显示被选中的IP的详情页,屏蔽列表数据 */
-    var search_host =  $("#select_host_ip").find("option:selected");
+    var search_host =  $("#select_ip").find("option:selected");
     if ( ! search_host.prop("disabled") && search_host.val() !== "" ) {
         $("#server_card").hide();
         $("#showlist_btn").removeAttr("hidden");
@@ -327,11 +327,11 @@ $("#hostmode_btn").click(function(){
 $("#comparison_btn").click(function(){
     if ( $(this).val() === "Compare" ) {
         var reference_ip = $("#search_info_title strong:first").text();
-        var compare_ip = $("#select_host_ip").find("option:selected").text();
+        var compare_ip = $("#select_ip").find("option:selected").text();
         if (reference_ip === compare_ip) {
             alert("Please Choose Different IP.");
         } else {
-            var new_select = $("#select_host_ip").find("option:selected");
+            var new_select = $("#select_ip").find("option:selected");
             SearchFunc(new_select.val(), new_select.text(), 1);
             $("#comparison_btn").attr("value", "Uncompare").html(
                 "<i class='fa fa-files-o'></i>&nbsp;Uncompare");

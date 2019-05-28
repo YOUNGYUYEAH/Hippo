@@ -45,11 +45,9 @@
 })(jQuery); // End of use strict
 
 
-var cssfilesText = "";
-var jsfilesText = "";
 function SelectDefaultFunc(){
     /* 判断页面select初始化结果,为select添加默认值 */
-    var sss = $("#select_host_ip");
+    var sss = $("#select_ip");
     if ( sss.length > 0 ) {
         sss.find("option:selected").removeAttr("selected");
         sss.append("<option data-hidden='true' disabled='disabled' selected='selected'> "
@@ -86,6 +84,7 @@ function monitorchart(){
     /* css */
     var cssfilesText = "";
     cssfilesText += "<link href='/static/vendor/bootstrap-select-1.13.10/css/bootstrap-select.min.css' rel='stylesheet' type='text/css'>";
+    cssfilesText += "<link href='/static/css/monitor.css' rel='stylesheet' type='text/css'>";
     /* js */
     var jsfilesText = "";
     jsfilesText += "<script src='/static/js/monitor_chart.js'></script>";

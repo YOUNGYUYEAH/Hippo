@@ -11,7 +11,7 @@ class LoginForm(forms.Form):
 
 class HostModeForm(forms.Form):
     ip = forms.ChoiceField(label='', widget=forms.Select(
-        attrs={'id': 'select_host_ip', 'class': 'form-control selectpicker show-tick', 'data-style': 'btn-default',
+        attrs={'id': 'select_ip', 'class': 'form-control selectpicker show-tick', 'data-style': 'btn-default',
                'autocomplete': 'off', 'data-live-search': 'true', 'data-width': '20%'}))
 
     def __init__(self, *args, **kwargs):
