@@ -1,4 +1,5 @@
 from django import forms
+import datetime
 from HippoWeb.Monitor import models
 
 
@@ -35,10 +36,17 @@ class ChartTypeForm(forms.Form):
         _type_list.append([i.lower(), i])
     charttype = forms.ChoiceField(label='', choices=_type_list, widget=forms.Select(
         attrs={'id': 'select_chart_type', 'class': 'form-control selectpicker show-tick', 'data-style': 'btn-default',
-               'autocomplete': 'off', 'data-width': '10%'}), initial=_count)
+               'autocomplete': 'off', 'data-width': '6%'}), initial=_count)
 
 
 class TimePickerForm(forms.Form):
-    timerange = forms.DateTimeField(label='', widget=forms.DateTimeInput(
+    timerange = forms.DateTimeField(label='', widget=forms.TextInput(
         attrs={'id': 'select_time', 'class': 'form-control selectpicker', 'data-style': 'btn-default',
-               'style': 'width: 25%;', 'data-width': '20%'}))
+               'style': 'width: 88%; float:left;', 'disabled': 'disabled'}))
+
+    def __init__(self, *args, **kwargs):
+        _nowtime = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+        _hoursago = str((datetime.datetime.now() - datetime.timedelta(hours=1)).strftime("%Y-%m-%d %H:%M:%S"))
+        _value = _hoursago + " — " + _nowtime
+        super(TimePickerForm, self).__init__(*args, **kwargs)
+        self.fields['timerange'].widget.attrs.update({'value': _value})

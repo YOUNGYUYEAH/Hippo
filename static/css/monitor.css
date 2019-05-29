@@ -49,3 +49,7 @@
 #Chartsweb {
   margin-top:1%;
 }
+.calendar-btn {
+  position: absolute;
+  display: inline;
+}

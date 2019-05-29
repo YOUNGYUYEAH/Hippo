@@ -13,18 +13,18 @@
                     {% if charttype_form %}
                         {{ charttype_form }}
                     {% endif %}
-                    <div class="input-group">
-                        {% if time_form %}
-                            {{ time_form }}
-                        {% endif %}
-                        <!--<input type="text" class="form-control" placeholder=""/>-->
-                        <div class="input-group-btn">
+                    {% if time_form %}
+                    <div class="input-group bootstrap-select" style="width:17.5%">
+                        {{ time_form }}
+                        <div class="input-group-btn calendar-btn" >
                             <button type="button" class="btn btn-dark btn-fixed" data-toggle="dropdown">
                                 <i class="fa fa-calendar"></i>
                             </button>
                         </div>
                     </div>
-                    <button class="btn btn-info" type="button" id="createchart_btn" value="Search">
+                    {% endif %}
+                    <button class="btn btn-info"
+                            type="button" id="createchart_btn" value="Search">
                         <i class="fa fa-line-chart"> Chart</i>
                     </button>
                 </form>
