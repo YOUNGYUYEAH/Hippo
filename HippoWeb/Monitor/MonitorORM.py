@@ -130,8 +130,9 @@ class LoadData(object):
 
     def load_cpu_loadavg_range(self):
         try:
-            _querysql = """SELECT `load_1`,`load_5`,`load_15` FROM monitor_cpu WHERE `ip`='%s' AND 
-            (DATE_FORMAT(`checktime`,'%%Y-%%m-%%d %%H:%%i:%%S') BETWEEN '%s' AND '%s');""" % (self.ip, self.ts, self.te)
+            _querysql = """SELECT `load_1`,`load_5`,`load_15`,DATE_FORMAT(`checktime`,'%%m-%%d %%H:%%i:%%S')
+             FROM monitor_cpu WHERE `ip`='%s' AND (DATE_FORMAT(`checktime`,'%%Y-%%m-%%d %%H:%%i:%%S') 
+             BETWEEN '%s' AND '%s');""" % (self.ip, self.ts, self.te)
             self.cursor.execute(_querysql)
             _load_cpu_loadavg_result = self.cursor.fetchall()
             return _load_cpu_loadavg_result
@@ -142,9 +143,10 @@ class LoadData(object):
 
     def load_cpu_time_range(self):
         try:
-            _querysql = """SELECT `p_user`,`p_system`,`p_nice`,`p_idle`,`p_iowait`,`p_irq`,`p_softirq`,`p_steal` 
-            FROM monitor_cpu WHERE `ip`='%s' AND (DATE_FORMAT(`checktime`, '%%Y-%%m-%%d %%H:%%i:%%S') 
-            BETWEEN '%s' AND '%s');""" % (self.ip, self.ts, self.te)
+            _querysql = """SELECT `p_user`,`p_system`,`p_nice`,`p_idle`,`p_iowait`,`p_irq`,`p_softirq`,`p_steal`, 
+            DATE_FORMAT(`checktime`,'%%m-%%d %%H:%%i:%%S') FROM monitor_cpu WHERE `ip`='%s' AND 
+            (DATE_FORMAT(`checktime`, '%%Y-%%m-%%d %%H:%%i:%%S') BETWEEN '%s' AND '%s');""" \
+                        % (self.ip, self.ts, self.te)
             self.cursor.execute(_querysql)
             _load_cpu_time_result = self.cursor.fetchall()
             return _load_cpu_time_result
@@ -195,6 +197,20 @@ class LoadData(object):
             else:
                 _load_memory_result = self.cursor.fetchall()
                 return _load_memory_result
+        except Exception as e:
+            print(e)
+        finally:
+            self.cursor.close()
+
+    def load_memory_use_range(self):
+        try:
+            _querysql = """SELECT `available`,`used`,`free`,`active`,`inactive`,`buffers`,`cached`, 
+            DATE_FORMAT(`checktime`,'%%m-%%d %%H:%%i:%%S') FROM monitor_memory WHERE `ip`='%s' AND 
+            (DATE_FORMAT(`checktime`, '%%Y-%%m-%%d %%H:%%i:%%S') BETWEEN '%s' AND '%s');""" \
+                        % (self.ip, self.ts, self.te)
+            self.cursor.execute(_querysql)
+            _load_cpu_time_result = self.cursor.fetchall()
+            return _load_cpu_time_result
         except Exception as e:
             print(e)
         finally:

@@ -42,8 +42,6 @@
                 success: function(data) {
                     if (data['data'] = "ok") {
                         window.location.reload();
-                    } else if (data['data'] = "error") {
-                        $("#login_form").after("<p style='color:red'>No Account Or Error Password.</p>")
                     }
                 },
             });

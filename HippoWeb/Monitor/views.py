@@ -1,10 +1,11 @@
 # -*- encoding:utf-8 -*-
 import json
+import numpy as np
 from HippoWeb.Monitor import models
 from HippoWeb.Monitor import MonitorORM
 from django.shortcuts import HttpResponse, render
 from django.contrib.auth.decorators import login_required
-from HippoWeb.forms import HostModeForm, ChartTypeForm
+from HippoWeb.forms import HostModeForm, ChartTypeForm, TimePickerForm
 
 
 def collect(req):
@@ -234,20 +235,35 @@ def data(req):
 
 def chart_cpu(ip, ts, te):
     _loadval = dict()
+    _cpuval = dict()
     _load = MonitorORM.LoadData(ip=ip, time_start=ts, time_end=te).load_cpu_loadavg_range()
-    _cputime = MonitorORM.LoadData(ip=ip, time_start=ts, time_end=te).load_cpu_time_range()
+    _load_axis = np.transpose(list(_load)).tolist()
     _loadval["legend"] = ["load (1min)", "load (5min)", "load (15min)"]
-    _loadval["yaxis"] = [
-        "1, 2, 3, 13, 12, 5, 2, 1",
-        "8, 12, 3, 4, 12, 21, 5, 3",
-        "1, 2, 3, 4, 5, 6, 7, 8"
-    ]
-    _loadval["xaxis"] = ["00:00", "01:00", "02:00", "03:00",
-                         "04:00", "05:00", "06:00", "07:00"]
+    _loadval["yaxis"] = _load_axis[0:3]
+    _loadval["xaxis"] = _load_axis.pop()
+    _cpu = MonitorORM.LoadData(ip=ip, time_start=ts, time_end=te).load_cpu_time_range()
+    _cpuval["legend"] = ["us", "sy", "ni", "id", "wa", "hi", "si", "st"]
+    _cpu_axis = np.transpose(list(_cpu)).tolist()
+    _cpuval["yaxis"] = _cpu_axis[0:7]
+    _cpuval["xaxis"] = _cpu_axis.pop()
     _response = HttpResponse(json.dumps({'loadval': _loadval,
-                                         'cputime': _cputime}),
+                                         'cpuval': _cpuval}),
                              content_type='application/json')
     return _response
+
+
+def chart_memory(ip, ts, te):
+    try:
+        _memval = dict()
+        _mem = MonitorORM.LoadData(ip=ip, time_start=ts, time_end=te).load_memory_use_range()
+        _memval["legend"] = ["available", "used", "free", "active", "inactive", "buffers", "cached"]
+        _mem_axis = np.transpose(list(_mem)).tolist()
+        _memval["yaxis"] = _mem_axis[0:7]
+        _memval["xaxis"] = _mem_axis.pop()
+        _response = HttpResponse(json.dumps({'memval': _memval}), content_type='application/json')
+        return _response
+    except Exception as e:
+        print(e)
 
 
 def create(req):
@@ -259,6 +275,9 @@ def create(req):
             chart_type = req.POST.get('type')
             if chart_type == 'cpu':
                 _response = chart_cpu(chart_ip, chart_ts, chart_te)
+                return _response
+            elif chart_type == 'memory':
+                _response = chart_memory(chart_ip, chart_ts, chart_te)
                 return _response
             else:
                 pass
@@ -278,5 +297,7 @@ def chart(req):
     """根据查询数据出图"""
     hostmode_form = HostModeForm()
     charttype_form = ChartTypeForm()
+    time_form = TimePickerForm()
     return render(req, 'monitor/monitor_chart.html', {'hostmode_form': hostmode_form,
-                                                      'charttype_form': charttype_form})
+                                                      'charttype_form': charttype_form,
+                                                      'time_form': time_form})

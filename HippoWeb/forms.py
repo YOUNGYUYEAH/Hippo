@@ -36,3 +36,9 @@ class ChartTypeForm(forms.Form):
     charttype = forms.ChoiceField(label='', choices=_type_list, widget=forms.Select(
         attrs={'id': 'select_chart_type', 'class': 'form-control selectpicker show-tick', 'data-style': 'btn-default',
                'autocomplete': 'off', 'data-width': '10%'}), initial=_count)
+
+
+class TimePickerForm(forms.Form):
+    timerange = forms.DateTimeField(label='', widget=forms.DateTimeInput(
+        attrs={'id': 'select_time', 'class': 'form-control selectpicker', 'data-style': 'btn-default',
+               'style': 'width: 25%;', 'data-width': '20%'}))
