@@ -71,8 +71,8 @@ def monitor_host(_id):
         "Inactive":"inactive", "Buffers":"buffers", "Cached":"cached", "Shared":"shared", "Slab":"slab"}"""
         index["Disk"] = """{"Mount":"diskmount", "Percent":"percent", "Total":"total", "Used":"used", 
         "Inode":"inode"}"""
-        index["Network"] = """{"Interface":"netpic", "IPaddr":"ipaddr", "Speed":"speed", "pps_sent[1s]":"pps_sent",
-        "pps_recv[1s]":"pps_recv", "bytes_sent[1s]":"bps_sent", "bytes_recv[1s]":"bps_recv", "Error In":"errin",
+        index["Network"] = """{"Interface":"netpic", "ipaddr":"ipaddr", "Speed":"speed", "pps_sent[1s]":"pps_sent",
+        "pps_recv[1s]":"pps_recv", "bps_sent[1s]":"bps_sent", "bps_recv[1s]":"bps_recv", "Error In":"errin",
         "Error Out":"errout"}"""
         _ip_info = MonitorORM.LoadData(_ip).load_info()
         _ip_cpu = MonitorORM.LoadData(_ip).load_cpu()
