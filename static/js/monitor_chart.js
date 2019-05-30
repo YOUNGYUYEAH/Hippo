@@ -163,17 +163,17 @@ function EchartsFunc(div_id,pic_xaxis,pic_yaxis,pic_legendArr,chart_type){
 $("#createchart_btn").click(function(){
     var create_chart_ip = $("#select_ip").find("option:selected");
     var _chart_host_ip = create_chart_ip.text();
+    var time_range = $("#select_time").val();
     if ( ! create_chart_ip.prop("disabled") && create_chart_ip.val() !== "" ) {
         var _chart_ip = _chart_host_ip.split("(")[1].split(")")[0];
-        var _chart_type = $("#select_chart_type").find("option:selected").val();
+        var _chart_type = $("#select_type").find("option:selected").val();
         $.ajax({
             url: '/monitor/c',
             type: 'POST',
             cache: false,
             data: {'ip': _chart_ip,
                 'type':_chart_type,
-                'time_start':"2019-05-29 07:00:00",
-                'time_end':"2019-05-29 09:00:00"
+                'time_range': time_range
             },
             success: function(data, statsText, xhr) {
                 if ( xhr.status === 200) {

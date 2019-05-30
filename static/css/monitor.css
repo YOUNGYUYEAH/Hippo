@@ -49,7 +49,33 @@
 #Chartsweb {
   margin-top:1%;
 }
-.calendar-btn {
-  position: absolute;
-  display: inline;
+#select_time {
+  text-align: center;
+}
+#time_dropdown {
+  width:100%;
+  margin: 3% 3% 1% 3%;
+}
+#time_dropdown tr {
+  margin-bottom: 3%;
+}
+#time_dropdown td {
+  display: inline-flex;
+  margin: 1% 0 1% 0;
+}
+#time_dropdown td span {
+  padding-top: 2%;
+  min-width: 75px;
+  white-space: nowrap;
+  vertical-align: center;
+}
+#time_dropdown input[type=number]::-webkit-inner-spin-button,
+#time_dropdown input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+  padding:0;
+}
+.dropdown-menu-hr {
+  border: 1px #f7f7f7 solid;
+  margin: 0;
 }

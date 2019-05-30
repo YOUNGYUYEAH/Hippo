@@ -1,11 +1,12 @@
 # -*- encoding:utf-8 -*-
 import json
 import numpy as np
+import datetime
 from HippoWeb.Monitor import models
 from HippoWeb.Monitor import MonitorORM
 from django.shortcuts import HttpResponse, render
 from django.contrib.auth.decorators import login_required
-from HippoWeb.forms import HostModeForm, ChartTypeForm, TimePickerForm
+from HippoWeb.forms import HostModeForm, DateTimeForm
 
 
 def collect(req):
@@ -270,14 +271,15 @@ def create(req):
     if req.is_ajax():
         if req.method == 'POST':
             chart_ip = req.POST.get('ip')
-            chart_ts = req.POST.get('time_start')
-            chart_te = req.POST.get('time_end')
+            chart_time = req.POST.get('time_range')
             chart_type = req.POST.get('type')
+            ts = chart_time.split(" - ")[0].lstrip().rstrip()
+            te = chart_time.split(" - ")[1].lstrip().rstrip()
             if chart_type == 'cpu':
-                _response = chart_cpu(chart_ip, chart_ts, chart_te)
+                _response = chart_cpu(chart_ip, ts, te)
                 return _response
             elif chart_type == 'memory':
-                _response = chart_memory(chart_ip, chart_ts, chart_te)
+                _response = chart_memory(chart_ip, ts, te)
                 return _response
             else:
                 pass
@@ -295,9 +297,12 @@ def create(req):
 
 def chart(req):
     """根据查询数据出图"""
+    _nowtime = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+    _hoursago = str((datetime.datetime.now() - datetime.timedelta(hours=1)).strftime("%Y-%m-%d %H:%M:%S"))
+    _hoursrange = _hoursago + "  -  " + _nowtime
     hostmode_form = HostModeForm()
-    charttype_form = ChartTypeForm()
-    time_form = TimePickerForm()
+    datetime_form = DateTimeForm()
     return render(req, 'monitor/monitor_chart.html', {'hostmode_form': hostmode_form,
-                                                      'charttype_form': charttype_form,
-                                                      'time_form': time_form})
+                                                      'datetime_form': datetime_form,
+                                                      'hours_range': _hoursrange})
+

@@ -8,23 +8,42 @@
                 <form enctype="multipart/form-data">
                     {{ csrf_input }}
                     {% if hostmode_form %}
-                        {{ hostmode_form }}
+                        {{ hostmode_form.ip }}
+                        {{ hostmode_form.charttype }}
                     {% endif %}
-                    {% if charttype_form %}
-                        {{ charttype_form }}
-                    {% endif %}
-                    {% if time_form %}
-                    <div class="input-group bootstrap-select" style="width:17.5%">
-                        {{ time_form }}
-                        <div class="input-group-btn calendar-btn" >
-                            <button type="button" class="btn btn-dark btn-fixed" data-toggle="dropdown">
+                    <div class="dropdown bootstrap-select" style="width:430px">
+                        <div class="input-group">
+                            <input id="select_time" class="form-control" type="text" placeholder=""
+                                value="{% if hours_range %}{{ hours_range }}{% endif %}" readonly disabled/>
+                            <button class="btn btn-dark btn-fixed" data-toggle="dropdown" aria-expanded="false">
                                 <i class="fa fa-calendar"></i>
                             </button>
+                            <div class="dropdown-menu dropdown-menu-right">
+                                <table id="time_dropdown">
+                                    <tr>
+                                        <td>
+                                            <span><i class="fa fa-clock-o"></i> Begin:</span>
+                                            <input class="form-control" type="text" placeholder="" style="width:170px" />
+                                            {{ datetime_form.old_hours }}
+                                            <strong class="text-center" style="margin:3px 3px 0 3px">:</strong>
+                                            {{ datetime_form.minutes }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <span><i class="fa fa-clock-o"></i> End:</span>
+                                            <input class="form-control" type="text" placeholder="" style="width:170px"/>
+                                            {{ datetime_form.hours }}
+                                            <strong class="text-center" style="margin:3px 3px 0 3px">:</strong>
+                                            {{ datetime_form.minutes }}
+                                        </td>
+                                    </tr>
+                                </table>
+                                <hr class="dropdown-menu-hr"/>
+                            </div>
                         </div>
                     </div>
-                    {% endif %}
-                    <button class="btn btn-info"
-                            type="button" id="createchart_btn" value="Search">
+                    <button class="btn btn-info" type="button" id="createchart_btn" value="Search">
                         <i class="fa fa-line-chart"> Chart</i>
                     </button>
                 </form>
