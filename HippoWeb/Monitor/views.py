@@ -299,7 +299,6 @@ def chart(req):
     """根据查询数据出图"""
     _nowtime = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
     _hoursago = str((datetime.datetime.now() - datetime.timedelta(hours=1)).strftime("%Y-%m-%d %H:%M:%S"))
-    _hoursrange = _hoursago + "  -  " + _nowtime
     hostmode_form = HostModeForm()
     datetime_form = DateTimeForm()
     return render(req, 'monitor/monitor_chart.html', {'hostmode_form': hostmode_form,
