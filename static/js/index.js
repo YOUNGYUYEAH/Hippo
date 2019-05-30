@@ -84,9 +84,11 @@ function monitorchart(){
     /* css */
     var cssfilesText = "";
     cssfilesText += "<link href='/static/vendor/bootstrap-select-1.13.10/css/bootstrap-select.min.css' rel='stylesheet' type='text/css'>";
+    cssfilesText += "<link href='/static/vendor/bootstrap-datepicker/css/bootstrap-datepicker.standalone.min.css' rel='stylesheet' type='text/css'>";
     cssfilesText += "<link href='/static/css/monitor.css' rel='stylesheet' type='text/css'>";
     /* js */
     var jsfilesText = "";
+    jsfilesText += "<script src='/static/vendor/bootstrap-datepicker/js/bootstrap-datepicker.min.js'></script>";
     jsfilesText += "<script src='/static/js/monitor_chart.js'></script>";
     $.get("/monitor/chart",function(data){
         $("#cssfiles").html(cssfilesText);

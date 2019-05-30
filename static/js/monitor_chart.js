@@ -2,6 +2,8 @@ $(document).ready(function() {
     $('#time_dropdown_main').on('hide.bs.dropdown', function () {
         return false;
     });
+    $("#BeginTime").datepicker();
+    $("#EndTime").datepicker();
     var begin_time_input = $('#begin_time input');
     var end_time_input = $('#end_time input');
     $('#begin_time .btn:first-of-type').on('click', function() {
