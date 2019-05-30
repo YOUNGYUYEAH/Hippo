@@ -12,13 +12,13 @@ class LoginForm(forms.Form):
 
 class HostModeForm(forms.Form):
     ip = forms.ChoiceField(label='', widget=forms.Select(
-        attrs={'id': 'select_ip', 'class': 'form-control selectpicker show-tick', 'data-style': 'btn-default',
+        attrs={'id': 'select_ip', 'class': 'form-control selectpicker show-tick', 'data-style': 'btn-outline-primary',
                'autocomplete': 'off', 'data-live-search': 'true', 'data-width': '20%'}))
     charttype = forms.ChoiceField(label='', widget=forms.Select(
-        attrs={'id': 'select_type', 'class': 'form-control selectpicker show-tick', 'data-style': 'btn-default',
+        attrs={'id': 'select_type', 'class': 'form-control selectpicker show-tick', 'data-style': 'btn-outline-primary',
                'autocomplete': 'off', 'data-width': '6%'}))
     timerange = forms.CharField(label='', widget=forms.DateTimeInput(
-        attrs={'id': 'select_time', 'class': 'form-control', 'data-style': 'btn-default', 'text-align': 'center',
+        attrs={'id': 'select_time', 'class': 'form-control', 'data-style': 'btn-outline-primary', 'text-align': 'center',
                'autocomplete': 'off', 'data-width': '350px',  'disabled': 'disabled'}))
 
     def __init__(self, *args, **kwargs):
