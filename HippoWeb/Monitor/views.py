@@ -304,5 +304,6 @@ def chart(req):
     datetime_form = DateTimeForm()
     return render(req, 'monitor/monitor_chart.html', {'hostmode_form': hostmode_form,
                                                       'datetime_form': datetime_form,
-                                                      'hours_range': _hoursrange})
+                                                      'hoursago': _hoursago,
+                                                      'nowtime': _nowtime})
 

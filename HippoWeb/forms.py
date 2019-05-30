@@ -51,13 +51,13 @@ class HostModeForm(forms.Form):
 class DateTimeForm(forms.Form):
     old_hours = forms.CharField(label='', max_length=2, widget=forms.NumberInput(
         attrs={'id': 'time_hours', 'class': 'form-control', 'min': '00', 'max': '23', 'step': '1',
-               'style': 'width:60px; margin-left:18px'}))
+               'style': 'width:40px; margin-left:18px;color:#000;'}))
     hours = forms.CharField(label='', max_length=2, widget=forms.NumberInput(
         attrs={'id': 'time_hours', 'class': 'form-control', 'min': '00', 'max': '23', 'step': '1',
-               'style': 'width:60px; margin-left:18px'}))
+               'style': 'width:40px; margin-left:18px;color:#000;'}))
     minutes = forms.CharField(label='', max_length=2, widget=forms.NumberInput(
         attrs={'id': 'time_minutes', 'class': 'form-control', 'min': '00', 'max': '59', 'step': '1',
-               'style': 'width:60px;'}))
+               'style': 'width:40px; margin-left:18px;color:#000;'}))
 
     def __init__(self, *args, **kwargs):
         super(DateTimeForm, self).__init__(*args, **kwargs)

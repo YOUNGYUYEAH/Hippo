@@ -333,11 +333,13 @@ $("#comparison_btn").click(function(){
         } else {
             var new_select = $("#select_ip").find("option:selected");
             SearchFunc(new_select.val(), new_select.text(), 1);
+            $("#charts_btn").attr("hidden","hidden");
             $("#comparison_btn").attr("value", "Uncompare").html(
                 "<i class='fa fa-files-o'></i>&nbsp;Uncompare");
         }
     } else if ( $(this).val() === "Uncompare" ) {
         $(".comparison_tr").remove();
+        $("#charts_btn").removeAttr("hidden","hidden");
         $("#comparison_btn").attr("value","Compare").html(
             "<i class='fa fa-files-o'></i>&nbsp;Compare");
         $("#search_info_title").removeAttr("hidden");

@@ -11,10 +11,10 @@
                         {{ hostmode_form.ip }}
                         {{ hostmode_form.charttype }}
                     {% endif %}
-                    <div class="dropdown bootstrap-select" style="width:430px">
+                    <div id="time_dropdown_main" class="dropdown bootstrap-select" style="width:430px">
                         <div class="input-group">
                             <input id="select_time" class="form-control" type="text" placeholder=""
-                                value="{% if hours_range %}{{ hours_range }}{% endif %}" readonly disabled/>
+                                value="{% if hoursago %}{{ hoursago }}{% endif %} - {% if nowtime %}{{ nowtime }}{% endif %}" readonly disabled/>
                             <button class="btn btn-dark btn-fixed" data-toggle="dropdown" aria-expanded="false">
                                 <i class="fa fa-calendar"></i>
                             </button>
@@ -23,19 +23,43 @@
                                     <tr>
                                         <td>
                                             <span><i class="fa fa-clock-o"></i> Begin:</span>
-                                            <input class="form-control" type="text" placeholder="" style="width:170px" />
-                                            {{ datetime_form.old_hours }}
+                                            <input id="BeginTime" class="form-control" type="text" placeholder="" style="width:170px" />
+                                            <div id="begin_time" class="input-group spinner">
+                                                {{ datetime_form.old_hours }}
+                                                <div class="input-group-btn-vertical">
+                                                    <button class="btn btn-dark" type="button"><i class="fa fa-caret-up"></i></button>
+                                                    <button class="btn btn-dark" type="button"><i class="fa fa-caret-down"></i></button>
+                                                </div>
+                                            </div>
                                             <strong class="text-center" style="margin:3px 3px 0 3px">:</strong>
-                                            {{ datetime_form.minutes }}
+                                            <div class="input-group spinner">
+                                                {{ datetime_form.minutes }}
+                                                <div class="input-group-btn-vertical">
+                                                    <button class="btn btn-dark" type="button"><i class="fa fa-caret-up"></i></button>
+                                                    <button class="btn btn-dark" type="button"><i class="fa fa-caret-down"></i></button>
+                                                </div>
+                                            </div>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>
                                             <span><i class="fa fa-clock-o"></i> End:</span>
-                                            <input class="form-control" type="text" placeholder="" style="width:170px"/>
-                                            {{ datetime_form.hours }}
+                                            <input id="EndTime" class="form-control" type="text" placeholder="" style="width:170px"/>
+                                            <div id="end_time" class="input-group spinner">
+                                                {{ datetime_form.hours }}
+                                                <div class="input-group-btn-vertical">
+                                                    <button class="btn btn-dark" type="button"><i class="fa fa-caret-up"></i></button>
+                                                    <button class="btn btn-dark" type="button"><i class="fa fa-caret-down"></i></button>
+                                                </div>
+                                            </div>
                                             <strong class="text-center" style="margin:3px 3px 0 3px">:</strong>
-                                            {{ datetime_form.minutes }}
+                                            <div class="input-group spinner">
+                                                {{ datetime_form.minutes }}
+                                                <div class="input-group-btn-vertical">
+                                                    <button class="btn btn-dark" type="button"><i class="fa fa-caret-up"></i></button>
+                                                    <button class="btn btn-dark" type="button"><i class="fa fa-caret-down"></i></button>
+                                                </div>
+                                            </div>
                                         </td>
                                     </tr>
                                 </table>

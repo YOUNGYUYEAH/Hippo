@@ -1,3 +1,25 @@
+$(document).ready(function() {
+    $('#time_dropdown_main').on('hide.bs.dropdown', function () {
+        return false;
+    });
+    var begin_time_input = $('#begin_time input');
+    var end_time_input = $('#end_time input');
+    $('#begin_time .btn:first-of-type').on('click', function() {
+        begin_time_input.val( parseInt((begin_time_input).val(), 10) + 1);
+    });
+    $('#begin_time .btn:last-of-type').on('click', function() {
+        begin_time_input.val( parseInt((begin_time_input).val(), 10) - 1);
+    });
+    $('#end_time .btn:first-of-type').on('click', function() {
+        end_time_input.val( parseInt((end_time_input).val(), 10) + 1);
+    });
+    $('#end_time .btn:last-of-type').on('click', function() {
+        end_time_input.val( parseInt((end_time_input).val(), 10) - 1);
+    });
+});
+
+
+
 function CreateChartFunc(_chart_ip, _chart_type,data) {
     $("#chart_title").html("<i class='fa fa-yelp'></i><strong>&nbsp;" + _chart_type.toUpperCase() +
         "</strong>&nbsp;Charts For &nbsp;<strong>" + _chart_ip + "</strong>" );
