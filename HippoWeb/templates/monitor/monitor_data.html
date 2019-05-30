@@ -44,7 +44,7 @@
                 <form enctype="multipart/form-data">
                     {{ csrf_input }}
                     {% if hostmode_form %}
-                        {{ hostmode_form }}
+                        {{ hostmode_form.ip }}
                     {% endif %}
                     <button class="btn btn-primary" type="button" id="hostmode_btn" value="Search">
                         <i class="fa fa-search"> Search</i>
