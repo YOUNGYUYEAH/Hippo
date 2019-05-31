@@ -1,26 +1,42 @@
 $(document).ready(function() {
-    $('#time_dropdown_main').on('hide.bs.dropdown', function () {
-        return false;
+    $("#begin_day").datepicker({
+        format: 'yyyy-mm-dd',
+        autoclose: true,
+        orientation: 'bottom',
+        language: 'en-IE',
+        startDate: '-14d',
+        endDate: $(this).val()
     });
-    $("#BeginTime").datepicker();
-    $("#EndTime").datepicker();
-    var begin_time_input = $('#begin_time input');
-    var end_time_input = $('#end_time input');
-    $('#begin_time .btn:first-of-type').on('click', function() {
-        begin_time_input.val( parseInt((begin_time_input).val(), 10) + 1);
+    $("#end_day").datepicker({
+        format: 'yyyy-mm-dd',
+        autoclose: true,
+        orientation: 'bottom',
+        language: 'en-IE',
     });
-    $('#begin_time .btn:last-of-type').on('click', function() {
-        begin_time_input.val( parseInt((begin_time_input).val(), 10) - 1);
-    });
-    $('#end_time .btn:first-of-type').on('click', function() {
-        end_time_input.val( parseInt((end_time_input).val(), 10) + 1);
-    });
-    $('#end_time .btn:last-of-type').on('click', function() {
-        end_time_input.val( parseInt((end_time_input).val(), 10) - 1);
-    });
+
+    function TimeClickFunc(_SetTime) {
+        var maxNumber = _SetTime.find('input').attr("max");
+        var minNumber = _SetTime.find('input').attr("min");
+        _SetTime.find('.btn:first-of-type').click(function () {
+            if (parseInt(_SetTime.find('input').val()) >= minNumber && parseInt(_SetTime.find('input').val()) < maxNumber) {
+                _SetTime.find('input').attr('value',parseInt(_SetTime.find('input').val(), 10) + 1);
+            } else {
+                _SetTime.find('input').attr('value',minNumber);
+            }
+        });
+        _SetTime.find('.btn:last-of-type').click(function () {
+            if (parseInt(_SetTime.find('input').val()) > minNumber && parseInt(_SetTime.find('input').val()) <= maxNumber) {
+                _SetTime.find('input').attr('value',parseInt(_SetTime.find('input').val(), 10) - 1);
+            } else {
+                _SetTime.find('input').attr('value',maxNumber);
+            }
+        });
+    }
+    TimeClickFunc($("#begin_hour"));
+    TimeClickFunc($("#begin_minute"));
+    TimeClickFunc($("#end_hour"));
+    TimeClickFunc($("#end_minute"));
 });
-
-
 
 function CreateChartFunc(_chart_ip, _chart_type,data) {
     $("#chart_title").html("<i class='fa fa-yelp'></i><strong>&nbsp;" + _chart_type.toUpperCase() +

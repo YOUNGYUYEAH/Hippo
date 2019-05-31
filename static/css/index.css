@@ -1,9 +1,12 @@
 html {
   position: relative;
-  min-height: 100%; }
+  min-height: 100%;
+  /*zoom: 80%;*/
+}
 
 body {
-  overflow-x: hidden; }
+  overflow-x: hidden;
+}
 
 body.sticky-footer {
   margin-bottom: 56px; }
@@ -144,6 +147,8 @@ body.fixed-nav {
 
 @media (min-width: 992px) {
   #mainNav.fixed-top .navbar-sidenav {
+    /*height: calc(100vh + 122px); }*/
+    /* 使用zoom 为100%的时候,*/
     height: calc(100vh - 112px); }
   #mainNav.fixed-top .sidenav-toggler {
     position: absolute;
@@ -350,5 +355,8 @@ footer.sticky-footer {
   padding-left: .75rem;
   padding-right: .75rem;
 }
-
-
+.btn-theme {
+  color: #1b1e21;
+  background-color: #fff;
+  border-color: rgba(132, 132, 133, 0.89);
+}

@@ -13,7 +13,7 @@
                     {% endif %}
                     <div id="time_dropdown_main" class="dropdown bootstrap-select" style="width:430px">
                         <div class="input-group">
-                            <input id="select_time" class="form-control btn" type="text" placeholder=""
+                            <input id="select_time" class="form-control btn-theme" type="text" placeholder=""
                                 value="{% if hoursago %}{{ hoursago }}{% endif %} - {% if nowtime %}{{ nowtime }}{% endif %}" readonly disabled/>
                             <button class="btn btn-dark btn-fixed" data-toggle="dropdown" aria-expanded="false">
                                 <i class="fa fa-calendar"></i>
@@ -23,20 +23,19 @@
                                     <tr>
                                         <td>
                                             <span><i class="fa fa-clock-o"></i> Begin:</span>
-                                            <input id="BeginTime" class="form-control" type="text" placeholder="" style="width:170px" />
-                                            <div id="begin_time" class="input-group spinner">
+                                            <input id="begin_day" class="form-control btn-theme" style="width:170px" type="text" value="{{ hoursago.split(' ')[0] }}" placeholder=""/>
+                                            <div id="begin_hour" class="input-group spinner">
                                                 {{ datetime_form.old_hours }}
                                                 <div class="input-group-btn-vertical">
-                                                    <button class="btn btn-dark" type="button"><i class="fa fa-caret-up"></i></button>
-                                                    <button class="btn btn-dark" type="button"><i class="fa fa-caret-down"></i></button>
+                                                    <button class="btn btn-theme" type="button"><i class="fa fa-caret-up"></i></button>
+                                                    <button class="btn btn-theme" type="button"><i class="fa fa-caret-down"></i></button>
                                                 </div>
                                             </div>
-                                            <strong class="text-center" style="margin:3px 3px 0 3px">:</strong>
-                                            <div class="input-group spinner">
+                                            <div id="begin_minute" class="input-group spinner" style="margin-left:10px">
                                                 {{ datetime_form.minutes }}
                                                 <div class="input-group-btn-vertical">
-                                                    <button class="btn btn-dark" type="button"><i class="fa fa-caret-up"></i></button>
-                                                    <button class="btn btn-dark" type="button"><i class="fa fa-caret-down"></i></button>
+                                                    <button class="btn btn-theme" type="button"><i class="fa fa-caret-up"></i></button>
+                                                    <button class="btn btn-theme" type="button"><i class="fa fa-caret-down"></i></button>
                                                 </div>
                                             </div>
                                         </td>
@@ -44,26 +43,37 @@
                                     <tr>
                                         <td>
                                             <span><i class="fa fa-clock-o"></i> End:</span>
-                                            <input id="EndTime" class="form-control" type="text" placeholder="" style="width:170px"/>
-                                            <div id="end_time" class="input-group spinner">
+                                            <input id="end_day" class="form-control btn-theme" style="width:170px" type="text" value="{{ nowtime.split(' ')[0] }}" placeholder=""/>
+                                            <div id="end_hour" class="input-group spinner">
                                                 {{ datetime_form.hours }}
                                                 <div class="input-group-btn-vertical">
-                                                    <button class="btn btn-dark" type="button"><i class="fa fa-caret-up"></i></button>
-                                                    <button class="btn btn-dark" type="button"><i class="fa fa-caret-down"></i></button>
+                                                    <button class="btn btn-theme" type="button"><i class="fa fa-caret-up"></i></button>
+                                                    <button class="btn btn-theme" type="button"><i class="fa fa-caret-down"></i></button>
                                                 </div>
                                             </div>
-                                            <strong class="text-center" style="margin:3px 3px 0 3px">:</strong>
-                                            <div class="input-group spinner">
+                                            <div id="end_minute" class="input-group spinner" style="margin-left:10px">
                                                 {{ datetime_form.minutes }}
                                                 <div class="input-group-btn-vertical">
-                                                    <button class="btn btn-dark" type="button"><i class="fa fa-caret-up"></i></button>
-                                                    <button class="btn btn-dark" type="button"><i class="fa fa-caret-down"></i></button>
+                                                    <button class="btn btn-theme" type="button"><i class="fa fa-caret-up"></i></button>
+                                                    <button class="btn btn-theme" type="button"><i class="fa fa-caret-down"></i></button>
                                                 </div>
                                             </div>
                                         </td>
                                     </tr>
                                 </table>
                                 <hr class="dropdown-menu-hr"/>
+                                <div class="input-group" style="margin:1% 0 1% 2%">
+                                    <a class="btn-sm btn-theme-radius" type="button"><span>1 Hour</span></a>
+                                    <a class="btn-sm btn-theme-radius" type="button"><span>6 Hour</span></a>
+                                    <a class="btn-sm btn-theme-radius" type="button"><span>1 Day</span></a>
+                                    <a class="btn-sm btn-theme-radius" type="button"><span>1 Week</span></a>
+                                    <a class="btn-sm btn-theme-radius" type="button"><span>2 Week</span></a>
+                                    <div class="input-group-btn" style="margin-left:13%">
+                                        <button type="button" class="btn btn-info pull-left">
+                                            <span>Submit</span>
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

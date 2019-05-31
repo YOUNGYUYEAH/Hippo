@@ -12,13 +12,13 @@ class LoginForm(forms.Form):
 
 class HostModeForm(forms.Form):
     ip = forms.ChoiceField(label='', widget=forms.Select(
-        attrs={'id': 'select_ip', 'class': 'form-control selectpicker show-tick', 'data-style': 'btn',
+        attrs={'id': 'select_ip', 'class': 'form-control selectpicker show-tick', 'data-style': 'btn-theme',
                'autocomplete': 'off', 'data-live-search': 'true', 'data-width': '20%'}))
     charttype = forms.ChoiceField(label='', widget=forms.Select(
-        attrs={'id': 'select_type', 'class': 'form-control selectpicker show-tick', 'data-style': 'btn',
+        attrs={'id': 'select_type', 'class': 'form-control selectpicker show-tick', 'data-style': 'btn-theme',
                'autocomplete': 'off', 'data-width': '6%'}))
     timerange = forms.CharField(label='', widget=forms.DateTimeInput(
-        attrs={'id': 'select_time', 'class': 'form-control', 'data-style': 'btn', 'text-align': 'center',
+        attrs={'id': 'select_time', 'class': 'form-control', 'data-style': 'btn-theme', 'text-align': 'center',
                'autocomplete': 'off', 'data-width': '350px',  'disabled': 'disabled'}))
 
     def __init__(self, *args, **kwargs):
@@ -50,13 +50,13 @@ class HostModeForm(forms.Form):
 
 class DateTimeForm(forms.Form):
     old_hours = forms.CharField(label='', max_length=2, widget=forms.NumberInput(
-        attrs={'id': 'time_hours', 'class': 'form-control', 'min': '00', 'max': '23', 'step': '1',
+        attrs={'id': 'time_hours', 'class': 'form-control btn-theme', 'min': '0', 'max': '23', 'step': '1',
                'style': 'width:40px; margin-left:18px;color:#000;'}))
     hours = forms.CharField(label='', max_length=2, widget=forms.NumberInput(
-        attrs={'id': 'time_hours', 'class': 'form-control', 'min': '00', 'max': '23', 'step': '1',
+        attrs={'id': 'time_hours', 'class': 'form-control btn-theme', 'min': '0', 'max': '23', 'step': '1',
                'style': 'width:40px; margin-left:18px;color:#000;'}))
     minutes = forms.CharField(label='', max_length=2, widget=forms.NumberInput(
-        attrs={'id': 'time_minutes', 'class': 'form-control', 'min': '00', 'max': '59', 'step': '1',
+        attrs={'id': 'time_minutes', 'class': 'form-control btn-theme', 'min': '0', 'max': '59', 'step': '1',
                'style': 'width:40px; margin-left:18px;color:#000;'}))
 
     def __init__(self, *args, **kwargs):

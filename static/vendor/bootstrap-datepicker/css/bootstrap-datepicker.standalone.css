@@ -498,13 +498,13 @@
   *border-right-width: 2px;
   *border-bottom-width: 2px;
   color: #333333;
-  font-size: 13px;
+  font-size: 16px;
   line-height: 20px;
 }
 .datepicker.dropdown-menu th,
 .datepicker.datepicker-inline th,
 .datepicker.dropdown-menu td,
 .datepicker.datepicker-inline td {
-  padding: 4px 5px;
+  padding: 8px 10px;
 }
 /*# sourceMappingURL=bootstrap-datepicker.standalone.css.map */
