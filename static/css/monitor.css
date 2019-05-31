@@ -77,17 +77,8 @@
   padding:0;
 }
 .dropdown-menu-hr {
-  margin: 0 0 3% 0;
-  padding-bottom: 3px;
-}
-.btn-theme-radius {
-  color: #1b1e21;
-  padding: 7px 5px 1px 5px;
-  background-color: #fff;
-  border-color: rgba(132, 132, 133, 0.89);
-  border-radius: .5rem;
-  text-align: center;
-  vertical-align: center;
+  margin: 0 0 2% 0;
+  padding-bottom: 1px;
 }
 
 

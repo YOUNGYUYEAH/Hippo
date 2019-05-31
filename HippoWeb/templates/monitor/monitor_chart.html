@@ -62,14 +62,16 @@
                                     </tr>
                                 </table>
                                 <hr class="dropdown-menu-hr"/>
-                                <div class="input-group" style="margin:1% 0 1% 2%">
-                                    <a class="btn-sm btn-theme-radius" type="button"><span>1 Hour</span></a>
-                                    <a class="btn-sm btn-theme-radius" type="button"><span>6 Hour</span></a>
-                                    <a class="btn-sm btn-theme-radius" type="button"><span>1 Day</span></a>
-                                    <a class="btn-sm btn-theme-radius" type="button"><span>1 Week</span></a>
-                                    <a class="btn-sm btn-theme-radius" type="button"><span>2 Week</span></a>
-                                    <div class="input-group-btn" style="margin-left:13%">
-                                        <button type="button" class="btn btn-info pull-left">
+                                <div class="input-group">
+                                    <div class="btn-group" style="margin-left:3%">
+                                        {% for i in ["1Hour", "6Hour", "1Day", "1Week"] %}
+                                            <button type="button" class="btn btn-outline-dark">
+                                                <span>{{ i }}</span>
+                                            </button>
+                                        {% endfor %}
+                                    </div>
+                                    <div class="input-group-btn pull-right">
+                                        <button type="button" class="btn btn-info" style="margin-left:45%;">
                                             <span>Submit</span>
                                         </button>
                                     </div>
