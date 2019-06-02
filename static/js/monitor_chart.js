@@ -53,10 +53,6 @@ $(document).ready(function() {
     TimeClickFunc($("#end_minute"));
 });
 
-function ChangeDateTimeFunc() {
-
-}
-
 function CreateChartFunc(_chart_ip, _chart_type,data) {
     $("#chart_title").html("<i class='fa fa-yelp'></i><strong>&nbsp;" + _chart_type.toUpperCase() +
         "</strong>&nbsp;Charts For &nbsp;<strong>" + _chart_ip + "</strong>" );
@@ -249,7 +245,13 @@ function getSecond() {
     if ( _ns < 10 ) { _ns = "0" + _ns; }
     return _ns;
 }
-
+$("#time_reset").click(function () {
+    var _nowtime = new Date();
+    var _nowtimeF = new Date().Format("yyyy-MM-dd hh:mm:ss");
+    var _hourago = new Date(_nowtime - (1000 * 60 * 60)).Format("yyyy-MM-dd hh:mm:ss");
+    var new_timerange = _hourago + " - " + _nowtimeF;
+    $("#select_time").attr("value",new_timerange);
+});
 $("#begin_minute input").focus(function(){
     var _btm = $("#begin_minute input").val();
     var new_timerange = $("#begin_day").val() + " " + $("#begin_hour input").val() + ":" + _btm + ":" + getSecond()

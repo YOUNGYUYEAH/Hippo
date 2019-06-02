@@ -15,7 +15,7 @@
                         <div class="input-group">
                             <input id="select_time" class="form-control btn-theme" type="text" placeholder=""
                                 value="{% if hoursago %}{{ hoursago }}{% endif %} - {% if nowtime %}{{ nowtime }}{% endif %}" readonly disabled/>
-                            <button class="btn btn-dark" type="button" style="border-radius:0">
+                            <button id="time_reset" class="btn btn-dark" type="button" style="border-radius:0">
                                 <i class="fa fa-refresh"></i>
                             </button>
                             <button class="btn btn-dark btn-fixed" data-toggle="dropdown" aria-expanded="false">
@@ -28,8 +28,7 @@
                                             <span><i class="fa fa-clock-o"></i> Begin:</span>
                                             <div class="input-group" style="width:180px" >
                                                 <input id="begin_day" class="form-control btn-theme" type="text" data-provide="datepicker"
-                                                       value="{{ hoursago.split(' ')[0] }}" placeholder="" readonly
-                                                       onchange="ChangeDateTimeFunc('bD');"/>
+                                                       value="{{ hoursago.split(' ')[0] }}" placeholder="" readonly/>
                                                 <div class="input-group-btn">
                                                     <button id="begin_day_btn" type="button" class="btn btn-dark btn-fixed">
                                                         <i class="fa fa-calendar-plus-o"></i>
@@ -84,7 +83,7 @@
                                 <hr class="dropdown-menu-hr"/>
                                 <div class="input-group" style="margin-bottom:2%">
                                     <div class="btn-group" style="margin-left:3%">
-                                        {% for i in ["1Hour", "6Hours", "1Day", "1Week"] %}
+                                        {% for i in ["6Hours", "1Day", "1Week", "2Weeks"] %}
                                             <button type="button" class="btn btn-outline-dark">
                                                 <span>{{ i }}</span>
                                             </button>
