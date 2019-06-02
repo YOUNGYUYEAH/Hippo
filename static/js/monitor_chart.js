@@ -244,43 +244,33 @@ $("#createchart_btn").click(function(){
     }
 });
 
+function getSecond() {
+    var _ns = new Date().getSeconds();
+    if ( _ns < 10 ) { _ns = "0" + _ns; }
+    return _ns;
+}
+
 $("#begin_minute input").focus(function(){
     var _btm = $("#begin_minute input").val();
-    var _ns = new Date().getSeconds();
-    if (_ns < 10 ) {
-        _ns = "0" + _ns;
-    }
-    var new_timerange = $("#begin_day").val() + " " + $("#begin_hour input").val() + ":" + _btm + ":" + _ns
-        + " - " + $("#end_day").val() + " " + $("#end_hour input").val() + ":" + $("#end_minute input").val() + ":" + _ns;
+    var new_timerange = $("#begin_day").val() + " " + $("#begin_hour input").val() + ":" + _btm + ":" + getSecond()
+        + " - " + $("#end_day").val() + " " + $("#end_hour input").val() + ":" + $("#end_minute input").val() + ":" + getSecond();
     $("#select_time").attr("value",new_timerange)
 });
 $("#begin_hour input").focus(function(){
     var _bth = $("#begin_hour input").val();
-    var _ns = new Date().getSeconds();
-    if (_ns < 10 ) {
-        _ns = "0" + _ns;
-    }
-    var new_timerange = $("#begin_day").val() + " " + _bth + ":" + $("#begin_minute input").val() + ":" + _ns
-        + " - " + $("#end_day").val() + " " + $("#end_hour input").val() + ":" + $("#end_minute input").val() + ":" + _ns;
+    var new_timerange = $("#begin_day").val() + " " + _bth + ":" + $("#begin_minute input").val() + ":" + getSecond()
+        + " - " + $("#end_day").val() + " " + $("#end_hour input").val() + ":" + $("#end_minute input").val() + ":" + getSecond();
     $("#select_time").attr("value",new_timerange)
 });
 $("#end_minute input").focus(function(){
     var _etm = $("#end_minute input").val();
-    var _ns = new Date().getSeconds();
-    if (_ns < 10 ) {
-        _ns = "0" + _ns;
-    }
-    var new_timerange = $("#begin_day").val() + " " + $("#begin_hour input").val() + ":" + $("#begin_minute input").val() + ":" + _ns
-        + " - " + $("#end_day").val() + " " + $("#end_hour input").val() + ":" + _etm + ":" + _ns;
+    var new_timerange = $("#begin_day").val() + " " + $("#begin_hour input").val() + ":" + $("#begin_minute input").val() + ":" + getSecond()
+        + " - " + $("#end_day").val() + " " + $("#end_hour input").val() + ":" + _etm + ":" + getSecond();
     $("#select_time").attr("value",new_timerange)
 });
 $("#end_hour input").focus(function(){
     var _eth = $("#end_hour input").val();
-    var _ns = new Date().getSeconds();
-    if (_ns < 10 ) {
-        _ns = "0" + _ns;
-    }
-    var new_timerange = $("#begin_day").val() + " " + $("#begin_hour input").val() + ":" + $("#begin_minute input").val() + ":" + _ns
-        + " - " + $("#end_day").val() + " " + _eth + ":" + $("#end_minute input").val() + ":" + _ns;
+    var new_timerange = $("#begin_day").val() + " " + $("#begin_hour input").val() + ":" + $("#begin_minute input").val() + ":" + getSecond()
+        + " - " + $("#end_day").val() + " " + _eth + ":" + $("#end_minute input").val() + ":" + getSecond();
     $("#select_time").attr("value",new_timerange)
 });
