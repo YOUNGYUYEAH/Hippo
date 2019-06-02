@@ -268,31 +268,39 @@ def chart_memory(ip, ts, te):
 
 
 def create(req):
-    if req.is_ajax():
-        if req.method == 'POST':
-            chart_ip = req.POST.get('ip')
-            chart_time = req.POST.get('time_range')
-            chart_type = req.POST.get('type')
-            ts = chart_time.split(" - ")[0].lstrip().rstrip()
-            te = chart_time.split(" - ")[1].lstrip().rstrip()
-            if chart_type == 'cpu':
-                _response = chart_cpu(chart_ip, ts, te)
-                return _response
-            elif chart_type == 'memory':
-                _response = chart_memory(chart_ip, ts, te)
-                return _response
+    try:
+        if req.is_ajax():
+            if req.method == 'POST':
+                chart_ip = req.POST.get('ip')
+                chart_time = req.POST.get('time_range')
+                chart_type = req.POST.get('type')
+                if chart_time == "1hour":
+                    ts = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+                    te = str((datetime.datetime.now() - datetime.timedelta(hours=1)).strftime("%Y-%m-%d %H:%M:%S"))
+                else:
+                    ts = chart_time.split(" - ")[0].lstrip().rstrip()
+                    te = chart_time.split(" - ")[1].lstrip().rstrip()
+
+                if chart_type == 'cpu':
+                    _response = chart_cpu(chart_ip, ts, te)
+                    return _response
+                elif chart_type == 'memory':
+                    _response = chart_memory(chart_ip, ts, te)
+                    return _response
+                else:
+                    pass
             else:
-                pass
+                # 非POST方法报错.
+                response = HttpResponse("API Error. :(  \n")
+                response.status_code = 405
+                return response
         else:
-            # 非POST方法报错.
-            response = HttpResponse("API Error. :(  \n")
+            # 仅接受AJAX.
+            response = HttpResponse("ONLY AJAX. :(  \n")
             response.status_code = 405
             return response
-    else:
-        # 仅接受AJAX.
-        response = HttpResponse("ONLY AJAX. :(  \n")
-        response.status_code = 405
-        return response
+    except Exception as e:
+        print(e)
 
 
 def chart(req):

@@ -247,7 +247,7 @@ function getSecond() {
 }
 $("#time_reset").click(function () {
     var _nowtime = new Date();
-    var _nowtimeF = new Date().Format("yyyy-MM-dd hh:mm:ss");
+    var _nowtimeF = new Date().Format("yyyy-MM-dd hh:mm:ss");        //index.js编写的方法
     var _hourago = new Date(_nowtime - (1000 * 60 * 60)).Format("yyyy-MM-dd hh:mm:ss");
     var new_timerange = _hourago + " - " + _nowtimeF;
     $("#select_time").attr("value",new_timerange);

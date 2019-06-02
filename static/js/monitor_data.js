@@ -245,7 +245,7 @@ function InfoFunc(name,data,data_index,infoObj,is_append) {
                 for ( var netval in infoObj ) {
                     if ( infoObj.hasOwnProperty(netval) ) {
                         if ( netval !== "Interface" ) {
-                            if (netval !== "Speed" && netval !== "Interface" && netval !== "IPaddr") {
+                            if (netval !== "Speed" && netval !== "Interface" && netval !== "ipaddr") {
                                 _bodyText += "<td>" + TransBitFunc(netJArr[infoObj[netval]], 1024, 2, "b/s") + "</td>";
                             } else {
                                 _bodyText += "<td>" + netJArr[infoObj[netval]] + "</td>";
@@ -346,4 +346,27 @@ $("#comparison_btn").click(function(){
         $("#comparison_title").empty().attr("hidden","hidden");
     }
 });
-
+$("#charts_btn").click(function () {
+    var _chart_host_ip = $("#search_info_title strong:first").text();
+    var _chart_ip = _chart_host_ip.split(")")[0].split("(")[1];
+    monitorchart();
+    $(document).ready(function () {
+        $.ajax({
+            url: '/monitor/c',
+            type: 'POST',
+            cache: false,
+            data: {
+                'ip': _chart_ip,
+                'type': "cpu",
+                'time_range': " 2019-05-24 17:00:00 - 2019-05-24 18:00:00"
+                // 'time_range': "1hour"
+            },
+            success: function (data, statsText, xhr) {
+                if (xhr.status === 200) {
+                    CreateChartFunc(_chart_host_ip, "cpu", data);
+                    $("#Chartsweb").removeAttr("hidden");
+                }
+            },
+        })
+    });
+});
