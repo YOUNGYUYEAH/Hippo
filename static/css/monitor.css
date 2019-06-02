@@ -121,3 +121,9 @@
   top: 0;
   left: 4px;
 }
+#begin_day,#end_day {
+  -webkit-user-select:none;
+  -moz-user-select:none;
+  -ms-user-select:none;
+  user-select:none;
+}

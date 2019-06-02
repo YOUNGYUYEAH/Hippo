@@ -15,6 +15,9 @@
                         <div class="input-group">
                             <input id="select_time" class="form-control btn-theme" type="text" placeholder=""
                                 value="{% if hoursago %}{{ hoursago }}{% endif %} - {% if nowtime %}{{ nowtime }}{% endif %}" readonly disabled/>
+                            <button class="btn btn-dark" type="button" style="border-radius:0">
+                                <i class="fa fa-refresh"></i>
+                            </button>
                             <button class="btn btn-dark btn-fixed" data-toggle="dropdown" aria-expanded="false">
                                 <i class="fa fa-calendar"></i>
                             </button>
@@ -23,8 +26,17 @@
                                     <tr>
                                         <td>
                                             <span><i class="fa fa-clock-o"></i> Begin:</span>
-                                            <input id="begin_day" class="form-control btn-theme" style="width:170px" type="text" value="{{ hoursago.split(' ')[0] }}" placeholder=""/>
-                                            <div id="begin_hour" class="input-group spinner">
+                                            <div class="input-group" style="width:180px" >
+                                                <input id="begin_day" class="form-control btn-theme" type="text" data-provide="datepicker"
+                                                       value="{{ hoursago.split(' ')[0] }}" placeholder="" readonly
+                                                       onchange="ChangeDateTimeFunc('bD');"/>
+                                                <div class="input-group-btn">
+                                                    <button id="begin_day_btn" type="button" class="btn btn-dark btn-fixed">
+                                                        <i class="fa fa-calendar-plus-o"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div id="begin_hour" class="input-group spinner" style="margin-left:-10px">
                                                 {{ datetime_form.old_hours }}
                                                 <div class="input-group-btn-vertical">
                                                     <button class="btn btn-theme" type="button"><i class="fa fa-caret-up"></i></button>
@@ -32,7 +44,7 @@
                                                 </div>
                                             </div>
                                             <div id="begin_minute" class="input-group spinner" style="margin-left:10px">
-                                                {{ datetime_form.minutes }}
+                                                {{ datetime_form.old_minutes }}
                                                 <div class="input-group-btn-vertical">
                                                     <button class="btn btn-theme" type="button"><i class="fa fa-caret-up"></i></button>
                                                     <button class="btn btn-theme" type="button"><i class="fa fa-caret-down"></i></button>
@@ -43,8 +55,16 @@
                                     <tr>
                                         <td>
                                             <span><i class="fa fa-clock-o"></i> End:</span>
-                                            <input id="end_day" class="form-control btn-theme" style="width:170px" type="text" value="{{ nowtime.split(' ')[0] }}" placeholder=""/>
-                                            <div id="end_hour" class="input-group spinner">
+                                            <div class="input-group" style="width:180px">
+                                                <input id="end_day" class="form-control btn-theme" type="text" data-provide="datepicker"
+                                                       value="{{ nowtime.split(' ')[0] }}" placeholder="" readonly/>
+                                                <div class="input-group-btn">
+                                                    <button id="end_day_btn" type="button" class="btn btn-dark btn-fixed">
+                                                        <i class="fa fa-calendar-plus-o"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div id="end_hour" class="input-group spinner" style="margin-left:-10px">
                                                 {{ datetime_form.hours }}
                                                 <div class="input-group-btn-vertical">
                                                     <button class="btn btn-theme" type="button"><i class="fa fa-caret-up"></i></button>
@@ -62,9 +82,9 @@
                                     </tr>
                                 </table>
                                 <hr class="dropdown-menu-hr"/>
-                                <div class="input-group">
+                                <div class="input-group" style="margin-bottom:2%">
                                     <div class="btn-group" style="margin-left:3%">
-                                        {% for i in ["1Hour", "6Hour", "1Day", "1Week"] %}
+                                        {% for i in ["1Hour", "6Hours", "1Day", "1Week"] %}
                                             <button type="button" class="btn btn-outline-dark">
                                                 <span>{{ i }}</span>
                                             </button>

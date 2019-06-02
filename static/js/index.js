@@ -67,6 +67,7 @@ function monitordata(){
     jsfilesText += "<script src='/static/vendor/datatables/dataTables.bootstrap4.js'></script>";
     jsfilesText += "<script src='/static/js/monitor_data.js'></script>";
     /* 通过接口页面返回html,拼接给div */
+    $("#navbarResponsive").removeClass("show");
     $.get("/monitor/data",function(data){
         $("#cssfiles").html(cssfilesText);
         $("#mainWeb").html(data);
@@ -90,6 +91,7 @@ function monitorchart(){
     var jsfilesText = "";
     jsfilesText += "<script src='/static/vendor/bootstrap-datepicker/js/bootstrap-datepicker.min.js'></script>";
     jsfilesText += "<script src='/static/js/monitor_chart.js'></script>";
+    $("#navbarResponsive").removeClass("show");
     $.get("/monitor/chart",function(data){
         $("#cssfiles").html(cssfilesText);
         $("#mainWeb").html(data);

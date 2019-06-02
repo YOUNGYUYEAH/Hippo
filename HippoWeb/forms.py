@@ -50,13 +50,16 @@ class HostModeForm(forms.Form):
 
 class DateTimeForm(forms.Form):
     old_hours = forms.CharField(label='', max_length=2, widget=forms.NumberInput(
-        attrs={'id': 'time_hours', 'class': 'form-control btn-theme', 'min': '0', 'max': '23', 'step': '1',
+        attrs={'class': 'form-control btn-theme', 'min': '0', 'max': '23', 'step': '1',
+               'style': 'width:40px; margin-left:18px;color:#000;'}))
+    old_minutes = forms.CharField(label='', max_length=2, widget=forms.NumberInput(
+        attrs={'class': 'form-control btn-theme', 'min': '0', 'max': '59', 'step': '1',
                'style': 'width:40px; margin-left:18px;color:#000;'}))
     hours = forms.CharField(label='', max_length=2, widget=forms.NumberInput(
-        attrs={'id': 'time_hours', 'class': 'form-control btn-theme', 'min': '0', 'max': '23', 'step': '1',
+        attrs={'class': 'form-control btn-theme', 'min': '0', 'max': '23', 'step': '1',
                'style': 'width:40px; margin-left:18px;color:#000;'}))
     minutes = forms.CharField(label='', max_length=2, widget=forms.NumberInput(
-        attrs={'id': 'time_minutes', 'class': 'form-control btn-theme', 'min': '0', 'max': '59', 'step': '1',
+        attrs={'class': 'form-control btn-theme', 'min': '0', 'max': '59', 'step': '1',
                'style': 'width:40px; margin-left:18px;color:#000;'}))
 
     def __init__(self, *args, **kwargs):
@@ -64,6 +67,8 @@ class DateTimeForm(forms.Form):
         _hours = str(datetime.datetime.now().strftime("%H"))
         _minutes = str(datetime.datetime.now().strftime("%M"))
         _old_hours = str((datetime.datetime.now() - datetime.timedelta(hours=1)).strftime("%H"))
+        _old_minutes = str((datetime.datetime.now() - datetime.timedelta(hours=1)).strftime("%M"))
         self.fields['hours'].widget.attrs.update({'value': _hours})
         self.fields['minutes'].widget.attrs.update({'value': _minutes})
         self.fields['old_hours'].widget.attrs.update({'value': _old_hours})
+        self.fields['old_minutes'].widget.attrs.update({'value': _old_minutes})

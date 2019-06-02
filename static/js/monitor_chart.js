@@ -1,32 +1,47 @@
 $(document).ready(function() {
-    $("#begin_day").datepicker({
-        format: 'yyyy-mm-dd',
-        autoclose: true,
-        orientation: 'bottom',
-        language: 'en-IE',
-        startDate: '-14d',
-        endDate: $(this).val()
+    $("#time_dropdown_main .dropdown-menu").click("[data-stopPropagtion]", function (e) {
+        e.stopPropagation();
     });
-    $("#end_day").datepicker({
-        format: 'yyyy-mm-dd',
-        autoclose: true,
-        orientation: 'bottom',
-        language: 'en-IE',
+
+    var today = new Date();
+    var oneday = 1000 * 60 * 60 * 24;
+
+    $("#begin_day_btn").click(function () {
+        $("#begin_day").datepicker({
+            format: 'yyyy-mm-dd',
+            autoclose: true,
+            orientation: 'bottom',
+            startDate: new Date(today- oneday*14),
+            endDate: new Date(),
+        }).focus();
+    });
+    $("#end_day_btn").click(function () {
+        $("#end_day").datepicker({
+            format: 'yyyy-mm-dd',
+            autoclose: true,
+            orientation: 'bottom',
+        }).focus();
     });
 
     function TimeClickFunc(_SetTime) {
         var maxNumber = _SetTime.find('input').attr("max");
         var minNumber = _SetTime.find('input').attr("min");
         _SetTime.find('.btn:first-of-type').click(function () {
-            if (parseInt(_SetTime.find('input').val()) >= minNumber && parseInt(_SetTime.find('input').val()) < maxNumber) {
+            _SetTime.find("input").focus();
+            if (parseInt(_SetTime.find('input').val()) >= minNumber && parseInt(_SetTime.find('input').val()) < 9) {
+                _SetTime.find('input').attr('value', "0" + (parseInt(_SetTime.find('input').val(), 10) + 1));
+            } else if ( parseInt(_SetTime.find('input').val()) >= 9 && parseInt(_SetTime.find('input').val()) < maxNumber) {
                 _SetTime.find('input').attr('value',parseInt(_SetTime.find('input').val(), 10) + 1);
             } else {
-                _SetTime.find('input').attr('value',minNumber);
+                _SetTime.find('input').attr('value',"0"+minNumber);
             }
         });
         _SetTime.find('.btn:last-of-type').click(function () {
-            if (parseInt(_SetTime.find('input').val()) > minNumber && parseInt(_SetTime.find('input').val()) <= maxNumber) {
-                _SetTime.find('input').attr('value',parseInt(_SetTime.find('input').val(), 10) - 1);
+            _SetTime.find("input").focus();
+            if (parseInt(_SetTime.find('input').val()) > minNumber && parseInt(_SetTime.find('input').val()) <= 10) {
+                _SetTime.find('input').attr('value',"0" + (parseInt(_SetTime.find('input').val(), 10) - 1));
+            } else if (parseInt(_SetTime.find('input').val()) > 9 && parseInt(_SetTime.find('input').val()) <= maxNumber) {
+                _SetTime.find('input').attr('value', parseInt(_SetTime.find('input').val(), 10) - 1);
             } else {
                 _SetTime.find('input').attr('value',maxNumber);
             }
@@ -37,6 +52,10 @@ $(document).ready(function() {
     TimeClickFunc($("#end_hour"));
     TimeClickFunc($("#end_minute"));
 });
+
+function ChangeDateTimeFunc() {
+
+}
 
 function CreateChartFunc(_chart_ip, _chart_type,data) {
     $("#chart_title").html("<i class='fa fa-yelp'></i><strong>&nbsp;" + _chart_type.toUpperCase() +
@@ -225,3 +244,43 @@ $("#createchart_btn").click(function(){
     }
 });
 
+$("#begin_minute input").focus(function(){
+    var _btm = $("#begin_minute input").val();
+    var _ns = new Date().getSeconds();
+    if (_ns < 10 ) {
+        _ns = "0" + _ns;
+    }
+    var new_timerange = $("#begin_day").val() + " " + $("#begin_hour input").val() + ":" + _btm + ":" + _ns
+        + " - " + $("#end_day").val() + " " + $("#end_hour input").val() + ":" + $("#end_minute input").val() + ":" + _ns;
+    $("#select_time").attr("value",new_timerange)
+});
+$("#begin_hour input").focus(function(){
+    var _bth = $("#begin_hour input").val();
+    var _ns = new Date().getSeconds();
+    if (_ns < 10 ) {
+        _ns = "0" + _ns;
+    }
+    var new_timerange = $("#begin_day").val() + " " + _bth + ":" + $("#begin_minute input").val() + ":" + _ns
+        + " - " + $("#end_day").val() + " " + $("#end_hour input").val() + ":" + $("#end_minute input").val() + ":" + _ns;
+    $("#select_time").attr("value",new_timerange)
+});
+$("#end_minute input").focus(function(){
+    var _etm = $("#end_minute input").val();
+    var _ns = new Date().getSeconds();
+    if (_ns < 10 ) {
+        _ns = "0" + _ns;
+    }
+    var new_timerange = $("#begin_day").val() + " " + $("#begin_hour input").val() + ":" + $("#begin_minute input").val() + ":" + _ns
+        + " - " + $("#end_day").val() + " " + $("#end_hour input").val() + ":" + _etm + ":" + _ns;
+    $("#select_time").attr("value",new_timerange)
+});
+$("#end_hour input").focus(function(){
+    var _eth = $("#end_hour input").val();
+    var _ns = new Date().getSeconds();
+    if (_ns < 10 ) {
+        _ns = "0" + _ns;
+    }
+    var new_timerange = $("#begin_day").val() + " " + $("#begin_hour input").val() + ":" + $("#begin_minute input").val() + ":" + _ns
+        + " - " + $("#end_day").val() + " " + _eth + ":" + $("#end_minute input").val() + ":" + _ns;
+    $("#select_time").attr("value",new_timerange)
+});
