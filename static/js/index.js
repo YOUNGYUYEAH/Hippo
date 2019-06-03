@@ -108,6 +108,7 @@ function monitorchart(){
     var jsfilesText = "";
     jsfilesText += "<script src='/static/vendor/bootstrap-datepicker/js/bootstrap-datepicker.min.js'></script>";
     jsfilesText += "<script src='/static/js/monitor_chart.js'></script>";
+    jsfilesText += "<script src='/static/js/echartsFunc.js'></script>";
     $("#navbarResponsive").removeClass("show");
     $.get("/monitor/chart",function(data){
         $("#cssfiles").html(cssfilesText);

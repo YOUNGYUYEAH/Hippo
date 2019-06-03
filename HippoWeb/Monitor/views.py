@@ -275,8 +275,8 @@ def create(req):
                 chart_time = req.POST.get('time_range')
                 chart_type = req.POST.get('type')
                 if chart_time == "1hour":
-                    ts = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
-                    te = str((datetime.datetime.now() - datetime.timedelta(hours=1)).strftime("%Y-%m-%d %H:%M:%S"))
+                    ts = str((datetime.datetime.now() - datetime.timedelta(hours=1)).strftime("%Y-%m-%d %H:%M:%S"))
+                    te = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
                 else:
                     ts = chart_time.split(" - ")[0].lstrip().rstrip()
                     te = chart_time.split(" - ")[1].lstrip().rstrip()
@@ -309,8 +309,10 @@ def chart(req):
     _hoursago = str((datetime.datetime.now() - datetime.timedelta(hours=1)).strftime("%Y-%m-%d %H:%M:%S"))
     hostmode_form = HostModeForm()
     datetime_form = DateTimeForm()
+    querytimedict = {"6Hours": 6, "1Day": 24, "1Week": 168, "2Weeks": 336}
     return render(req, 'monitor/monitor_chart.html', {'hostmode_form': hostmode_form,
                                                       'datetime_form': datetime_form,
                                                       'hoursago': _hoursago,
-                                                      'nowtime': _nowtime})
+                                                      'nowtime': _nowtime,
+                                                      'querytimeDict': querytimedict})
 

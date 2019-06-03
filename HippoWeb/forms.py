@@ -72,3 +72,4 @@ class DateTimeForm(forms.Form):
         self.fields['minutes'].widget.attrs.update({'value': _minutes})
         self.fields['old_hours'].widget.attrs.update({'value': _old_hours})
         self.fields['old_minutes'].widget.attrs.update({'value': _old_minutes})
+

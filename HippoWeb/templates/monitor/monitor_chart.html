@@ -28,7 +28,8 @@
                                             <span><i class="fa fa-clock-o"></i> Begin:</span>
                                             <div class="input-group" style="width:180px" >
                                                 <input id="begin_day" class="form-control btn-theme" type="text" data-provide="datepicker"
-                                                       value="{{ hoursago.split(' ')[0] }}" placeholder="" readonly/>
+                                                       value="{{ hoursago.split(' ')[0] }}" placeholder="" readonly
+                                                       onchange="ChangeDayFunc('begin');"/>
                                                 <div class="input-group-btn">
                                                     <button id="begin_day_btn" type="button" class="btn btn-dark btn-fixed">
                                                         <i class="fa fa-calendar-plus-o"></i>
@@ -56,7 +57,8 @@
                                             <span><i class="fa fa-clock-o"></i> End:</span>
                                             <div class="input-group" style="width:180px">
                                                 <input id="end_day" class="form-control btn-theme" type="text" data-provide="datepicker"
-                                                       value="{{ nowtime.split(' ')[0] }}" placeholder="" readonly/>
+                                                       value="{{ nowtime.split(' ')[0] }}" placeholder="" readonly
+                                                       onchange="ChangeDayFunc('end');"/>
                                                 <div class="input-group-btn">
                                                     <button id="end_day_btn" type="button" class="btn btn-dark btn-fixed">
                                                         <i class="fa fa-calendar-plus-o"></i>
@@ -83,23 +85,23 @@
                                 <hr class="dropdown-menu-hr"/>
                                 <div class="input-group" style="margin-bottom:2%">
                                     <div class="btn-group" style="margin-left:3%">
-                                        {% for i in ["6Hours", "1Day", "1Week", "2Weeks"] %}
-                                            <button type="button" class="btn btn-outline-dark">
-                                                <span>{{ i }}</span>
+                                        {% for k in querytimeDict %}
+                                            <button type="button" class="btn btn-outline-dark" onclick="PostTimeFunc({{ querytimeDict[k] }})">
+                                                <i class="fa">{{ k }}</i>
                                             </button>
                                         {% endfor %}
                                     </div>
-                                    <div class="input-group-btn pull-right">
-                                        <button type="button" class="btn btn-info" style="margin-left:45%;">
-                                            <span>Submit</span>
+                                    <div class="input-group-btn">
+                                        <button id="select_time_submit" type="button" class="btn btn-info" data-stopPropagation="true" onclick="PostTimeFunc();" style="margin-left:calc(60px - 30%)">
+                                            <i class="fa fa-check"></i>
                                         </button>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <button class="btn btn-info" type="button" id="createchart_btn" value="Search">
-                        <i class="fa fa-line-chart"> Chart</i>
+                    <button class="btn btn-info" type="button" id="createchart_btn" value="Search" onclick="PostTimeFunc();">
+                        <i class="fa fa-line-chart">Chart</i>
                     </button>
                 </form>
             </div>

@@ -358,8 +358,7 @@ $("#charts_btn").click(function () {
             data: {
                 'ip': _chart_ip,
                 'type': "cpu",
-                'time_range': " 2019-05-24 17:00:00 - 2019-05-24 18:00:00"
-                // 'time_range': "1hour"
+                'time_range': "1hour"
             },
             success: function (data, statsText, xhr) {
                 if (xhr.status === 200) {
