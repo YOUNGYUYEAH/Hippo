@@ -31,10 +31,8 @@ function EchartsFunc(div_id,pic_xaxis,pic_yaxis,pic_legendArr,chart_type){
                 }
             },
             grid: {                                            // 调整图形相对位置
-                top:'10%',
-                left: '3%',
+                top:'8%',
                 bottom: '8%',
-                right: '3%',
                 containLabel:true
             },
             dataZoom: [{                                       // 设置区域放大滑动轴
@@ -52,8 +50,8 @@ function EchartsFunc(div_id,pic_xaxis,pic_yaxis,pic_legendArr,chart_type){
                     shadowBlur: 3,
                     shadowColor: 'rgba(0, 0, 0, 0.6)',
                     shadowOffsetX: 2,
-                    shadowOffsetY: 2
-                }
+                    shadowOffsetY: 2,
+                },
             }],
             toolbox: {                                         // 工具箱设置
                 orient: 'horizontal',
@@ -83,7 +81,11 @@ function EchartsFunc(div_id,pic_xaxis,pic_yaxis,pic_legendArr,chart_type){
             },
             series: seriesArr                                  // 设置数据轴情况和样式  ***需要循环填入数据
         };
-        echarts.init(document.getElementById(div_id)).setOption(LineChartOpts);
+        var LineChart = echarts.init(document.getElementById(div_id));
+        LineChart.setOption(LineChartOpts);
+        window.addEventListener("resize",function() {
+            LineChart.resize();
+        });
     } else if ( chart_type === "Pie") {
         var PieChartOpts = {
             tooltip: {
@@ -145,6 +147,10 @@ function EchartsFunc(div_id,pic_xaxis,pic_yaxis,pic_legendArr,chart_type){
                 }
             ]
         };
-        echarts.init(document.getElementById(div_id)).setOption(PieChartOpts);
+        var PieChart = echarts.init(document.getElementById(div_id));
+        PieChart.setOption(PieChartOpts);
+        window.addEventListener("resize",function() {
+            PieChart.resize();
+        });
     }
 }
