@@ -104,15 +104,9 @@ function memEchartsFunc(div_id,pic_title,pic_xaxis,pic_yaxis,pic_legendArr) {
             {
                 type:'pie',
                 id:'pie',
-                radius:[0,'30%'],
+                radius:[0,'50%'],
                 center:['80%','45%'],
                 encode:{ itemName:'time',value:'10:00',tooltip:'10:00' }
-            }, {
-                type:'pie',
-                id:'circle',
-                label:{ formatter:'{b}:{@10:00} {{d}%} ' },
-                center:['80%','45%'],
-                radius:['40%','55%'],
             }
         ]
     };
@@ -123,7 +117,7 @@ function memEchartsFunc(div_id,pic_title,pic_xaxis,pic_yaxis,pic_legendArr) {
             var dimension = xAxisInfo.value + 1;
             memChart.setOption({
                 series:[{
-                    id:'circle',
+                    id:'pie',
                     label: { formatter:'{b} : {@['+ dimension +']} ({d}%)' },
                     encode: {
                         value: dimension,
