@@ -363,6 +363,9 @@ $("#charts_btn").click(function () {
             success: function (data, statsText, xhr) {
                 if (xhr.status === 200) {
                     CreateChartFunc(_chart_host_ip, "cpu", data);
+                    $("body").addClass("sidenav-toggled");
+                    $(".navbar-sidenav .nav-link-collapse").addClass("collapsed");
+                    $(".navbar-sidenav .sidenav-second-level, .navbar-sidenav .sidenav-third-level").removeClass("show");
                     $("#Chartsweb").removeAttr("hidden");
                 }
             },

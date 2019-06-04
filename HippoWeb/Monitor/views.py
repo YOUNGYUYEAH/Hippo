@@ -239,12 +239,14 @@ def chart_cpu(ip, ts, te):
     _cpuval = dict()
     _load = MonitorORM.LoadData(ip=ip, time_start=ts, time_end=te).load_cpu_loadavg_range()
     _load_axis = np.transpose(list(_load)).tolist()
+    _loadval["title"] = "System LoadAvg"
     _loadval["legend"] = ["load (1min)", "load (5min)", "load (15min)"]
     _loadval["yaxis"] = _load_axis[0:3]
     _loadval["xaxis"] = _load_axis.pop()
     _cpu = MonitorORM.LoadData(ip=ip, time_start=ts, time_end=te).load_cpu_time_range()
-    _cpuval["legend"] = ["us", "sy", "ni", "id", "wa", "hi", "si", "st"]
     _cpu_axis = np.transpose(list(_cpu)).tolist()
+    _cpuval["title"] = "CPU Time Percent"
+    _cpuval["legend"] = ["us", "sy", "ni", "id", "wa", "hi", "si", "st"]
     _cpuval["yaxis"] = _cpu_axis[0:7]
     _cpuval["xaxis"] = _cpu_axis.pop()
     _response = HttpResponse(json.dumps({'loadval': _loadval,

@@ -76,17 +76,6 @@ $(document).ready(function() {
     TimeClickFunc($("#end_minute"));
 });
 
-function CreateChartFunc(_chart_ip, _chart_type,data) {
-    $("#chart_title").html("<i class='fa fa-yelp'></i><strong>&nbsp;" + _chart_type.toUpperCase() +
-        "</strong>&nbsp;Charts For &nbsp;<strong>" + _chart_ip + "</strong>" );
-    if ( _chart_type === "cpu" ) {
-        EchartsFunc("pic_1", data["loadval"]["xaxis"], data["loadval"]["yaxis"], data["loadval"]["legend"], "Line");
-        EchartsFunc("pic_2", data["cpuval"]["xaxis"], data["cpuval"]["yaxis"], data["cpuval"]["legend"], "Line");
-    } else if ( _chart_type === "memory" ) {
-        EchartsFunc("pic_1","","","","Pie");
-    }
-}
-
 function getSecond() {
     var _ns = new Date().getSeconds();
     if ( _ns < 10 ) { _ns = "0" + _ns; }
@@ -150,6 +139,9 @@ function PostTimeFunc(_timekey) {
             success: function(data, statsText, xhr) {
                 if ( xhr.status === 200) {
                     CreateChartFunc(_chart_host_ip,_chart_type,data);
+                    $("body").addClass("sidenav-toggled");
+                    $(".navbar-sidenav .nav-link-collapse").addClass("collapsed");
+                    $(".navbar-sidenav .sidenav-second-level, .navbar-sidenav .sidenav-third-level").removeClass("show");
                     $("#Chartsweb").removeAttr("hidden");
                 }
             },
