@@ -5,7 +5,7 @@ function CreateChartFunc(_chart_ip, _chart_type,data) {
         cpuEchartsFunc("pic_1", data["loadval"]["title"],data["loadval"]["xaxis"], data["loadval"]["yaxis"], data["loadval"]["legend"]);
         cpuEchartsFunc("pic_2", data["cpuval"]["title"],data["cpuval"]["xaxis"], data["cpuval"]["yaxis"], data["cpuval"]["legend"]);
     } else if ( _chart_type === "memory" ) {
-        memEchartsFunc("pic_1","","","","");
+        memChartsFunc("pic_1",data);
     }
 }
 
@@ -75,59 +75,84 @@ function cpuEchartsFunc(div_id,pic_title,pic_xaxis,pic_yaxis,pic_legendArr){
     });
 }
 
-function memEchartsFunc(div_id,pic_title,pic_xaxis,pic_yaxis,pic_legendArr) {
-    var memChartOpts = {
-        legend:{},
-        tooltip:{
-            trigger:'axis',
-            showContent:false
-        },
-        dataset:{
-            source:[
-                ['time','10:00','11:00','12:00','13:00','14:00'],
-                ['used','15','20','14','30','32'],
-                ['free','16','2','39','12','23'],
-                ['buffer','12','32','12','8','54'],
-                ['test','12','23','55','69','61'],
-                ['text','41','23','61','24','1']
-            ]
-        },
-        xAxis:{ type: 'category' },
-        yAxis:{ gridIndex:0 },
-        grid:{ top:'10%', left:"5%" ,right:'35%' },
+
+function memChartsFunc(div_id,data) {
+    var dataSetMem = [];
+    for (var M in data["Memval"]["axis"]) {
+        if (data["Memval"]["axis"].hasOwnProperty(M) ) {
+            dataSetMem.push(data["Memval"]["axis"][M]);
+        }
+    }
+    var dataSetmem = [];
+    for (var m in data["memval"]["axis"]) {
+        if (data["memval"]["axis"].hasOwnProperty(m) ) {
+            dataSetmem.push(data["memval"]["axis"][m]);
+        }
+    }
+    var memOpts = {
+        legend: {},
+        tooltip: { trigger: 'axis', showContent: false },
+        dataset: [{
+            dimension: data["memval"]["legend"],
+            source: dataSetmem
+        }, {
+            dimension: data["Memval"]["legend"],
+            source: dataSetMem
+        }],
+        xAxis: {type: 'category'},
+        yAxis: {gridIndex: 0},
+        grid: {top: '10%', left:'8%', right:'30%'},
         series: [
-            { type:'line',seriesLayoutBy:'row' },
-            { type:'line',seriesLayoutBy:'row' },
-            { type:'line',seriesLayoutBy:'row' },
-            { type:'line',seriesLayoutBy:'row' },
-            { type:'line',seriesLayoutBy:'row' },
+            {type: 'line', smooth: true,},
+            {type: 'line', smooth: true,},
+            {type: 'line', smooth: true,},
+            {type: 'line', smooth: true,},
             {
-                type:'pie',
-                id:'pie',
-                radius:[0,'50%'],
-                center:['80%','45%'],
-                encode:{ itemName:'time',value:'10:00',tooltip:'10:00' }
+                datasetIndex:0,
+                type: 'pie',
+                id: 'pie',
+                radius: [0,'30%'],
+                center: ['80%', '50%'],
+                label:{},
+                encode: {
+                    value: 2,tooltip: 2
+                },
+                seriesLayoutBy: 'row'
+            },{
+                datasetIndex:1,
+                type: 'pie',
+                id: 'circle',
+                radius: ['40%', '50%'],
+                center: ['80%', '50%'],
+                label:{},
+                encode: {
+                    value: 2,tooltip: 2
+                },
+                seriesLayoutBy: 'row'
             }
         ]
     };
-    var memChart = echarts.init(document.getElementById(div_id));
-    memChart.on('updateAxisPointer',function(event){
+    var memChart = echarts.init(document.getElementById("pic_1"));
+    memChart.on('updateAxisPointer', function (event) {
         var xAxisInfo = event.axesInfo[0];
-        if( xAxisInfo ) {
+        if (xAxisInfo) {
             var dimension = xAxisInfo.value + 1;
             memChart.setOption({
-                series:[{
-                    id:'pie',
-                    label: { formatter:'{b} : {@['+ dimension +']} ({d}%)' },
+                series: {
+                    id: 'pie',
+                    label: {},
                     encode: {
                         value: dimension,
                         tooltip: dimension
-                    }
-                }]
+                    },
+                }
             });
         }
     });
-    var emptyeChart = echarts.init(document.getElementById("pic_2"));
-    emptyeChart.clear();
-    memChart.setOption(memChartOpts,true);
+    var emptyChart = echarts.init(document.getElementById("pic_2"));
+    emptyChart.clear();
+    memChart.setOption(memOpts,true);
+    window.addEventListener("resize",function() {
+        memChart.resize();
+    });
 }

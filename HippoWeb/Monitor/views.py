@@ -257,13 +257,17 @@ def chart_cpu(ip, ts, te):
 
 def chart_memory(ip, ts, te):
     try:
+        _Memval = dict()
         _memval = dict()
-        _mem = MonitorORM.LoadData(ip=ip, time_start=ts, time_end=te).load_memory_use_range()
-        _memval["legend"] = ["available", "used", "free", "active", "inactive", "buffers", "cached"]
-        _mem_axis = np.transpose(list(_mem)).tolist()
-        _memval["yaxis"] = _mem_axis[0:7]
-        _memval["xaxis"] = _mem_axis.pop()
-        _response = HttpResponse(json.dumps({'memval': _memval}), content_type='application/json')
+        _Mem = MonitorORM.LoadData(ip=ip, time_start=ts, time_end=te).load_memory_used_free()
+        _Memval["legend"] = ["checktime", "Used", "Free"]
+        _Memval["axis"] = [list(Z) for Z in _Mem]
+        _mem = MonitorORM.LoadData(ip=ip, time_start=ts, time_end=te).load_mem_used_free_buffer_cached()
+        _memval["legend"] = ["checktime", "used", "free", "buffers", "cached"]
+        _memval["axis"] = [list(z) for z in _mem]
+        _response = HttpResponse(json.dumps({'memval': _memval,
+                                             'Memval': _Memval}),
+                                 content_type='application/json')
         return _response
     except Exception as e:
         print(e)

@@ -202,12 +202,24 @@ class LoadData(object):
         finally:
             self.cursor.close()
 
-    def load_memory_use_range(self):
+    def load_memory_used_free(self):
         try:
-            _querysql = """SELECT `available`,`used`,`free`,`active`,`inactive`,`buffers`,`cached`, 
-            DATE_FORMAT(`checktime`,'%%m-%%d %%H:%%i:%%S') FROM monitor_memory WHERE `ip`='%s' AND 
-            (DATE_FORMAT(`checktime`, '%%Y-%%m-%%d %%H:%%i:%%S') BETWEEN '%s' AND '%s');""" \
-                        % (self.ip, self.ts, self.te)
+            _querysql = """SELECT DATE_FORMAT(`checktime`,'%%m-%%d %%H:%%i:%%S'),`used`,(`buffers`+`cached`+`free`)
+             FROM monitor_memory WHERE `ip`='%s' AND (DATE_FORMAT(`checktime`, '%%Y-%%m-%%d %%H:%%i:%%S') 
+             BETWEEN '%s' AND '%s');""" % (self.ip, self.ts, self.te)
+            self.cursor.execute(_querysql)
+            _load_cpu_time_result = self.cursor.fetchall()
+            return _load_cpu_time_result
+        except Exception as e:
+            print(e)
+        finally:
+            self.cursor.close()
+
+    def load_mem_used_free_buffer_cached(self):
+        try:
+            _querysql = """SELECT DATE_FORMAT(`checktime`,'%%m-%%d %%H:%%i:%%S'),`used`,`buffers`,`cached`,`free`
+             FROM monitor_memory WHERE `ip`='%s' AND (DATE_FORMAT(`checktime`, '%%Y-%%m-%%d %%H:%%i:%%S') 
+             BETWEEN '%s' AND '%s');""" % (self.ip, self.ts, self.te)
             self.cursor.execute(_querysql)
             _load_cpu_time_result = self.cursor.fetchall()
             return _load_cpu_time_result
