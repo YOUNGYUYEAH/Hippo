@@ -115,7 +115,7 @@ function memChartsFunc(div_id,data) {
             x: '90%',
             feature: { saveAsImage:{}, restore:{} }
         },
-        color:["#de4d2c","#2663e9","#6a54ff","#4cb0c6",],
+        color:["#de4d2c","#343a40","#848485","#4e555d",],
         series: [
             {type: 'line', name:'used', smooth:true, itemStyle: { normal: {lineStyle: {width: 3}}}, symbolSize: 5},
             {type: 'line', name:'free', smooth:true, itemStyle: { normal: {lineStyle: {width: 3}}}, symbolSize: 5},
