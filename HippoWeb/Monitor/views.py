@@ -266,7 +266,8 @@ def chart_memory(ip, ts, te):
         _memval["legend"] = ["checktime", "used", "free", "buffers", "cached"]
         _memval["axis"] = [list(z) for z in _mem]
         _response = HttpResponse(json.dumps({'memval': _memval,
-                                             'Memval': _Memval}),
+                                             'Memval': _Memval,
+                                             'title': "Memory Used"}),
                                  content_type='application/json')
         return _response
     except Exception as e:

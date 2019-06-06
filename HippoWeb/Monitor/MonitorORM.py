@@ -217,7 +217,7 @@ class LoadData(object):
 
     def load_mem_used_free_buffer_cached(self):
         try:
-            _querysql = """SELECT DATE_FORMAT(`checktime`,'%%m-%%d %%H:%%i:%%S'),`used`,`buffers`,`cached`,`free`
+            _querysql = """SELECT DATE_FORMAT(`checktime`,'%%m-%%d %%H:%%i:%%S'),`used`,`free`,`buffers`,`cached`
              FROM monitor_memory WHERE `ip`='%s' AND (DATE_FORMAT(`checktime`, '%%Y-%%m-%%d %%H:%%i:%%S') 
              BETWEEN '%s' AND '%s');""" % (self.ip, self.ts, self.te)
             self.cursor.execute(_querysql)
