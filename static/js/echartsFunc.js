@@ -1,13 +1,20 @@
 function CreateChartFunc(_chart_ip, _chart_type,data) {
     $("#chart_title").html("<i class='fa fa-yelp'></i><strong>&nbsp;" + _chart_type.toUpperCase() +
         "</strong>&nbsp;Charts For &nbsp;<strong>" + _chart_ip + "</strong>" );
+    for (var Pic=0; Pic<6; Pic++) {
+        $("#pic_"+Pic).attr("hidden","hidden");
+    }
     if ( _chart_type === "cpu" ) {
+        $("#pic_1").removeAttr("hidden");
         $("#pic_2").removeAttr("hidden");
         cpuEchartsFunc("pic_1", data["loadval"]["title"],data["loadval"]["xaxis"], data["loadval"]["yaxis"], data["loadval"]["legend"]);
         cpuEchartsFunc("pic_2", data["cpuval"]["title"],data["cpuval"]["xaxis"], data["cpuval"]["yaxis"], data["cpuval"]["legend"]);
     } else if ( _chart_type === "memory" ) {
-        $("#pic_2").attr("hidden","hidden");
-        memChartsFunc("pic_1",data);
+        $("#pic_3").removeAttr("hidden");
+        memChartsFunc("pic_3",data);
+    } else if ( _chart_type === "disk") {
+        $("#pic_4").removeAttr("hidden");
+        diskChartsFunc("pic_4",data);
     }
 }
 
@@ -31,7 +38,8 @@ function cpuEchartsFunc(div_id,pic_title,pic_xaxis,pic_yaxis,pic_legendArr){
         tooltip: { trigger: 'axis' },                      // 轴对齐时展示所有点信息
         legend: {
             data: pic_legendArr,                           // y轴线的标签信息 **需要填充数据
-            textStyle: { fontSize: 16 }
+            textStyle: { fontSize: 16 },
+            icon:'roundRect'
         },
         grid: { containLabel:true },
         dataZoom: [{                                       // 设置区域放大滑动轴
@@ -64,12 +72,12 @@ function cpuEchartsFunc(div_id,pic_title,pic_xaxis,pic_yaxis,pic_legendArr){
         series: seriesArr                                  // 设置数据轴情况和样式  ***需要循环填入数据
     };
     var cpuChart = echarts.init(document.getElementById(div_id));
+    cpuChart.clear();
     cpuChart.setOption(cpuChartOpts,true);
     window.addEventListener("resize",function() {
         cpuChart.resize();
     });
 }
-
 
 function memChartsFunc(div_id,data) {
     var dataSetMem = [];
@@ -86,8 +94,27 @@ function memChartsFunc(div_id,data) {
     }
     var memOpts = {
         title: { text: data["title"] },
-        legend: { data:["used","free","buffers","cached"], left:'30%' },
-        tooltip: { trigger: 'axis' },
+        legend: { data:["used","free","buffers","cached"], icon:'roundRect' , left:'30%', },
+        tooltip: {
+            trigger: 'axis', formatter: function (params) {
+                var ToolRes = [];
+                for (var Par = 0; Par < params.length; Par++) {
+                    if ( Par ===0 ) { ToolRes += params[Par].data[Par] + "<br\>"; }
+                    var Val = params[Par].data[Par+1];
+                    if ( Val > Math.pow(1024,3)) {
+                        Val = ( Val/(Math.pow(1024,3)) ).toFixed(2)+"GB";
+                    } else if ( Val > Math.pow(1024,2)) {
+                        Val = ( Val/(Math.pow(1024,2)) ).toFixed(2)+"MB";
+                    } else if ( Val > 1024 ) {
+                        Val = ( Val/1024 ).toFixed(2)+"KB";
+                    }
+                    ToolRes += "<div style='display:inline-flex;border-radius:50%;"
+                        + "width:10px;height:10px;background-color:"
+                        + params[Par].color + "'></div> "
+                        + params[Par].seriesName + " : " + Val + "<br\>";
+                } return ToolRes;
+            }
+        },
         dataset: [{
             dimension: data["memval"]["legend"],
             source: dataSetmem
@@ -96,7 +123,22 @@ function memChartsFunc(div_id,data) {
             source: dataSetMem
         }],
         xAxis: { type: 'category', boundaryGap: false },
-        yAxis: { gridIndex: 0 },
+        yAxis: { gridIndex: 0,
+            axisLabel:{
+                formatter: function(value) {
+                    var result = [];
+                    if ( value > Math.pow(1024,3) ) {
+                        result = ( value/(Math.pow(1024,3)) ).toFixed(2)+"GB";
+                    } else if ( value >Math.pow(1024,2) ) {
+                        result = ( value/(Math.pow(1024,2)) ).toFixed(2)+"MB";
+                    } else if ( value > 1024 ) {
+                        result = ( value/ 1024 ).toFixed(2)+"KB";
+                    } else {
+                        result = value;
+                    } return result
+                }
+            }
+        },
         grid: { top: '15%', left:'8%', right:'40%',containLabel:true },
         dataZoom: [{
             id: 'dataZoomX',
@@ -115,7 +157,7 @@ function memChartsFunc(div_id,data) {
             x: '90%',
             feature: { saveAsImage:{}, restore:{} }
         },
-        color:["#de4d2c","#343a40","#848485","#4e555d",],
+        color:["#de4d2c","#343a40","#848485","#322143"],
         series: [
             {type: 'line', name:'used', smooth:true, itemStyle: { normal: {lineStyle: {width: 3}}}, symbolSize: 5},
             {type: 'line', name:'free', smooth:true, itemStyle: { normal: {lineStyle: {width: 3}}}, symbolSize: 5},
@@ -123,7 +165,7 @@ function memChartsFunc(div_id,data) {
             {type: 'line', name:'cached', smooth:true, itemStyle: { normal: {lineStyle: {width: 3}}}, symbolSize: 5},
             {
                 datasetIndex:0,
-                label:{ show:false },
+                label:{ formatter:'({d}%)',color:'#00aee7' },
                 id:'pie', type: 'pie',
                 radius: [ 0,'30%'],
                 center: ['78%', '55%'],
@@ -131,7 +173,7 @@ function memChartsFunc(div_id,data) {
                 seriesLayoutBy: 'row',
             },{
                 datasetIndex:1,
-                label:{ show:false },
+                label:{ formatter:'[{d}%]',color:'#e6bb2d' },
                 id:'circle', type: 'pie',
                 radius: ['40%', '50%'],
                 center: ['78%', '55%'],
@@ -141,7 +183,6 @@ function memChartsFunc(div_id,data) {
         ]
     };
     var memChart = echarts.init(document.getElementById(div_id));
-    var emptyChart = echarts.init(document.getElementById("pic_2"));
     memChart.on('updateAxisPointer', function (event) {
         var xAxisInfo = event.axesInfo[0];
         if (xAxisInfo) {
@@ -149,6 +190,8 @@ function memChartsFunc(div_id,data) {
             memChart.setOption({
                 series: [{
                     datasetIndex:0, id:'pie',
+                    // label: { formatter:'{@' + dimension + '} ({d}%)'},
+                    label: { formatter:'({d}%)'},
                     encode: { value: dimension, tooltip: dimension },
                 },{
                     datasetIndex:1, id:'circle',
@@ -157,9 +200,55 @@ function memChartsFunc(div_id,data) {
             });
         }
     });
+    memChart.clear();
     memChart.setOption(memOpts,true);
-    emptyChart.clear();
     window.addEventListener("resize",function() {
         memChart.resize();
+    });
+}
+
+function diskChartsFunc(div_id,data) {
+    var diskChartOpts = {
+        title: { text: data["title"] },
+        legend: { data:data["diskval"]["legend"], icon:'roundRect' },
+        tooltip: { trigger:'axis' },
+        toolbox: {
+            orient: 'horizontal',
+            x: '90%',
+            feature: { saveAsImage:{}, restore:{} }
+        },
+        dataZoom: [{
+            id: 'dataZoomX',
+            type: 'slider',
+            xAxisIndex:[0],
+            filterMode:'filter',
+        }, {
+            handleIcon: 'M10.7,11.9v-1.3H9.3v1.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4v1.3h1.3v-' +
+            '1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z ' +
+            'M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z',
+            handleSize: '80%',
+            handleStyle: { color: '#fff', shadowBlur: 3, shadowColor: 'rgba(0, 0, 0, 0.6)', shadowOffsetX: 2, shadowOffsetY: 2 },
+        }],
+        xAxis: {
+            type:'category',
+            boundaryGap: false,
+            data: data["diskval"]["xasix"],
+            axisLabel:{ textStyle:{ fontSize:14 } }
+        },
+        yAxis: {
+            type:'value',
+            axisLabel:{ textStyle:{ fontSize: 14 } }
+        },
+        color:'#33383d',
+        series:[{
+            data:[120,200,401,410,502,120,320,201],
+            type:'bar'
+        }]
+    }
+    var diskChart = echarts.init(document.getElementById(div_id));
+    diskChart.clear();
+    diskChart.setOption(diskChartOpts,true);
+    window.addEventListener("resize",function() {
+        diskChart.resize();
     });
 }

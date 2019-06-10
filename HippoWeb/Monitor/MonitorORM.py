@@ -178,6 +178,19 @@ class LoadData(object):
         finally:
             self.cursor.close()
 
+    def load_disk_used(self):
+        try:
+            _querysql = """SELECT `diskmount`,`diskusage`,DATE_FORMAT(`checktime`,'%%m-%%d %%H:%%i:%%S') FROM monitor_disk 
+            WHERE `ip`='%s' AND (DATE_FORMAT(`checktime`, '%%Y-%%m-%%d %%H:%%i:%%S') BETWEEN '%s' AND '%s');"""\
+                        % (self.ip, self.ts, self.te)
+            self.cursor.execute(_querysql)
+            _load_disk_used_result = self.cursor.fetchall()
+            return _load_disk_used_result
+        except Exception as e:
+            print(e)
+        finally:
+            self.cursor.close()
+
     def load_memory(self):
         """读取内存信息需进行单位换算,使用原生SQL,注意由于%和%%使用的不同"""
         try:

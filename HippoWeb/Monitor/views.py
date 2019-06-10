@@ -274,6 +274,19 @@ def chart_memory(ip, ts, te):
         print(e)
 
 
+def chart_disk(ip, ts, te):
+    try:
+        _diskval = dict()
+        _disk = MonitorORM.LoadData(ip=ip, time_start=ts, time_end=te).load_disk_used()
+        print(_disk)
+        _response = HttpResponse(json.dumps({'diskval': _diskval,
+                                             'title': "Disk Used"}),
+                                 content_type='application/json')
+        return _response
+    except Exception as e:
+        print(e)
+
+
 def create(req):
     try:
         if req.is_ajax():
@@ -293,6 +306,9 @@ def create(req):
                     return _response
                 elif chart_type == 'memory':
                     _response = chart_memory(chart_ip, ts, te)
+                    return _response
+                elif chart_type == "disk":
+                    _response = chart_disk(chart_ip, ts, te)
                     return _response
                 else:
                     pass
