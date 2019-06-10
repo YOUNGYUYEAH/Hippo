@@ -242,10 +242,17 @@ function diskChartsFunc(div_id,data) {
         },
         color:'#33383d',
         series:[{
-            data:[120,200,401,410,502,120,320,201],
-            type:'bar'
+            data:[400,400,400,400,400,400,400,400],
+            type:'bar',
+            color:'#053401',
+            barGap:'-100%'
+        },{
+            data:[100,180,300,200,340,60,52,120],
+            type:'bar',
+            color:'#69a78a',
+            barGap:'-100%'
         }]
-    }
+    };
     var diskChart = echarts.init(document.getElementById(div_id));
     diskChart.clear();
     diskChart.setOption(diskChartOpts,true);
