@@ -278,7 +278,7 @@ def chart_disk(ip, ts, te):
     try:
         _diskval = dict()
         _disk = MonitorORM.LoadData(ip=ip, time_start=ts, time_end=te).load_disk_used()
-        print(_disk)
+        _diskval["legend"] = _disk
         _response = HttpResponse(json.dumps({'diskval': _diskval,
                                              'title': "Disk Used"}),
                                  content_type='application/json')

@@ -210,7 +210,8 @@ function memChartsFunc(div_id,data) {
 function diskChartsFunc(div_id,data) {
     var diskChartOpts = {
         title: { text: data["title"] },
-        legend: { data:data["diskval"]["legend"], icon:'roundRect' },
+        //legend: { data:data["diskval"]["legend"], icon:'roundRect' },
+        legend: { data:["used"], icon:'roundRect' },
         tooltip: { trigger:'axis' },
         toolbox: {
             orient: 'horizontal',
@@ -231,8 +232,8 @@ function diskChartsFunc(div_id,data) {
         }],
         xAxis: {
             type:'category',
-            boundaryGap: false,
-            data: data["diskval"]["xasix"],
+            data: [1,2,3,4,5,6,7,8],
+            //data: data["diskval"]["xasix"],
             axisLabel:{ textStyle:{ fontSize:14 } }
         },
         yAxis: {
