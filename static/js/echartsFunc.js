@@ -212,7 +212,7 @@ function diskChartsFunc(div_id,data) {
         title: { text: data["title"] },
         //legend: { data:data["diskval"]["legend"], icon:'roundRect' },
         legend: { data:["used"], icon:'roundRect' },
-        tooltip: { trigger:'axis' },
+        tooltip: { trigger:'axis',axisPointer: {type: 'cross'} },
         toolbox: {
             orient: 'horizontal',
             x: '90%',
@@ -236,21 +236,39 @@ function diskChartsFunc(div_id,data) {
             //data: data["diskval"]["xasix"],
             axisLabel:{ textStyle:{ fontSize:14 } }
         },
-        yAxis: {
+        yAxis: [{
+            name:'inode',
             type:'value',
+            position: 'right',
             axisLabel:{ textStyle:{ fontSize: 14 } }
-        },
+        },{
+            name:'disk',
+            type:'value',
+            position: 'left',
+            axisLabel:{ textStyle:{ fontSize: 14 } }
+        }],
         color:'#33383d',
         series:[{
+            name:'Inode',
+            data:[2,1,2,4,1,2,3,1],
+            type:'line',
+            color:'#17a2b8',
+            itemStyle:{ normal:{ lineStyle:{ width: 3 } } },
+            symbolSize: 5
+        },{
+            name:'diskTotal',
             data:[400,400,400,400,400,400,400,400],
             type:'bar',
-            color:'#053401',
-            barGap:'-100%'
+            color:'#e9ecef',
+            barGap:'-100%',
+            yAxisIndex:1
         },{
+            name:'diskUsed',
             data:[100,180,300,200,340,60,52,120],
             type:'bar',
-            color:'#69a78a',
-            barGap:'-100%'
+            color:'#343a40',
+            barGap:'-100%',
+            yAxisIndex:1
         }]
     };
     var diskChart = echarts.init(document.getElementById(div_id));
