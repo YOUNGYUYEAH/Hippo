@@ -9,12 +9,12 @@ function CreateChartFunc(_chart_ip, _chart_type,data) {
         $("#pic_2").removeAttr("hidden");
         cpuEchartsFunc("pic_1", data["loadval"]["title"],data["loadval"]["xaxis"], data["loadval"]["yaxis"], data["loadval"]["legend"]);
         cpuEchartsFunc("pic_2", data["cpuval"]["title"],data["cpuval"]["xaxis"], data["cpuval"]["yaxis"], data["cpuval"]["legend"]);
-    } else if ( _chart_type === "memory" ) {
-        $("#pic_3").removeAttr("hidden");
-        memChartsFunc("pic_3",data);
     } else if ( _chart_type === "disk") {
+        $("#pic_3").removeAttr("hidden");
+        diskChartsFunc("pic_3",data);
+    } else if ( _chart_type === "memory" ) {
         $("#pic_4").removeAttr("hidden");
-        diskChartsFunc("pic_4",data);
+        memChartsFunc("pic_4",data);
     }
 }
 
@@ -34,7 +34,7 @@ function cpuEchartsFunc(div_id,pic_title,pic_xaxis,pic_yaxis,pic_legendArr){
         })
     }
     var cpuChartOpts = {
-        title: { text:pic_title },
+        title: { text:pic_title, left:'10%' },
         tooltip: { trigger: 'axis' },                      // 轴对齐时展示所有点信息
         legend: {
             data: pic_legendArr,                           // y轴线的标签信息 **需要填充数据
@@ -56,7 +56,7 @@ function cpuEchartsFunc(div_id,pic_title,pic_xaxis,pic_yaxis,pic_legendArr){
         }],
         toolbox: {                                         // 工具箱设置
             orient: 'horizontal',
-            x: '90%',
+            x: '85%',
             feature: { saveAsImage:{}, restore:{} }
         },
         xAxis: {                                           // x轴设置
@@ -93,7 +93,7 @@ function memChartsFunc(div_id,data) {
         }
     }
     var memOpts = {
-        title: { text: data["title"] },
+        title: { text: data["title"], left:'10%' },
         legend: { data:["used","free","buffers","cached"], icon:'roundRect' , left:'30%', },
         tooltip: {
             trigger: 'axis', formatter: function (params) {
@@ -154,7 +154,7 @@ function memChartsFunc(div_id,data) {
         }],
         toolbox: {
             orient: 'horizontal',
-            x: '90%',
+            x: '85%',
             feature: { saveAsImage:{}, restore:{} }
         },
         color:["#de4d2c","#343a40","#848485","#322143"],
@@ -190,7 +190,6 @@ function memChartsFunc(div_id,data) {
             memChart.setOption({
                 series: [{
                     datasetIndex:0, id:'pie',
-                    // label: { formatter:'{@' + dimension + '} ({d}%)'},
                     label: { formatter:'({d}%)'},
                     encode: { value: dimension, tooltip: dimension },
                 },{
@@ -208,14 +207,15 @@ function memChartsFunc(div_id,data) {
 }
 
 function diskChartsFunc(div_id,data) {
+    var mountArr = data["diskval"]["mount"].split("[")[1].split("]")[0].split(", ");
+
     var diskChartOpts = {
-        title: { text: data["title"] },
-        //legend: { data:data["diskval"]["legend"], icon:'roundRect' },
-        legend: { data:["used"], icon:'roundRect' },
+        title: { text: data["title"], left:'10%' },
+        legend: { data:data["diskval"]["legend"], icon:'roundRect' },
         tooltip: { trigger:'axis',axisPointer: {type: 'cross'} },
         toolbox: {
             orient: 'horizontal',
-            x: '90%',
+            x: '85%',
             feature: { saveAsImage:{}, restore:{} }
         },
         dataZoom: [{
@@ -232,17 +232,16 @@ function diskChartsFunc(div_id,data) {
         }],
         xAxis: {
             type:'category',
-            data: [1,2,3,4,5,6,7,8],
-            //data: data["diskval"]["xasix"],
+            data: data["diskval"]["axis"],
             axisLabel:{ textStyle:{ fontSize:14 } }
         },
         yAxis: [{
-            name:'inode',
+            name:'Inode',
             type:'value',
             position: 'right',
             axisLabel:{ textStyle:{ fontSize: 14 } }
         },{
-            name:'disk',
+            name:'Disk',
             type:'value',
             position: 'left',
             axisLabel:{ textStyle:{ fontSize: 14 } }

@@ -255,6 +255,29 @@ def chart_cpu(ip, ts, te):
     return _response
 
 
+def chart_disk(ip, ts, te):
+    try:
+        _diskval = dict()
+        _diskval["axis"] = []
+        _diskval["legend"] = ["diskUsed", "diskTotal", "Inode"]
+        _value = []
+        _disk = MonitorORM.LoadData(ip=ip, time_start=ts, time_end=te).load_disk_used()
+        _diskval["mount"] = np.transpose(list(_disk))[0][0]
+        for d in _disk:
+            print(d[1])
+            _value.append(d[1])
+        _diskval["value"] = np.transpose(_value).tolist()
+        for i in _disk:
+            _diskval["axis"].append(i[2])
+        print(_diskval)
+        _response = HttpResponse(json.dumps({'diskval': _diskval,
+                                             'title': "Disk Used"}),
+                                 content_type='application/json')
+        return _response
+    except Exception as e:
+        print(e)
+
+
 def chart_memory(ip, ts, te):
     try:
         _Memval = dict()
@@ -268,19 +291,6 @@ def chart_memory(ip, ts, te):
         _response = HttpResponse(json.dumps({'memval': _memval,
                                              'Memval': _Memval,
                                              'title': "Memory Used"}),
-                                 content_type='application/json')
-        return _response
-    except Exception as e:
-        print(e)
-
-
-def chart_disk(ip, ts, te):
-    try:
-        _diskval = dict()
-        _disk = MonitorORM.LoadData(ip=ip, time_start=ts, time_end=te).load_disk_used()
-        _diskval["legend"] = _disk
-        _response = HttpResponse(json.dumps({'diskval': _diskval,
-                                             'title': "Disk Used"}),
                                  content_type='application/json')
         return _response
     except Exception as e:
@@ -304,11 +314,11 @@ def create(req):
                 if chart_type == 'cpu':
                     _response = chart_cpu(chart_ip, ts, te)
                     return _response
-                elif chart_type == 'memory':
-                    _response = chart_memory(chart_ip, ts, te)
-                    return _response
                 elif chart_type == "disk":
                     _response = chart_disk(chart_ip, ts, te)
+                    return _response
+                elif chart_type == 'memory':
+                    _response = chart_memory(chart_ip, ts, te)
                     return _response
                 else:
                     pass
