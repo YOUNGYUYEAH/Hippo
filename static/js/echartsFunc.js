@@ -268,14 +268,14 @@ function diskChartsFunc(div_id,data) {
                 name:'diskTotal',
                 color:'#e9ecef',
                 yAxisIndex:1,
-                encode:{ data:{ value:1,tooltip:1 } },
+                encode:{ value:0,tooltip:0 }
             },{
                 datasetIndex:0,
                 type:'bar',
                 name:'diskUsed',
                 color:'#343A40',
                 yAxisIndex:1,
-                encode:{ data:{ value:2,tooltip:2 } }
+                encode:{ value:1,tooltip:1 }
         }]
         //series:[{
         //    name:'Inode',
