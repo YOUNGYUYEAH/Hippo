@@ -208,7 +208,17 @@ function memChartsFunc(div_id,data) {
 
 function diskChartsFunc(div_id,data) {
     var mountArr = data["diskval"]["mount"].split("[")[1].split("]")[0].split(", ");
-
+    var sourceArr = [];
+    for (var m=0; m<mountArr.length; m++) {
+        var _value = [];
+        for (var v in data["diskval"]["value"][m]) {
+            if ( data["diskval"]["value"][m].hasOwnProperty(v)) {
+                _value.push(JSON.parse(data["diskval"]["value"][m][v]))
+            }
+        }
+        sourceArr.push({source:_value});
+    }
+    console.log(sourceArr);
     var diskChartOpts = {
         title: { text: data["title"], left:'10%' },
         legend: { data:data["diskval"]["legend"], icon:'roundRect' },
@@ -218,6 +228,7 @@ function diskChartsFunc(div_id,data) {
             x: '85%',
             feature: { saveAsImage:{}, restore:{} }
         },
+        dataset:sourceArr,
         dataZoom: [{
             id: 'dataZoomX',
             type: 'slider',
@@ -246,29 +257,48 @@ function diskChartsFunc(div_id,data) {
             position: 'left',
             axisLabel:{ textStyle:{ fontSize: 14 } }
         }],
-        color:'#33383d',
         series:[{
-            name:'Inode',
-            data:[2,1,2,4,1,2,3,1],
-            type:'line',
-            color:'#17a2b8',
-            itemStyle:{ normal:{ lineStyle:{ width: 3 } } },
-            symbolSize: 5
-        },{
-            name:'diskTotal',
-            data:[400,400,400,400,400,400,400,400],
-            type:'bar',
-            color:'#e9ecef',
-            barGap:'-100%',
-            yAxisIndex:1
-        },{
-            name:'diskUsed',
-            data:[100,180,300,200,340,60,52,120],
-            type:'bar',
-            color:'#343a40',
-            barGap:'-100%',
-            yAxisIndex:1
+                //datasetIndex:0,
+                //type:'line',
+                //name:'inode',
+                //encode:{value:0,tooltip:0},
+            //}, {
+                datasetIndex:0,
+                type:'bar',
+                name:'diskTotal',
+                color:'#e9ecef',
+                yAxisIndex:1,
+                encode:{ data:{ value:1,tooltip:1 } },
+            },{
+                datasetIndex:0,
+                type:'bar',
+                name:'diskUsed',
+                color:'#343A40',
+                yAxisIndex:1,
+                encode:{ data:{ value:2,tooltip:2 } }
         }]
+        //series:[{
+        //    name:'Inode',
+        //    //data:[2,1,2,4,1,2,3,1],
+        //    type:'line',
+        //    color:'#17a2b8',
+        //    itemStyle:{ normal:{ lineStyle:{ width: 3 } } },
+        //    symbolSize: 5
+        //},{
+        //    name:'diskTotal',
+        //    //data:[400,400,400,400,400,400,400,400],
+        //    type:'bar',
+        //    color:'#e9ecef',
+        //    barGap:'-100%',
+        //    yAxisIndex:1
+        //},{
+        //    name:'diskUsed',
+        //    //data:[100,180,300,200,340,60,52,120],
+        //    type:'bar',
+        //    color:'#343a40',
+        //    barGap:'-100%',
+        //    yAxisIndex:1
+        //}]
     };
     var diskChart = echarts.init(document.getElementById(div_id));
     diskChart.clear();
