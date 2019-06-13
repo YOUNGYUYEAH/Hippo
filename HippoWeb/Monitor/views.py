@@ -259,7 +259,7 @@ def chart_disk(ip, ts, te):
     try:
         _diskval = dict()
         _diskval["axis"] = []
-        _diskval["legend"] = ["diskUsed", "diskTotal", "Inode"]
+        _diskval["legend"] = []
         _value = []
         _disk = MonitorORM.LoadData(ip=ip, time_start=ts, time_end=te).load_disk_used()
         _diskval["mount"] = np.transpose(list(_disk))[0][0]
@@ -268,6 +268,10 @@ def chart_disk(ip, ts, te):
         _diskval["value"] = np.transpose(_value).tolist()
         for i in _disk:
             _diskval["axis"].append(i[2])
+        for m in _diskval["mount"].lstrip("[").rstrip("]").split(", "):
+            _diskval["legend"].append(m+"-Used")
+            _diskval["legend"].append(m+"-Total")
+            _diskval["legend"].append(m+"-Inode")
         _response = HttpResponse(json.dumps({'diskval': _diskval,
                                              'title': "Disk Used"}),
                                  content_type='application/json')

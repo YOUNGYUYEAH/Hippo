@@ -209,20 +209,83 @@ function memChartsFunc(div_id,data) {
 function diskChartsFunc(div_id,data) {
     var mountArr = data["diskval"]["mount"].split("[")[1].split("]")[0].split(", ");
     var sourceArr = [];
+    var seriesArr = [];
     for (var m=0; m<mountArr.length; m++) {
-        var _value = [];
+        seriesArr.push({
+            datasetIndex:m,
+            type:'bar',
+            name:mountArr[m] + '-Total',
+            color:'#e9ecef',
+            barGap: '-100%',
+            yAxisIndex:1,
+            stack: m+'total',
+            encode:{ x:"checktime",y:"total" },
+        },{
+            datasetIndex:m,
+            type:'bar',
+            name:mountArr[m] + '-Used',
+            color:'#343A40',
+            barGap: '-100%',
+            yAxisIndex:1,
+            stack: m+'used',
+            encode:{ x:"checktime",y:"used" },
+        },{
+            datasetIndex:m,
+            type:'line',
+            name:mountArr[m] + '-Inode',
+            encode:{ x:"checktime", y:"inode" },
+            yAxisIndex:0,
+            itemStyle:{ normal:{ lineStyle:{ width: 3 } } },
+            symbolSize: 5
+        });
+        console.log(seriesArr);
+        var _valArr = [];
+        _valArr.push(["checktime","total","used","inode","percent"]);
         for (var v in data["diskval"]["value"][m]) {
             if ( data["diskval"]["value"][m].hasOwnProperty(v)) {
-                _value.push(JSON.parse(data["diskval"]["value"][m][v]))
+                var Obj = JSON.parse(data["diskval"]["value"][m][v]);
+                $.each(Obj, function(key,val){
+                    var _val = [];
+                    _val.push(data["diskval"]["axis"][v],Obj["total"],Obj["used"],parseInt(Obj["inode"]),parseInt(Obj["percent"]));
+                    _valArr.push(_val);
+                    return false;
+                });
             }
         }
-        sourceArr.push({source:_value});
+        sourceArr.push({source:_valArr});
     }
-    console.log(sourceArr);
     var diskChartOpts = {
         title: { text: data["title"], left:'10%' },
         legend: { data:data["diskval"]["legend"], icon:'roundRect' },
-        tooltip: { trigger:'axis',axisPointer: {type: 'cross'} },
+        tooltip: { trigger:'axis',axisPointer: {type: 'cross'},
+            formatter: function(params) {
+                var ToolRes = [];
+                for (var Par = 0; Par < params.length; Par++ ) {
+                    if ( Par === 0 ) {
+                        ToolRes += params[Par].data[Par] + "<br\>";
+                    }
+                    var Val = params[Par].data[Par+1];
+                    if (Val > Math.pow(1024,4)) {
+                        Val = ( Val/(Math.pow(1024,4)) ).toFixed(2)+"TB";
+                    } else if ( Val > Math.pow(1024,3)) {
+                        Val = ( Val/(Math.pow(1024,3)) ).toFixed(2)+"GB";
+                    } else if ( Val > Math.pow(1024,2)) {
+                        Val = ( Val/(Math.pow(1024,2)) ).toFixed(2)+"MB";
+                    } else if ( Val > 1024 ) {
+                        Val = ( Val/1024 ).toFixed(2)+"KB";
+                    }
+                    if ( params[Par].seriesName === "Inode" ) {
+                        ToolRes += "<div style='display:inline-flex;border-radius:50%;"
+                        + "width:10px;height:10px;background-color:" + params[Par].color + "'></div> "
+                        + params[Par].seriesName + " : " + Val + "%" + "<br\>";
+                    } else {
+                        ToolRes += "<div style='display:inline-flex;border-radius:50%;"
+                        + "width:10px;height:10px;background-color:" + params[Par].color + "'></div> "
+                        + params[Par].seriesName + " : " + Val + "<br\>";
+                    }
+                } return ToolRes;
+            }
+        },
         toolbox: {
             orient: 'horizontal',
             x: '85%',
@@ -243,63 +306,37 @@ function diskChartsFunc(div_id,data) {
         }],
         xAxis: {
             type:'category',
-            data: data["diskval"]["axis"],
             axisLabel:{ textStyle:{ fontSize:14 } }
         },
         yAxis: [{
             name:'Inode',
             type:'value',
             position: 'right',
+            max:100,
             axisLabel:{ textStyle:{ fontSize: 14 } }
         },{
             name:'Disk',
             type:'value',
             position: 'left',
-            axisLabel:{ textStyle:{ fontSize: 14 } }
+            axisLabel:{ textStyle:{ fontSize: 14 } ,
+                formatter: function(value) {
+                        var result = [];
+                        if ( value > Math.pow(1024,4)) {
+                            result = (value / (Math.pow(1024, 4))).toFixed(2) + "TB";
+                        } else if (value > Math.pow(1024, 3)) {
+                            result = (value / (Math.pow(1024, 3))).toFixed(2) + "GB";
+                        } else if (value > Math.pow(1024, 2)) {
+                            result = (value / (Math.pow(1024, 2))).toFixed(2) + "MB";
+                        } else if (value > 1024) {
+                            result = (value / 1024).toFixed(2) + "KB";
+                        } else {
+                            result = value;
+                        } return result
+                }
+            }
         }],
-        series:[{
-                //datasetIndex:0,
-                //type:'line',
-                //name:'inode',
-                //encode:{value:0,tooltip:0},
-            //}, {
-                datasetIndex:0,
-                type:'bar',
-                name:'diskTotal',
-                color:'#e9ecef',
-                yAxisIndex:1,
-                encode:{ value:0,tooltip:0 }
-            },{
-                datasetIndex:0,
-                type:'bar',
-                name:'diskUsed',
-                color:'#343A40',
-                yAxisIndex:1,
-                encode:{ value:1,tooltip:1 }
-        }]
-        //series:[{
-        //    name:'Inode',
-        //    //data:[2,1,2,4,1,2,3,1],
-        //    type:'line',
-        //    color:'#17a2b8',
-        //    itemStyle:{ normal:{ lineStyle:{ width: 3 } } },
-        //    symbolSize: 5
-        //},{
-        //    name:'diskTotal',
-        //    //data:[400,400,400,400,400,400,400,400],
-        //    type:'bar',
-        //    color:'#e9ecef',
-        //    barGap:'-100%',
-        //    yAxisIndex:1
-        //},{
-        //    name:'diskUsed',
-        //    //data:[100,180,300,200,340,60,52,120],
-        //    type:'bar',
-        //    color:'#343a40',
-        //    barGap:'-100%',
-        //    yAxisIndex:1
-        //}]
-    };
+        series: seriesArr
+        };
     var diskChart = echarts.init(document.getElementById(div_id));
     diskChart.clear();
     diskChart.setOption(diskChartOpts,true);
