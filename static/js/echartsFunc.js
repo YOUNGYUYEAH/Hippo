@@ -367,6 +367,7 @@ function diskChartsFunc(div_id,data) {
             series: seriesArr
         };
         if ( mountArr.length === 1 ) {
+            $("#" + div_id).removeAttr("_echarts_instance_").empty();
             var diskChart = echarts.init(document.getElementById(div_id));
             diskChart.clear();
             diskChart.setOption(diskChartOpts, true);
@@ -374,6 +375,7 @@ function diskChartsFunc(div_id,data) {
                 diskChart.resize();
             });
         } else {
+            seriesArr = [];
             var MultdiskWeb = "<div id='" + div_id + "_" + m + "' style='width:94vw;height:60vh;margin-bottom:2%'></div>";
             if ( m === 0 ) {
                 $("#" + div_id).html(MultdiskWeb);
@@ -381,6 +383,7 @@ function diskChartsFunc(div_id,data) {
                 $("#" + div_id).append(MultdiskWeb);
             }
             var MultdiskChart = echarts.init(document.getElementById(div_id+"_"+m));
+            MultdiskChart.clear();
             MultdiskChart.setOption(diskChartOpts,true);
             window.addEventListener("resize", function () {
                 MultdiskChart.resize();
