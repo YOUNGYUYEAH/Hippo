@@ -269,9 +269,9 @@ def chart_disk(ip, ts, te):
         for i in _disk:
             _diskval["axis"].append(i[2])
         for m in _diskval["mount"].lstrip("[").rstrip("]").split(", "):
-            _diskval["legend"].append(m+"-Used")
-            _diskval["legend"].append(m+"-Total")
-            _diskval["legend"].append(m+"-Inode")
+            _diskval["legend"].append(m+" Used")
+            _diskval["legend"].append(m+" Total")
+            _diskval["legend"].append(m+" Inode")
         _response = HttpResponse(json.dumps({'diskval': _diskval,
                                              'title': "Disk Used"}),
                                  content_type='application/json')

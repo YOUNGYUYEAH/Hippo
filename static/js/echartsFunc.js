@@ -1,20 +1,20 @@
 function CreateChartFunc(_chart_ip, _chart_type,data) {
     $("#chart_title").html("<i class='fa fa-yelp'></i><strong>&nbsp;" + _chart_type.toUpperCase() +
         "</strong>&nbsp;Charts For &nbsp;<strong>" + _chart_ip + "</strong>" );
-    for (var Pic=0; Pic<6; Pic++) {
-        $("#pic_"+Pic).attr("hidden","hidden");
+    var typeArr = ["cpu","disk","memory","network"];
+    for (var Pic=0; Pic< typeArr.length; Pic++) {
+        $("#pic_"+typeArr[Pic]).attr("hidden","hidden");
     }
     if ( _chart_type === "cpu" ) {
-        $("#pic_1").removeAttr("hidden");
-        $("#pic_2").removeAttr("hidden");
-        cpuEchartsFunc("pic_1", data["loadval"]["title"],data["loadval"]["xaxis"], data["loadval"]["yaxis"], data["loadval"]["legend"]);
-        cpuEchartsFunc("pic_2", data["cpuval"]["title"],data["cpuval"]["xaxis"], data["cpuval"]["yaxis"], data["cpuval"]["legend"]);
+        $("#pic_cpu").removeAttr("hidden");
+        cpuEchartsFunc("pic_cpu", data["loadval"]["title"],data["loadval"]["xaxis"], data["loadval"]["yaxis"], data["loadval"]["legend"]);
+        // cpuEchartsFunc("pic_2", data["cpuval"]["title"],data["cpuval"]["xaxis"], data["cpuval"]["yaxis"], data["cpuval"]["legend"]);
     } else if ( _chart_type === "disk") {
-        $("#pic_3").removeAttr("hidden");
-        diskChartsFunc("pic_3",data);
+        $("#pic_disk").removeAttr("hidden");
+        diskChartsFunc("pic_disk",data);
     } else if ( _chart_type === "memory" ) {
-        $("#pic_4").removeAttr("hidden");
-        memChartsFunc("pic_4",data);
+        $("#pic_memory").removeAttr("hidden");
+        memChartsFunc("pic_memory",data);
     }
 }
 
@@ -116,9 +116,11 @@ function memChartsFunc(div_id,data) {
             }
         },
         dataset: [{
+            name: 'mem',
             dimension: data["memval"]["legend"],
             source: dataSetmem
         }, {
+            name: 'Mem',
             dimension: data["Memval"]["legend"],
             source: dataSetMem
         }],
@@ -165,7 +167,13 @@ function memChartsFunc(div_id,data) {
             {type: 'line', name:'cached', smooth:true, itemStyle: { normal: {lineStyle: {width: 3}}}, symbolSize: 5},
             {
                 datasetIndex:0,
-                label:{ formatter:'({d}%)',color:'#00aee7' },
+                label: {
+                    formatter:function(event) {
+                        var _dataName = event.seriesName.split(",");
+                        return "(" + _dataName[event.dataIndex+1] + ":" + [event.percent]+ "%" + ")";
+                    }, color: '#00AEE7'
+                },
+                name: data["memval"]["legend"],
                 id:'pie', type: 'pie',
                 radius: [ 0,'30%'],
                 center: ['78%', '55%'],
@@ -173,7 +181,13 @@ function memChartsFunc(div_id,data) {
                 seriesLayoutBy: 'row',
             },{
                 datasetIndex:1,
-                label:{ formatter:'[{d}%]',color:'#e6bb2d' },
+                label:{
+                    formatter:function(event) {
+                        var _dataName = event.seriesName.split(",");
+                        return "[" + _dataName[event.dataIndex+1] + ":" + [event.percent]+ "%" + "]";
+                    }, color:'#e6bb2d'
+                },
+                name: data["Memval"]["legend"],
                 id:'circle', type: 'pie',
                 radius: ['40%', '50%'],
                 center: ['78%', '55%'],
@@ -190,10 +204,21 @@ function memChartsFunc(div_id,data) {
             memChart.setOption({
                 series: [{
                     datasetIndex:0, id:'pie',
-                    label: { formatter:'({d}%)'},
+                    label: {
+                        formatter:function(event) {
+                            var _dataName = event.seriesName.split(",");
+                            return "(" + _dataName[event.dataIndex+1] + ":" + [event.percent]+ "%" + ")";
+                        }
+                    },
                     encode: { value: dimension, tooltip: dimension },
                 },{
                     datasetIndex:1, id:'circle',
+                    label: {
+                        formatter:function(event) {
+                            var _dataName = event.seriesName.split(",");
+                            return "[" + _dataName[event.dataIndex+1] + ":" + [event.percent]+ "%" + "]";
+                        }
+                    },
                     encode: { value: dimension, tooltip: dimension },
                 }]
             });
@@ -210,118 +235,121 @@ function diskChartsFunc(div_id,data) {
     var mountArr = data["diskval"]["mount"].split("[")[1].split("]")[0].split(", ");
     var sourceArr = [];
     var seriesArr = [];
-    for (var m=0; m<mountArr.length; m++) {
+    for (var m = 0; m < mountArr.length; m++) {
         seriesArr.push({
-            datasetIndex:m,
-            type:'bar',
-            name:mountArr[m] + '-Total',
-            color:'#e9ecef',
+            datasetIndex: m,
+            type: 'bar',
+            name: mountArr[m] + ' Total',
+            color: '#e9ecef',
             barGap: '-100%',
-            yAxisIndex:1,
-            stack: m+'total',
-            encode:{ x:"checktime",y:"total" },
-        },{
-            datasetIndex:m,
-            type:'bar',
-            name:mountArr[m] + '-Used',
-            color:'#343A40',
+            yAxisIndex: 1,
+            encode: {x: "checktime", y: "total"},
+        }, {
+            datasetIndex: m,
+            type: 'bar',
+            name: mountArr[m] + ' Used',
+            color: '#343A40',
             barGap: '-100%',
-            yAxisIndex:1,
-            stack: m+'used',
-            encode:{ x:"checktime",y:"used" },
-        },{
-            datasetIndex:m,
-            type:'line',
-            name:mountArr[m] + '-Inode',
-            encode:{ x:"checktime", y:"inode" },
-            yAxisIndex:0,
-            itemStyle:{ normal:{ lineStyle:{ width: 3 } } },
+            yAxisIndex: 1,
+            encode: {x: "checktime", y: "used"},
+        }, {
+            datasetIndex: m,
+            type: 'line',
+            name: mountArr[m] + ' Inode',
+            encode: {x: "checktime", y: "inode"},
+            yAxisIndex: 0,
+            itemStyle: {normal: {lineStyle: {width: 3}}},
             symbolSize: 5
         });
-        console.log(seriesArr);
         var _valArr = [];
-        _valArr.push(["checktime","total","used","inode","percent"]);
+        _valArr.push(["checktime", "total", "used", "inode", "percent"]);
         for (var v in data["diskval"]["value"][m]) {
-            if ( data["diskval"]["value"][m].hasOwnProperty(v)) {
+            if (data["diskval"]["value"][m].hasOwnProperty(v)) {
                 var Obj = JSON.parse(data["diskval"]["value"][m][v]);
-                $.each(Obj, function(key,val){
+                $.each(Obj, function (key, val) {
                     var _val = [];
-                    _val.push(data["diskval"]["axis"][v],Obj["total"],Obj["used"],parseInt(Obj["inode"]),parseInt(Obj["percent"]));
+                    _val.push(data["diskval"]["axis"][v], Obj["total"], Obj["used"], parseInt(Obj["inode"]), parseInt(Obj["percent"]));
                     _valArr.push(_val);
                     return false;
                 });
             }
         }
-        sourceArr.push({source:_valArr});
-    }
-    var diskChartOpts = {
-        title: { text: data["title"], left:'10%' },
-        legend: { data:data["diskval"]["legend"], icon:'roundRect' },
-        tooltip: { trigger:'axis',axisPointer: {type: 'cross'},
-            formatter: function(params) {
-                var ToolRes = [];
-                for (var Par = 0; Par < params.length; Par++ ) {
-                    if ( Par === 0 ) {
-                        ToolRes += params[Par].data[Par] + "<br\>";
+        sourceArr.push({source: _valArr});
+        var diskChartOpts = {
+            title: {text: data["title"], left: '10%'},
+            legend: {data: data["diskval"]["legend"], icon: 'roundRect'},
+            tooltip: {
+                trigger: 'axis', axisPointer: {type: 'cross'},
+                formatter: function (params) {
+                    var ToolRes = [];
+                    for (var Par = 0; Par < params.length; Par++) {
+                        if (Par === 0) {
+                            ToolRes += params[Par].data[Par] + "<br\>";
+                        }
+                        var Val = params[Par].data[Par + 1];
+                        if (Val > Math.pow(1024, 4)) {
+                            Val = (Val / (Math.pow(1024, 4))).toFixed(2) + "TB";
+                        } else if (Val > Math.pow(1024, 3)) {
+                            Val = (Val / (Math.pow(1024, 3))).toFixed(2) + "GB";
+                        } else if (Val > Math.pow(1024, 2)) {
+                            Val = (Val / (Math.pow(1024, 2))).toFixed(2) + "MB";
+                        } else if (Val > 1024) {
+                            Val = (Val / 1024).toFixed(2) + "KB";
+                        }
+                        if (params[Par].componentSubType === "line") {
+                            ToolRes += "<div style='display:inline-flex;border-radius:50%;width:10px;height:10px;background-color:"
+                                + params[Par].color + "'></div> " + params[Par].seriesName + " : " + Val + "<span>%</span><br\>";
+                        } else {
+                            ToolRes += "<div style='display:inline-flex;border-radius:50%;width:10px;height:10px;background-color:"
+                                + params[Par].color + " '></div> " + params[Par].seriesName + " : " + Val + "<br\>";
+                        }
                     }
-                    var Val = params[Par].data[Par+1];
-                    if (Val > Math.pow(1024,4)) {
-                        Val = ( Val/(Math.pow(1024,4)) ).toFixed(2)+"TB";
-                    } else if ( Val > Math.pow(1024,3)) {
-                        Val = ( Val/(Math.pow(1024,3)) ).toFixed(2)+"GB";
-                    } else if ( Val > Math.pow(1024,2)) {
-                        Val = ( Val/(Math.pow(1024,2)) ).toFixed(2)+"MB";
-                    } else if ( Val > 1024 ) {
-                        Val = ( Val/1024 ).toFixed(2)+"KB";
-                    }
-                    if ( params[Par].seriesName === "Inode" ) {
-                        ToolRes += "<div style='display:inline-flex;border-radius:50%;"
-                        + "width:10px;height:10px;background-color:" + params[Par].color + "'></div> "
-                        + params[Par].seriesName + " : " + Val + "%" + "<br\>";
-                    } else {
-                        ToolRes += "<div style='display:inline-flex;border-radius:50%;"
-                        + "width:10px;height:10px;background-color:" + params[Par].color + "'></div> "
-                        + params[Par].seriesName + " : " + Val + "<br\>";
-                    }
-                } return ToolRes;
-            }
-        },
-        toolbox: {
-            orient: 'horizontal',
-            x: '85%',
-            feature: { saveAsImage:{}, restore:{} }
-        },
-        dataset:sourceArr,
-        dataZoom: [{
-            id: 'dataZoomX',
-            type: 'slider',
-            xAxisIndex:[0],
-            filterMode:'filter',
-        }, {
-            handleIcon: 'M10.7,11.9v-1.3H9.3v1.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4v1.3h1.3v-' +
-            '1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z ' +
-            'M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z',
-            handleSize: '80%',
-            handleStyle: { color: '#fff', shadowBlur: 3, shadowColor: 'rgba(0, 0, 0, 0.6)', shadowOffsetX: 2, shadowOffsetY: 2 },
-        }],
-        xAxis: {
-            type:'category',
-            axisLabel:{ textStyle:{ fontSize:14 } }
-        },
-        yAxis: [{
-            name:'Inode',
-            type:'value',
-            position: 'right',
-            max:100,
-            axisLabel:{ textStyle:{ fontSize: 14 } }
-        },{
-            name:'Disk',
-            type:'value',
-            position: 'left',
-            axisLabel:{ textStyle:{ fontSize: 14 } ,
-                formatter: function(value) {
+                    return ToolRes;
+                }
+            },
+            toolbox: {
+                orient: 'horizontal',
+                x: '85%',
+                feature: {saveAsImage: {}, restore: {}}
+            },
+            dataset: sourceArr,
+            dataZoom: [{
+                id: 'dataZoomX',
+                type: 'slider',
+                xAxisIndex: [0],
+                filterMode: 'filter',
+            }, {
+                handleIcon: 'M10.7,11.9v-1.3H9.3v1.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4v1.3h1.3v-' +
+                '1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z ' +
+                'M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z',
+                handleSize: '80%',
+                handleStyle: {
+                    color: '#fff',
+                    shadowBlur: 3,
+                    shadowColor: 'rgba(0, 0, 0, 0.6)',
+                    shadowOffsetX: 2,
+                    shadowOffsetY: 2
+                },
+            }],
+            xAxis: {
+                type: 'category',
+                axisLabel: {textStyle: {fontSize: 14}}
+            },
+            yAxis: [{
+                name: 'Inode',
+                type: 'value',
+                position: 'right',
+                max: 100,
+                axisLabel: {textStyle: {fontSize: 14}}
+            }, {
+                name: 'Disk',
+                type: 'value',
+                position: 'left',
+                axisLabel: {
+                    textStyle: {fontSize: 14},
+                    formatter: function (value) {
                         var result = [];
-                        if ( value > Math.pow(1024,4)) {
+                        if (value > Math.pow(1024, 4)) {
                             result = (value / (Math.pow(1024, 4))).toFixed(2) + "TB";
                         } else if (value > Math.pow(1024, 3)) {
                             result = (value / (Math.pow(1024, 3))).toFixed(2) + "GB";
@@ -331,16 +359,32 @@ function diskChartsFunc(div_id,data) {
                             result = (value / 1024).toFixed(2) + "KB";
                         } else {
                             result = value;
-                        } return result
+                        }
+                        return result
+                    }
                 }
-            }
-        }],
-        series: seriesArr
+            }],
+            series: seriesArr
         };
-    var diskChart = echarts.init(document.getElementById(div_id));
-    diskChart.clear();
-    diskChart.setOption(diskChartOpts,true);
-    window.addEventListener("resize",function() {
-        diskChart.resize();
-    });
+        if ( mountArr.length === 1 ) {
+            var diskChart = echarts.init(document.getElementById(div_id));
+            diskChart.clear();
+            diskChart.setOption(diskChartOpts, true);
+            window.addEventListener("resize", function () {
+                diskChart.resize();
+            });
+        } else {
+            var MultdiskWeb = "<div id='" + div_id + "_" + m + "' style='width:94vw;height:60vh;margin-bottom:2%'></div>";
+            if ( m === 0 ) {
+                $("#" + div_id).html(MultdiskWeb);
+            } else {
+                $("#" + div_id).append(MultdiskWeb);
+            }
+            var MultdiskChart = echarts.init(document.getElementById(div_id+"_"+m));
+            MultdiskChart.setOption(diskChartOpts,true);
+            window.addEventListener("resize", function () {
+                MultdiskChart.resize();
+            });
+        }
+    }
 }
