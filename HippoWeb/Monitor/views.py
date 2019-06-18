@@ -249,6 +249,8 @@ def chart_cpu(ip, ts, te):
     _cpuval["legend"] = ["us", "sy", "ni", "id", "wa", "hi", "si", "st"]
     _cpuval["yaxis"] = _cpu_axis[0:7]
     _cpuval["xaxis"] = _cpu_axis.pop()
+    print(_loadval)
+    print(_cpuval)
     _response = HttpResponse(json.dumps({'loadval': _loadval,
                                          'cpuval': _cpuval}),
                              content_type='application/json')

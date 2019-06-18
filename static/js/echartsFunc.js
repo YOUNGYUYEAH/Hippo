@@ -7,19 +7,28 @@ function CreateChartFunc(_chart_ip, _chart_type,data) {
     }
     if ( _chart_type === "cpu" ) {
         $("#pic_cpu").removeAttr("hidden");
-        cpuEchartsFunc("pic_cpu", data["loadval"]["title"],data["loadval"]["xaxis"], data["loadval"]["yaxis"], data["loadval"]["legend"]);
+        cpuEchartsFunc("pic_cpu", data["loadval"]["title"],data["loadval"]["xaxis"], data["loadval"]["yaxis"], data["loadval"]["legend"],data);
         // cpuEchartsFunc("pic_2", data["cpuval"]["title"],data["cpuval"]["xaxis"], data["cpuval"]["yaxis"], data["cpuval"]["legend"]);
     } else if ( _chart_type === "disk") {
         $("#pic_disk").removeAttr("hidden");
         diskChartsFunc("pic_disk",data);
+        $("#disk_swiper").ready( function () {
+            var swiper = new Swiper('.swiper-container', {
+                noSwiping: true,
+                noSwipingClass: 'stop-swiping',
+                nextButton: '.swiper-button-next',
+                prevButton: '.swiper-button-prev',
+            });
+        })
     } else if ( _chart_type === "memory" ) {
         $("#pic_memory").removeAttr("hidden");
         memChartsFunc("pic_memory",data);
     }
 }
 
-function cpuEchartsFunc(div_id,pic_title,pic_xaxis,pic_yaxis,pic_legendArr){
+function cpuEchartsFunc(div_id,pic_title,pic_xaxis,pic_yaxis,pic_legendArr,data){
     var seriesArr = [];
+    console.log(data);
     for (var L=0; L<pic_legendArr.length; L++ ) {
         var Arrdata = pic_yaxis[L];
         seriesArr.push({
@@ -125,7 +134,8 @@ function memChartsFunc(div_id,data) {
             source: dataSetMem
         }],
         xAxis: { type: 'category', boundaryGap: false },
-        yAxis: { gridIndex: 0,
+        yAxis: { name:'memory',
+            gridIndex: 0,
             axisLabel:{
                 formatter: function(value) {
                     var result = [];
@@ -235,6 +245,7 @@ function diskChartsFunc(div_id,data) {
     var mountArr = data["diskval"]["mount"].split("[")[1].split("]")[0].split(", ");
     var sourceArr = [];
     var seriesArr = [];
+    var MultdiskChart = [];
     for (var m = 0; m < mountArr.length; m++) {
         seriesArr.push({
             datasetIndex: m,
@@ -376,18 +387,33 @@ function diskChartsFunc(div_id,data) {
             });
         } else {
             seriesArr = [];
-            var MultdiskWeb = "<div id='" + div_id + "_" + m + "' style='width:94vw;height:60vh;margin-bottom:2%'></div>";
+            var MultdiskWeb = "";
+            var MultDiskDiv = "<div id='" + div_id + "_" + m + "' style='width:94vw;height:60vh;margin-bottom:2%' " +
+                "class='swiper-slide stop-swiping'></div>";
             if ( m === 0 ) {
+                MultdiskWeb += "<div id='disk_swiper' class='swiper-container'><div class='swiper-wrapper'>";
+                MultdiskWeb += MultDiskDiv;
                 $("#" + div_id).html(MultdiskWeb);
+            } else if ( m === mountArr.length-1  ) {
+                MultdiskWeb += MultDiskDiv;
+                MultdiskWeb += "</div></div>";
+                $(".swiper-wrapper").append(MultdiskWeb);
+                $(".swiper-container").append("<div class='swiper-button-prev'></div>" +
+                    "<div class='swiper-button-next'></div>");
             } else {
-                $("#" + div_id).append(MultdiskWeb);
+                MultdiskWeb += MultDiskDiv;
+                $(".swiper-wrapper").append(MultdiskWeb);
             }
-            var MultdiskChart = echarts.init(document.getElementById(div_id+"_"+m));
-            MultdiskChart.clear();
-            MultdiskChart.setOption(diskChartOpts,true);
-            window.addEventListener("resize", function () {
-                MultdiskChart.resize();
-            });
+            MultdiskChart[m] = echarts.init( document.getElementById(div_id+"_"+m) );
+            MultdiskChart[m].clear();
+            MultdiskChart[m].setOption(diskChartOpts,true);
+            if ( m === mountArr.length -1 ) {
+                $.each(MultdiskChart, function(key,val) {
+                    window.addEventListener("resize", function () {
+                        val.resize();
+                    });
+                });
+            }
         }
     }
 }
