@@ -7,11 +7,10 @@ function CreateChartFunc(_chart_ip, _chart_type,data) {
     }
     if ( _chart_type === "cpu" ) {
         $("#pic_cpu").removeAttr("hidden");
-        cpuEchartsFunc("pic_cpu", data["loadval"]["title"],data["loadval"]["xaxis"], data["loadval"]["yaxis"], data["loadval"]["legend"],data);
-        // cpuEchartsFunc("pic_2", data["cpuval"]["title"],data["cpuval"]["xaxis"], data["cpuval"]["yaxis"], data["cpuval"]["legend"]);
+        cpuEchartsFunc("pic_cpu", data);
     } else if ( _chart_type === "disk") {
         $("#pic_disk").removeAttr("hidden");
-        diskChartsFunc("pic_disk",data);
+        diskEchartsFunc("pic_disk",data);
         $("#disk_swiper").ready( function () {
             var swiper = new Swiper('.swiper-container', {
                 noSwiping: true,
@@ -22,63 +21,114 @@ function CreateChartFunc(_chart_ip, _chart_type,data) {
         })
     } else if ( _chart_type === "memory" ) {
         $("#pic_memory").removeAttr("hidden");
-        memChartsFunc("pic_memory",data);
+        memEchartsFunc("pic_memory",data);
+    } else if ( _chart_type === "network" ) {
+        $("#pic_network").removeAttr("hidden");
+        networkEchartsFunc("pic_network", data)
     }
 }
 
-function cpuEchartsFunc(div_id,pic_title,pic_xaxis,pic_yaxis,pic_legendArr,data){
-    var seriesArr = [];
-    console.log(data);
-    for (var L=0; L<pic_legendArr.length; L++ ) {
-        var Arrdata = pic_yaxis[L];
-        seriesArr.push({
-            name: pic_legendArr[L],
-            type: 'line',
-            data: Arrdata,
-            markPoint:{
-                data: [{ type: 'max', name: 'max' }]      // 折线最大值显示标记点
-            },
-            itemStyle:{ normal:{ lineStyle:{ width: 3 } } },
-            symbolSize: 5                                 // 拐角点大小
-        })
-    }
+function cpuEchartsFunc(div_id, data){
+    var dataArr = {
+        dimension:data["cpuval"]["legend"],
+        source:data["cpuval"]["axis"]
+    };
     var cpuChartOpts = {
-        title: { text:pic_title, left:'10%' },
-        tooltip: { trigger: 'axis' },                      // 轴对齐时展示所有点信息
-        legend: {
-            data: pic_legendArr,                           // y轴线的标签信息 **需要填充数据
-            textStyle: { fontSize: 16 },
-            icon:'roundRect'
-        },
-        grid: { containLabel:true },
+        title: { text: data["title"], left: '5%'},
+        tooltip: { trigger: 'axis'},                         // 轴对齐时展示所有点信息
+        legend: [{
+            left:'20%',
+            data: ["load_1","load_5","load_15"],             // y轴线的标签信息 **需要填充数据
+            //textStyle: {fontSize: 16},
+            icon: 'roundRect'
+        },{
+            right:'15%',
+            data: ["us","sy","ni","id","wa","hi","si","st"],
+            //textStyle: {fontSize: 16},
+            icon: 'roundRect'
+        }],
+        dataset: dataArr,
         dataZoom: [{                                       // 设置区域放大滑动轴
             id: 'dataZoomX',
             type: 'slider',
-            xAxisIndex:[0],
-            filterMode:'filter',
+            xAxisIndex: [0,1],
+            left:'7%',
+            right:'7%',
+            filterMode: 'filter',
         }, {                                               // 更换滑动条的触点样式
             handleIcon: 'M10.7,11.9v-1.3H9.3v1.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4v1.3h1.3v-' +
             '1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z ' +
             'M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z',
             handleSize: '80%',
-            handleStyle: { color: '#fff', shadowBlur: 3, shadowColor: 'rgba(0, 0, 0, 0.6)', shadowOffsetX: 2, shadowOffsetY: 2 },
+            handleStyle: {
+                color: '#fff',
+                shadowBlur: 3,
+                shadowColor: 'rgba(0, 0, 0, 0.6)',
+                shadowOffsetX: 2,
+                shadowOffsetY: 2
+            },
+            left:'7%',
+            right:'7%',
         }],
         toolbox: {                                         // 工具箱设置
             orient: 'horizontal',
-            x: '85%',
-            feature: { saveAsImage:{}, restore:{} }
+            x: '90%',
+            feature: {saveAsImage: {}, restore: {}}
         },
-        xAxis: {                                           // x轴设置
+        grid: [
+            { left:'7%',right:'53%' },
+            { left:'53%',right:'7%' }
+        ],
+        xAxis: [{                                           // x轴设置
             type: 'category',
+            gridIndex: 0,
             boundaryGap: false,                            // x轴数据点为点状,非面积[这个设置能使图线贴y轴]
-            data: pic_xaxis,                               // **需要填充数据
-            axisLabel:{ textStyle:{ fontSize: 14 } }
-        },
-        yAxis: {                                           // y轴设置
+            encode: { data: 'checktime'},
+            axisLabel: { textStyle:{ fontSize:14 }}
+        },{
+            type: 'category',
+            gridIndex: 1,
+            boundaryGap: false,
+            encode: { data: 'checktime'},
+            axisLabel: { textStyle:{ fontSize:14 }}
+        }],
+        yAxis: [{                                           // y轴设置
+            name: "Load Avg",
             type: 'value',
+            gridIndex: 0,
             axisLabel:{ textStyle:{ fontSize: 14 } }
-        },
-        series: seriesArr                                  // 设置数据轴情况和样式  ***需要循环填入数据
+        },{
+            name: "Time Percent",
+            type: 'value',
+            gridIndex: 1,
+            axisLabel:{ textStyle:{ fontSize: 14 } }
+        }],
+        series:[
+            //load
+            {type: 'line', name:'load_1', xAxisIndex:0, yAxisIndex:0, markPoint: {data: [{ type: 'max', name: 'max' }]},
+                itemStyle: {normal: {lineStyle: {width: 3}}}, symbolSize: 5},
+            {type: 'line', name:'load_5', xAxisIndex:0, yAxisIndex:0, markPoint: {data: [{ type: 'max', name: 'max' }]},
+                itemStyle: {normal: {lineStyle: {width: 3}}}, symbolSize: 5},
+            {type: 'line', name:'load_15', xAxisIndex:0, yAxisIndex:0, markPoint: {data: [{ type: 'max', name: 'max' }]},
+                itemStyle: {normal: {lineStyle: {width: 3}}}, symbolSize: 5},
+            //time percent
+            {type: 'line', name:'us', xAxisIndex:1, yAxisIndex:1, markPoint: {data: [{ type: 'max', name: 'max' }]},
+                itemStyle: {normal: {lineStyle: {width: 3}}}, symbolSize: 5},
+            {type: 'line', name:'sy', xAxisIndex:1, yAxisIndex:1, markPoint: {data: [{ type: 'max', name: 'max' }]},
+                itemStyle: {normal: {lineStyle: {width: 3}}}, symbolSize: 5},
+            {type: 'line', name:'ni', xAxisIndex:1, yAxisIndex:1, markPoint: {data: [{ type: 'max', name: 'max' }]},
+                itemStyle: {normal: {lineStyle: {width: 3}}}, symbolSize: 5},
+            {type: 'line', name:'id', xAxisIndex:1, yAxisIndex:1, markPoint: {data: [{ type: 'max', name: 'max' }]},
+                itemStyle: {normal: {lineStyle: {width: 3}}}, symbolSize: 5},
+            {type: 'line', name:'wa', xAxisIndex:1, yAxisIndex:1, markPoint: {data: [{ type: 'max', name: 'max' }]},
+                itemStyle: {normal: {lineStyle: {width: 3}}}, symbolSize: 5},
+            {type: 'line', name:'hi', xAxisIndex:1, yAxisIndex:1, markPoint: {data: [{ type: 'max', name: 'max' }]},
+                itemStyle: {normal: {lineStyle: {width: 3}}}, symbolSize: 5},
+            {type: 'line', name:'si', xAxisIndex:1, yAxisIndex:1, markPoint: {data: [{ type: 'max', name: 'max' }]},
+                itemStyle: {normal: {lineStyle: {width: 3}}}, symbolSize: 5},
+            {type: 'line', name:'st', xAxisIndex:1, yAxisIndex:1, markPoint: {data: [{ type: 'max', name: 'max' }]},
+                itemStyle: {normal: {lineStyle: {width: 3}}}, symbolSize: 5},
+        ]
     };
     var cpuChart = echarts.init(document.getElementById(div_id));
     cpuChart.clear();
@@ -88,7 +138,7 @@ function cpuEchartsFunc(div_id,pic_title,pic_xaxis,pic_yaxis,pic_legendArr,data)
     });
 }
 
-function memChartsFunc(div_id,data) {
+function memEchartsFunc(div_id,data) {
     var dataSetMem = [];
     for (var M in data["Memval"]["axis"]) {
         if (data["Memval"]["axis"].hasOwnProperty(M) ) {
@@ -241,7 +291,7 @@ function memChartsFunc(div_id,data) {
     });
 }
 
-function diskChartsFunc(div_id,data) {
+function diskEchartsFunc(div_id,data) {
     var mountArr = data["diskval"]["mount"].split("[")[1].split("]")[0].split(", ");
     var sourceArr = [];
     var seriesArr = [];
@@ -416,4 +466,8 @@ function diskChartsFunc(div_id,data) {
             }
         }
     }
+}
+
+function networkEchartsFunc(div_id,data) {
+    console.log("123")
 }

@@ -235,24 +235,13 @@ def data(req):
 
 
 def chart_cpu(ip, ts, te):
-    _loadval = dict()
     _cpuval = dict()
-    _load = MonitorORM.LoadData(ip=ip, time_start=ts, time_end=te).load_cpu_loadavg_range()
-    _load_axis = np.transpose(list(_load)).tolist()
-    _loadval["title"] = "System LoadAvg"
-    _loadval["legend"] = ["load (1min)", "load (5min)", "load (15min)"]
-    _loadval["yaxis"] = _load_axis[0:3]
-    _loadval["xaxis"] = _load_axis.pop()
-    _cpu = MonitorORM.LoadData(ip=ip, time_start=ts, time_end=te).load_cpu_time_range()
-    _cpu_axis = np.transpose(list(_cpu)).tolist()
-    _cpuval["title"] = "CPU Time Percent"
-    _cpuval["legend"] = ["us", "sy", "ni", "id", "wa", "hi", "si", "st"]
-    _cpuval["yaxis"] = _cpu_axis[0:7]
-    _cpuval["xaxis"] = _cpu_axis.pop()
-    print(_loadval)
-    print(_cpuval)
-    _response = HttpResponse(json.dumps({'loadval': _loadval,
-                                         'cpuval': _cpuval}),
+    _cpu = MonitorORM.LoadData(ip=ip, time_start=ts, time_end=te).load_cpu_range()
+    _cpuval["title"] = ""
+    _cpuval["legend"] = ["checktime", "load_1", "load_5", "load_15", "us", "sy", "ni", "id", "wa", "hi", "si", "st"]
+    _cpuval["axis"] = np.array(_cpu).tolist()
+    _response = HttpResponse(json.dumps({'cpuval': _cpuval,
+                                         'title': "CPU Used"}),
                              content_type='application/json')
     return _response
 
