@@ -250,3 +250,16 @@ class LoadData(object):
             print(error)
         finally:
             self.cursor.close()
+
+    def load_network_range(self):
+        try:
+            _querysql = """SELECT `netpic`,`netusage`,DATE_FORMAT(`checktime`,'%%m-%%d %%H:%%i:%%S') FROM monitor_network 
+            WHERE `ip`='%s' AND (DATE_FORMAT(`checktime`, '%%Y-%%m-%%d %%H:%%i:%%S') BETWEEN '%s' AND '%s');"""\
+                        % (self.ip, self.ts, self.te)
+            self.cursor.execute(_querysql)
+            _load_disk_used_result = self.cursor.fetchall()
+            return _load_disk_used_result
+        except Exception as e:
+            print(e)
+        finally:
+            self.cursor.close()

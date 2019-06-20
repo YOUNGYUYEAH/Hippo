@@ -290,6 +290,27 @@ def chart_memory(ip, ts, te):
         print(e)
 
 
+def chart_network(ip, ts, te):
+    try:
+        _netval = dict()
+        _netval["axis"] = []
+        _netval["value"] = []
+        _valuelist = []
+        _net = MonitorORM.LoadData(ip=ip, time_start=ts, time_end=te).load_network_range()
+        _netval["netpic"] = np.transpose(list(_net))[0][0]
+        for n in _net:
+            _netval["axis"].append(n[2])
+            for N in n[1].lstrip("['").rstrip("']").split("', '"):
+                _N = json.loads(N)
+                _value = [_N["ipaddr"], _N["packetes_sent"], _N["packetes_recv"],
+                          _N["bytes_sent"], _N["bytes_recv"], _N["errout"], _N["errin"],
+                          _N["bps_sent"], _N["bps_recv"], _N["pps_sent"], _N["pps_recv"]]
+                _valuelist.append(_value)
+        print(_valuelist)
+    except Exception as e:
+        print(e)
+
+
 def create(req):
     try:
         if req.is_ajax():
@@ -312,6 +333,9 @@ def create(req):
                     return _response
                 elif chart_type == 'memory':
                     _response = chart_memory(chart_ip, ts, te)
+                    return _response
+                elif chart_type == 'network':
+                    _response = chart_network(chart_ip, ts ,te)
                     return _response
                 else:
                     pass
